@@ -8,6 +8,7 @@ export type I18nTranslations = {
 			NotFoundByEmail: string
 			NotFoundById: string
 			InvalidPassword: string
+			Unauthorized: string
 		}
 	}
 	validation: {

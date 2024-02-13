@@ -3,6 +3,7 @@
 		"EmailExists": "Email \"{email}\" already in use",
 		"NotFoundByEmail": "User with email \"{email}\" not found",
 		"NotFoundById": "User with id \"{id}\" not found",
-		"InvalidPassword": "Invalid password"
+		"InvalidPassword": "Invalid password",
+		"Unauthorized": "Unauthorized"
 	}
 }

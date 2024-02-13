@@ -37,6 +37,14 @@ export class AuthService {
 		}
 	}
 
+	async validateUser(userId: string) {
+		try {
+			return await this.usersService.findById(userId)
+		} catch (e) {
+			return null
+		}
+	}
+
 	async generateTokens(userId: string) {
 		return {
 			accessToken: await this.generateAccessToken(userId),

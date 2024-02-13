@@ -63,4 +63,18 @@ export class UsersService {
 
 		return user
 	}
+
+	async findById(id: string) {
+		const user = await this.prisma.user.findUnique({ where: { id } })
+		if (!user) {
+			throw new NotFoundException(
+				this.i18n.t('exceptions.user.NotFoundById', {
+					lang: I18nContext.current().lang,
+					args: { id },
+				}),
+			)
+		}
+
+		return user
+	}
 }
