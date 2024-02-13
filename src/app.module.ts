@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
 
 import { AuthModule } from './auth/auth.module'
+import { UsersModule } from './users/users.module'
 import { PrismaService } from './prisma.service'
 
 @Module({
@@ -16,6 +17,7 @@ import { PrismaService } from './prisma.service'
 			}),
 		}),
 		AuthModule,
+		UsersModule,
 	],
 	providers: [PrismaService],
 })
