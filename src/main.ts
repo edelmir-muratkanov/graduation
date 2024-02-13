@@ -13,6 +13,7 @@ async function bootstrap() {
 		.setTitle('Graduation')
 		.setDescription('The Graduation API description')
 		.setVersion('0.1')
+		.addBearerAuth()
 		.build()
 
 	const document = SwaggerModule.createDocument(app, config)

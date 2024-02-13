@@ -4,6 +4,7 @@
 		"NotFoundByEmail": "Пользователь с почтой \"{email}\" не найден",
 		"NotFoundById": "Пользователь с идентификатором \"{id}\" не найден",
 		"InvalidPassword": "Неправильный пароль",
-		"Unauthorized": "Не авторизован"
+		"Unauthorized": "Не авторизован",
+		"Forbidden": "Недостаточно прав"
 	}
 }
