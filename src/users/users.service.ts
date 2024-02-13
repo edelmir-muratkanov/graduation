@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import {
+	ConflictException,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import { PrismaService } from 'src/prisma/prisma.service'
@@ -43,5 +47,20 @@ export class UsersService {
 
 			throw new Error(e)
 		}
+	}
+
+	async findByEmail(email: string) {
+		const user = await this.prisma.user.findUnique({ where: { email } })
+
+		if (!user) {
+			throw new NotFoundException(
+				this.i18n.t('exceptions.user.NotFoundByEmail', {
+					lang: I18nContext.current().lang,
+					args: { email },
+				}),
+			)
+		}
+
+		return user
 	}
 }

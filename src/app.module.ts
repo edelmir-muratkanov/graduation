@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
+import { APP_FILTER, APP_PIPE } from '@nestjs/core'
 import * as Joi from 'joi'
 import {
-	AcceptLanguageResolver,
 	HeaderResolver,
 	I18nModule,
+	I18nValidationExceptionFilter,
+	I18nValidationPipe,
 	QueryResolver,
 } from 'nestjs-i18n'
 import { join } from 'path'
@@ -28,9 +30,9 @@ import { UsersModule } from './users/users.module'
 		I18nModule.forRoot({
 			fallbackLanguage: 'en',
 			fallbacks: {
-				'en-*': 'en',
-				'ru-*': 'ru',
-				'kz-*': 'kz',
+				en: 'en',
+				ru: 'ru',
+				kz: 'kz',
 			},
 			loaderOptions: {
 				path: join(__dirname, '/i18n/'),
@@ -41,7 +43,6 @@ import { UsersModule } from './users/users.module'
 					use: QueryResolver,
 					options: ['lang'],
 				},
-				AcceptLanguageResolver,
 				new HeaderResolver(['x-lang']),
 			],
 			typesOutputPath: join(__dirname, '../src/shared/generated/i18n.ts'),
@@ -49,6 +50,19 @@ import { UsersModule } from './users/users.module'
 		AuthModule,
 		UsersModule,
 		PrismaModule,
+	],
+	providers: [
+		{
+			provide: APP_PIPE,
+			useValue: new I18nValidationPipe({
+				transform: true,
+				whitelist: true,
+			}),
+		},
+		{
+			provide: APP_FILTER,
+			useValue: new I18nValidationExceptionFilter(),
+		},
 	],
 })
 export class AppModule {}

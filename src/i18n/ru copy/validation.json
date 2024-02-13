@@ -1,5 +1,0 @@
-{
-	"IsEmail": "Поле {property} должно быть электронной почтой",
-	"IsString": "Поле {property} должно быть строкой",
-	"MinLength": "Длина {property} должна быть не менее {constraints.0} символов"
-}

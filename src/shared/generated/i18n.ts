@@ -5,6 +5,9 @@ export type I18nTranslations = {
 	exceptions: {
 		user: {
 			EmailExists: string
+			NotFoundByEmail: string
+			NotFoundById: string
+			InvalidPassword: string
 		}
 	}
 	validation: {
