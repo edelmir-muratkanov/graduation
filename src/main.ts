@@ -1,6 +1,7 @@
-import { Logger, ValidationPipe } from '@nestjs/common'
+import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n'
 
 import { AppModule } from './app.module'
 
@@ -19,10 +20,14 @@ async function bootstrap() {
 	SwaggerModule.setup('api', app, document)
 
 	app.useGlobalPipes(
-		new ValidationPipe({
+		new I18nValidationPipe({
 			transform: true,
 			whitelist: true,
 		}),
+	)
+
+	app.useGlobalFilters(
+		new I18nValidationExceptionFilter({ detailedErrors: false }),
 	)
 
 	await app.listen(port, () => {

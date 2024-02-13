@@ -1,0 +1,5 @@
+{
+	"user": {
+		"EmailExists": "Email \"{email}\" already in use"
+	}
+}
