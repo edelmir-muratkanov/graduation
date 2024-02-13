@@ -1,9 +1,27 @@
+import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 import { AppModule } from './app.module'
 
 async function bootstrap() {
+	const logger = new Logger('Bootstrap')
 	const app = await NestFactory.create(AppModule)
-	await app.listen(3000)
+	const port = process.env.PORT
+
+	const config = new DocumentBuilder()
+		.setTitle('Graduation')
+		.setDescription('The Graduation API description')
+		.setVersion('0.1')
+		.build()
+
+	const document = SwaggerModule.createDocument(app, config)
+	SwaggerModule.setup('api', app, document)
+
+	await app.listen(port, () => {
+		logger.log(`Application started at http://localhost:${port}`)
+		logger.log(`Swagger started at http;//localhost:${port}/api`)
+	})
 }
+
 bootstrap()
