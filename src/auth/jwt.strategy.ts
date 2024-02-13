@@ -1,13 +1,13 @@
-import { UnauthorizedException } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
-import type { I18nService } from 'nestjs-i18n'
-import { I18nContext } from 'nestjs-i18n'
+import { I18nContext, I18nService } from 'nestjs-i18n'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import type { I18nTranslations } from 'src/shared/generated/i18n'
 
 import type { JwtDto } from './dto/jwt.dto'
-import type { AuthService } from './auth.service'
+import { AuthService } from './auth.service'
 
+@Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
 	constructor(
 		private readonly authService: AuthService,
@@ -16,6 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			secretOrKey: process.env.ACCESS_TOKEN_SECRET,
+			ignoreExpiration: false,
 		})
 	}
 
