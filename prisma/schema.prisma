@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+enum Role {
+  User
+  Admin
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  passwordHash String
+  role         Role            @default(User)
+  projects     ProjectOnUser[]
+}
+
+model Property {
+  id       String               @id @default(cuid())
+  name     String               @unique
+  methods  MethodOnParameter[]
+  projects ProjectOnParameter[]
+}
+
+model MethodOnParameter {
+  method     Method   @relation(fields: [methodId], references: [id])
+  methodId   String
+  property   Property @relation(fields: [propertyId], references: [id])
+  propertyId String
+
+  parameters Json
+
+  @@id([methodId, propertyId])
+}
+
+model Method {
+  id         String              @id @default(cuid())
+  name       String              @unique
+  parameters MethodOnParameter[]
+  projects   ProjectOnMethod[]
+}
+
+model Project {
+  id         String               @id @default(cuid())
+  name       String
+  country    String
+  operator   String
+  parameters ProjectOnParameter[]
+  methods    ProjectOnMethod[]
+  users      ProjectOnUser[]
+}
+
+model ProjectOnParameter {
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+
+  property   Property @relation(fields: [propertyId], references: [id])
+  propertyId String
+
+  value Float
+
+  @@id([projectId, propertyId])
+}
+
+model ProjectOnMethod {
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+
+  method   Method @relation(fields: [methodId], references: [id])
+  methodId String
+
+  @@id([methodId, projectId])
+}
+
+model ProjectOnUser {
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@id([userId, projectId])
+}

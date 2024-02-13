@@ -1,0 +1,102 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  email String [unique, not null]
+  passwordHash String [not null]
+  role Role [not null, default: 'User']
+  projects ProjectOnUser [not null]
+}
+
+Table Property {
+  id String [pk]
+  name String [unique, not null]
+  methods MethodOnParameter [not null]
+  projects ProjectOnParameter [not null]
+}
+
+Table MethodOnParameter {
+  method Method [not null]
+  methodId String [not null]
+  property Property [not null]
+  propertyId String [not null]
+  parameters Json [not null]
+
+  indexes {
+    (methodId, propertyId) [pk]
+  }
+}
+
+Table Method {
+  id String [pk]
+  name String [unique, not null]
+  parameters MethodOnParameter [not null]
+  projects ProjectOnMethod [not null]
+}
+
+Table Project {
+  id String [pk]
+  name String [not null]
+  country String [not null]
+  operator String [not null]
+  parameters ProjectOnParameter [not null]
+  methods ProjectOnMethod [not null]
+  users ProjectOnUser [not null]
+}
+
+Table ProjectOnParameter {
+  project Project [not null]
+  projectId String [not null]
+  property Property [not null]
+  propertyId String [not null]
+  value Float [not null]
+
+  indexes {
+    (projectId, propertyId) [pk]
+  }
+}
+
+Table ProjectOnMethod {
+  project Project [not null]
+  projectId String [not null]
+  method Method [not null]
+  methodId String [not null]
+
+  indexes {
+    (methodId, projectId) [pk]
+  }
+}
+
+Table ProjectOnUser {
+  project Project [not null]
+  projectId String [not null]
+  user User [not null]
+  userId String [not null]
+
+  indexes {
+    (userId, projectId) [pk]
+  }
+}
+
+Enum Role {
+  User
+  Admin
+}
+
+Ref: MethodOnParameter.methodId > Method.id
+
+Ref: MethodOnParameter.propertyId > Property.id
+
+Ref: ProjectOnParameter.projectId > Project.id
+
+Ref: ProjectOnParameter.propertyId > Property.id
+
+Ref: ProjectOnMethod.projectId > Project.id
+
+Ref: ProjectOnMethod.methodId > Method.id
+
+Ref: ProjectOnUser.projectId > Project.id
+
+Ref: ProjectOnUser.userId > User.id
