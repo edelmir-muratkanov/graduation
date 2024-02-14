@@ -14,6 +14,13 @@ export class AuthService {
 		private readonly i18n: I18nService<I18nTranslations>,
 	) {}
 
+	async register(email: string, password: string) {
+		const user = await this.usersService.createUser(email, password)
+		const tokens = await this.generateTokens(user.id)
+
+		return { user, tokens }
+	}
+
 	async login(email: string, password: string) {
 		const user = await this.usersService.findByEmail(email)
 		const passwordValid = await this.passwordService.comparePasswords(
