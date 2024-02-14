@@ -1,4 +1,4 @@
-import type { UserResponse } from 'src/users/user.dto'
+import type { UserResponse } from 'src/users/dto/user.response'
 
 import type { TokensResponse } from './tokens.response'
 
