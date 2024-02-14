@@ -1,8 +1,8 @@
 {
 	"user": {
-		"EmailExists": "Электронная почта \"{email}\" занята",
-		"NotFoundByEmail": "Пользователь с почтой \"{email}\" не найден",
-		"NotFoundById": "Пользователь с идентификатором \"{id}\" не найден",
+		"EmailExists": "Электронная почта '{email}' занята",
+		"NotFoundByEmail": "Пользователь с почтой '{email}' не найден",
+		"NotFoundById": "Пользователь с идентификатором '{id}' не найден",
 		"InvalidPassword": "Неправильный пароль",
 		"Unauthorized": "Не авторизован",
 		"Forbidden": "Недостаточно прав"
