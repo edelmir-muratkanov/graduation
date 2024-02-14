@@ -11,9 +11,9 @@ import {
 	QueryResolver,
 } from 'nestjs-i18n'
 import { join } from 'path'
+import { PrismaModule } from 'src/shared/prisma/prisma.module'
 
 import { AuthModule } from './auth/auth.module'
-import { PrismaModule } from './prisma/prisma.module'
 import { LoggingMiddleware } from './shared/middleware/logging.middleware'
 import { UsersModule } from './users/users.module'
 
@@ -37,7 +37,7 @@ import { UsersModule } from './users/users.module'
 				kz: 'kz',
 			},
 			loaderOptions: {
-				path: join(__dirname, '/i18n/'),
+				path: join(__dirname, '/shared/i18n/'),
 				watch: true,
 			},
 			resolvers: [
