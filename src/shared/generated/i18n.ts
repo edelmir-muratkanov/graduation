@@ -11,6 +11,10 @@ export type I18nTranslations = {
             "Unauthorized": string;
             "Forbidden": string;
         };
+        "property": {
+            "NameExists": string;
+            "NotFound": string;
+        };
     };
     "validation": {
         "IsEmail": string;

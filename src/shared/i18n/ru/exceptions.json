@@ -6,5 +6,9 @@
 		"InvalidPassword": "Неправильный пароль",
 		"Unauthorized": "Не авторизован",
 		"Forbidden": "Недостаточно прав"
+	},
+	"property": {
+		"NameExists": "Свойство с именем '{name}' уже существует",
+		"NotFound": "Свойство с id '{id}' не найдено"
 	}
 }

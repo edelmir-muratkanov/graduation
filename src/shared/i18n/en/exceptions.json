@@ -6,5 +6,9 @@
 		"InvalidPassword": "Invalid password",
 		"Unauthorized": "Unauthorized",
 		"Forbidden": "Forbidden"
+	},
+	"property": {
+		"NameExists": "Property with name '{name}' already exists",
+		"NotFound": "Property with id '{id}' not found"
 	}
 }
