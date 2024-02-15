@@ -3,5 +3,7 @@
 	"IsString": "Поле {property} должно быть строкой",
 	"MinLength": "Длина {property} должна быть не менее {constraints.0} символов",
 	"IsNumber": "Поле {property} должно быть числом",
-	"Min": "Поле {property} должно быть как минимум {constraints.0}"
+	"Min": "Поле {property} должно быть как минимум {constraints.0}",
+	"IsArray": "Поле {property} должно быть массивом",
+	"NotEmpty": "Поле {property} не должно быть пустым"
 }

@@ -26,6 +26,8 @@ export type I18nTranslations = {
         "MinLength": string;
         "IsNumber": string;
         "Min": string;
+        "IsArray": string;
+        "NotEmpty": string;
     };
 };
 export type I18nPath = Path<I18nTranslations>;

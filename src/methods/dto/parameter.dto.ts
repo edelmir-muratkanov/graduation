@@ -5,16 +5,17 @@ import {
 	IsString,
 	ValidateNested,
 } from 'class-validator'
+import { validationMessage } from 'src/shared/utils'
 
 import { ParameterDataDto } from './parameter-data.dto'
 
 export class ParameterDto {
-	@IsString()
-	@IsNotEmpty()
+	@IsString({ message: validationMessage('validation.IsString') })
+	@IsNotEmpty({ message: validationMessage('validation.NotEmpty') })
 	propertyId: string
 
 	@ValidateNested()
-	@IsDefined()
+	@IsDefined({ message: validationMessage('validation.NotEmpty') })
 	@Type(() => ParameterDataDto)
 	parameters: ParameterDataDto
 }
