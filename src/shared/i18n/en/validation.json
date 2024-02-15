@@ -1,5 +1,7 @@
 {
 	"IsEmail": "{property} should be email",
 	"IsString": "{property} should be string",
-	"MinLength": "{property}`s length should not be less than {constraints.0}"
+	"MinLength": "{property}`s length should not be less than {constraints.0}",
+	"IsNumber": "{property} should be number",
+	"Min": "{property} should be at least {constraints.0}"
 }

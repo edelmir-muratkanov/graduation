@@ -16,6 +16,8 @@ export type I18nTranslations = {
         "IsEmail": string;
         "IsString": string;
         "MinLength": string;
+        "IsNumber": string;
+        "Min": string;
     };
 };
 export type I18nPath = Path<I18nTranslations>;

@@ -23,4 +23,24 @@ export class PropertiesService {
 			}
 		}
 	}
+
+	async getAll(limit?: number, offset?: number, lastCursorId?: string) {
+		const [count, items] = await this.prisma.$transaction([
+			this.prisma.property.count(),
+			this.prisma.property.findMany({
+				orderBy: { name: 'asc' },
+				take: limit,
+				...(lastCursorId
+					? {
+							skip: 1,
+							cursor: { id: lastCursorId },
+						}
+					: {
+							skip: offset,
+						}),
+			}),
+		])
+
+		return { count, items }
+	}
 }

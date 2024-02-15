@@ -1,6 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post, Query } from '@nestjs/common'
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger'
+import { ApiPaginatedResponse } from 'src/shared/decorators/api-paginated-response.decorator'
 import { Auth } from 'src/shared/decorators/auth.decorator'
+import { PaginationParamsRequest } from 'src/shared/pagination/pagination-params.request'
 
 import { CreatePropertyRequest } from './dto/create-property.request'
 import { PropertyResponse } from './dto/property.response'
@@ -16,5 +18,13 @@ export class PropertiesController {
 	@ApiCreatedResponse({ type: PropertyResponse })
 	async create(@Body() request: CreatePropertyRequest) {
 		return this.propertiesService.create(request.name)
+	}
+
+	@Get()
+	@ApiPaginatedResponse(PropertyResponse)
+	async getAll(
+		@Query() { limit, offset, lastCursorId }: PaginationParamsRequest,
+	) {
+		return this.propertiesService.getAll(limit, offset, lastCursorId)
 	}
 }
