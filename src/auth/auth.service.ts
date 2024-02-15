@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import type { User } from '@prisma/client'
 import { I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated/i18n'
 import { PasswordService } from 'src/shared/services/password.service'
@@ -16,7 +17,7 @@ export class AuthService {
 
 	async register(email: string, password: string) {
 		const user = await this.usersService.createUser(email, password)
-		const tokens = await this.generateTokens(user.id)
+		const tokens = await this.generateTokens(user)
 
 		return { user, tokens }
 	}
@@ -40,7 +41,7 @@ export class AuthService {
 				email: user.email,
 				role: user.role,
 			},
-			tokens: await this.generateTokens(user.id),
+			tokens: await this.generateTokens(user),
 		}
 	}
 
@@ -52,34 +53,32 @@ export class AuthService {
 		}
 	}
 
-	async generateTokens(userId: string) {
-		return {
-			accessToken: await this.generateAccessToken(userId),
-			refreshToken: await this.generateRefreshToken(userId),
-		}
-	}
+	async generateTokens(user: Partial<User>) {
+		const [accessToken, refreshToken] = await Promise.all([
+			this.jwtService.signAsync(
+				{
+					id: user.id,
+					email: user.email,
+					role: user.role,
+				},
+				{
+					secret: process.env.ACCESS_TOKEN_SECRET,
+					expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
+				},
+			),
+			this.jwtService.signAsync(
+				{
+					id: user.id,
+					email: user.email,
+					role: user.role,
+				},
+				{
+					secret: process.env.REFRESH_TOKEN_SECRET,
+					expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+				},
+			),
+		])
 
-	private async generateAccessToken(userId: string) {
-		return this.jwtService.signAsync(
-			{
-				id: userId,
-			},
-			{
-				secret: process.env.ACCESS_TOKEN_SECRET,
-				expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
-			},
-		)
-	}
-
-	private async generateRefreshToken(userId: string) {
-		return this.jwtService.signAsync(
-			{
-				id: userId,
-			},
-			{
-				secret: process.env.REFRESH_TOKEN_SECRET,
-				expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
-			},
-		)
+		return { accessToken, refreshToken }
 	}
 }
