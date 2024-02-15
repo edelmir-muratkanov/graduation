@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
-import { PasswordService } from 'src/shared/services/password.service'
+import { PasswordService } from 'src/shared/services'
 import { UsersModule } from 'src/users/users.module'
 
 import { AuthController } from './auth.controller'

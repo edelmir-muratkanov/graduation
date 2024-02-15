@@ -14,9 +14,8 @@ import {
 	ApiNoContentResponse,
 	ApiTags,
 } from '@nestjs/swagger'
-import { ApiPaginatedResponse } from 'src/shared/decorators/api-paginated-response.decorator'
-import { Auth } from 'src/shared/decorators/auth.decorator'
-import { PaginationParamsRequest } from 'src/shared/pagination/pagination-params.request'
+import { ApiPaginatedResponse, Auth } from 'src/shared/decorators'
+import { PaginationParamsRequest } from 'src/shared/pagination'
 
 import { CreatePropertyRequest } from './dto/create-property.request'
 import { PropertyResponse } from './dto/property.response'

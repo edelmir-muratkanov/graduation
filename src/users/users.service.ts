@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
-import type { I18nTranslations } from 'src/shared/generated/i18n'
-import { PrismaService } from 'src/shared/prisma/prisma.service'
-import { PasswordService } from 'src/shared/services/password.service'
+import type { I18nTranslations } from 'src/shared/generated'
+import { PrismaService } from 'src/shared/prisma'
+import { PasswordService } from 'src/shared/services'
 
 @Injectable()
 export class UsersService {

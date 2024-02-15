@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import type { I18nTranslations } from 'src/shared/generated/i18n'
+import type { I18nTranslations } from 'src/shared/generated'
 
 import type { JwtDto } from './dto/jwt.dto'
 import { AuthService } from './auth.service'

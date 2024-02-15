@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import type { User } from '@prisma/client'
 import { I18nService } from 'nestjs-i18n'
-import type { I18nTranslations } from 'src/shared/generated/i18n'
-import { PasswordService } from 'src/shared/services/password.service'
+import type { I18nTranslations } from 'src/shared/generated'
+import { PasswordService } from 'src/shared/services'
 import { UsersService } from 'src/users/users.service'
 
 @Injectable()

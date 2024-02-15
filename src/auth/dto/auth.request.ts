@@ -1,5 +1,5 @@
 import { IsEmail, IsString, MinLength } from 'class-validator'
-import { validationMessage } from 'src/shared/utils/validation-message'
+import { validationMessage } from 'src/shared/utils'
 
 export class AuthRequest {
 	@IsEmail({}, { message: validationMessage('validation.IsEmail') })

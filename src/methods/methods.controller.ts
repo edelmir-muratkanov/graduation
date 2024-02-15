@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { ApiPaginatedResponse } from 'src/shared/decorators/api-paginated-response.decorator'
-import { Auth } from 'src/shared/decorators/auth.decorator'
-import { PaginationParamsRequest } from 'src/shared/pagination/pagination-params.request'
+import { ApiPaginatedResponse, Auth } from 'src/shared/decorators'
+import { PaginationParamsRequest } from 'src/shared/pagination'
 
 import { CreateMethodRequest } from './dto/create-method.request'
 import { MethodsResponse } from './dto/methods.response'

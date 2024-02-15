@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { PrismaModule } from 'src/shared/prisma/prisma.module'
+import { PrismaModule } from 'src/shared/prisma'
 
 import { MethodsController } from './methods.controller'
 import { MethodsService } from './methods.service'

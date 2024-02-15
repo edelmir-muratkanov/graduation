@@ -5,9 +5,8 @@ import {
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { I18nService } from 'nestjs-i18n'
-import type { I18nTranslations } from 'src/shared/generated/i18n'
-import { PrismaErrors } from 'src/shared/prisma/prisma.errors'
-import { PrismaService } from 'src/shared/prisma/prisma.service'
+import type { I18nTranslations } from 'src/shared/generated'
+import { PrismaErrors, PrismaService } from 'src/shared/prisma'
 
 import type { MethodParametersData } from './methods.interface'
 
