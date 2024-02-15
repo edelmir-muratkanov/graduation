@@ -46,4 +46,31 @@ export class MethodsService {
 			}
 		}
 	}
+
+	async getAll(limit?: number, offset?: number, lastCursorId?: string) {
+		const [count, items] = await this.prisma.$transaction([
+			this.prisma.method.count(),
+			this.prisma.method.findMany({
+				include: {
+					_count: {
+						select: {
+							projects: true,
+						},
+					},
+				},
+				orderBy: { name: 'asc' },
+				take: limit,
+				...(lastCursorId
+					? {
+							skip: 1,
+							cursor: { id: lastCursorId },
+						}
+					: {
+							skip: offset,
+						}),
+			}),
+		])
+
+		return { count, items }
+	}
 }
