@@ -24,5 +24,6 @@ export class PaginationParamsRequest {
 
 	@IsOptional()
 	@IsString({ message: validationMessage('validation.IsString') })
+	@Transform(({ value }) => (value as string).trim())
 	lastCursorId?: string
 }

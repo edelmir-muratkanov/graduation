@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer'
+import { Transform, Type } from 'class-transformer'
 import {
 	IsDefined,
 	IsNotEmpty,
@@ -12,6 +12,7 @@ import { ParameterDataDto } from './parameter-data.dto'
 export class ParameterDto {
 	@IsString({ message: validationMessage('validation.IsString') })
 	@IsNotEmpty({ message: validationMessage('validation.NotEmpty') })
+	@Transform(({ value }) => (value as string).trim())
 	propertyId: string
 
 	@ValidateNested()
