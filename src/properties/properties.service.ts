@@ -35,6 +35,14 @@ export class PropertiesService {
 		const [count, items] = await this.prisma.$transaction([
 			this.prisma.property.count(),
 			this.prisma.property.findMany({
+				include: {
+					_count: {
+						select: {
+							methods: true,
+							projects: true,
+						},
+					},
+				},
 				orderBy: { name: 'asc' },
 				take: limit,
 				...(lastCursorId

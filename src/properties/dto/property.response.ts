@@ -1,7 +1,10 @@
-import type { Property } from '@prisma/client'
-
-export class PropertyResponse implements Property {
+export class PropertyResponse {
 	id: string
 
 	name: string
+
+	_count: {
+		methods: number
+		projects: number
+	}
 }
