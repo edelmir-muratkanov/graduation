@@ -14,6 +14,7 @@ import { join } from 'path'
 import { PrismaModule } from 'src/shared/prisma/prisma.module'
 
 import { AuthModule } from './auth/auth.module'
+import { MethodsModule } from './methods/methods.module'
 import { PropertiesModule } from './properties/properties.module'
 import { LoggingMiddleware } from './shared/middleware/logging.middleware'
 import { UsersModule } from './users/users.module'
@@ -50,10 +51,11 @@ import { UsersModule } from './users/users.module'
 			],
 			typesOutputPath: join(__dirname, '../src/shared/generated/i18n.ts'),
 		}),
+		PrismaModule,
 		AuthModule,
 		UsersModule,
-		PrismaModule,
 		PropertiesModule,
+		MethodsModule,
 	],
 	providers: [
 		{

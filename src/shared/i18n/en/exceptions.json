@@ -10,5 +10,9 @@
 	"property": {
 		"NameExists": "Property with name '{name}' already exists",
 		"NotFound": "Property with id '{id}' not found"
+	},
+	"method": {
+		"PropertyNotFound": "The property of one of the method parameters was not found",
+		"MethodExists": "Method with name '{name}' already exists"
 	}
 }

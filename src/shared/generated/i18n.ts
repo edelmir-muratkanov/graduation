@@ -15,6 +15,10 @@ export type I18nTranslations = {
             "NameExists": string;
             "NotFound": string;
         };
+        "method": {
+            "PropertyNotFound": string;
+            "MethodExists": string;
+        };
     };
     "validation": {
         "IsEmail": string;
