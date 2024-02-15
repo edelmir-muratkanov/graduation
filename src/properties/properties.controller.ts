@@ -42,6 +42,7 @@ export class PropertiesController {
 		return this.propertiesService.getAll(limit, offset, lastCursorId)
 	}
 
+	@Auth('Admin')
 	@Put(':id')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	@ApiNoContentResponse()
