@@ -2,6 +2,7 @@ import {
 	BadRequestException,
 	ConflictException,
 	Injectable,
+	NotFoundException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { I18nService } from 'nestjs-i18n'
@@ -71,5 +72,25 @@ export class MethodsService {
 		])
 
 		return { count, items }
+	}
+
+	async getById(id: string) {
+		const method = await this.prisma.method.findUnique({
+			where: { id },
+			include: {
+				parameters: {
+					select: {
+						propertyId: true,
+						parameters: true,
+					},
+				},
+			},
+		})
+
+		if (!method) {
+			throw new NotFoundException(this.i18n.t('exceptions.method.NotFound'))
+		}
+
+		return method
 	}
 }

@@ -18,6 +18,7 @@ export type I18nTranslations = {
         "method": {
             "PropertyNotFound": string;
             "MethodExists": string;
+            "NotFound": string;
         };
     };
     "validation": {
