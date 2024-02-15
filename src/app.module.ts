@@ -14,6 +14,7 @@ import { join } from 'path'
 import { PrismaModule } from 'src/shared/prisma/prisma.module'
 
 import { AuthModule } from './auth/auth.module'
+import { PropertiesModule } from './properties/properties.module'
 import { LoggingMiddleware } from './shared/middleware/logging.middleware'
 import { UsersModule } from './users/users.module'
 
@@ -52,6 +53,7 @@ import { UsersModule } from './users/users.module'
 		AuthModule,
 		UsersModule,
 		PrismaModule,
+		PropertiesModule,
 	],
 	providers: [
 		{
