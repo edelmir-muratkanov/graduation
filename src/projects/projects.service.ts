@@ -2,6 +2,7 @@ import {
 	BadRequestException,
 	ConflictException,
 	Injectable,
+	NotFoundException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { I18nService } from 'nestjs-i18n'
@@ -115,5 +116,62 @@ export class ProjectsService {
 		])
 
 		return { count, items }
+	}
+
+	async getById(id: string) {
+		const project = await this.prisma.project.findUnique({
+			where: {
+				id,
+			},
+			select: {
+				id: true,
+				name: true,
+				country: true,
+				operator: true,
+				users: {
+					select: {
+						user: {
+							select: {
+								id: true,
+								email: true,
+							},
+						},
+					},
+				},
+				parameters: {
+					select: {
+						value: true,
+						property: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
+					},
+				},
+				methods: {
+					select: {
+						method: {
+							select: {
+								id: true,
+								name: true,
+								parameters: {
+									select: {
+										propertyId: true,
+										parameters: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		})
+
+		if (!project) {
+			throw new NotFoundException(this.i18n.t('exceptions.project.NotFound'))
+		}
+
+		return project
 	}
 }

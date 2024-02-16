@@ -18,6 +18,7 @@
 	},
 	"project": {
 		"InvalidProperties": "One of the propties does not exist or invalid",
-		"Exists": "Project already exists"
+		"Exists": "Project already exists",
+		"NotFound": "Project not found"
 	}
 }

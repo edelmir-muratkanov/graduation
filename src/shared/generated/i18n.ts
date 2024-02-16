@@ -23,6 +23,7 @@ export type I18nTranslations = {
         "project": {
             "InvalidProperties": string;
             "Exists": string;
+            "NotFound": string;
         };
     };
     "validation": {
