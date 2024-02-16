@@ -21,6 +21,14 @@ async function bootstrap() {
 		.setDescription('The Graduation API description')
 		.setVersion('0.1')
 		.addBearerAuth()
+		.addGlobalParameters({
+			in: 'query',
+			name: 'lang',
+			schema: {
+				default: 'en',
+				enum: ['en', 'ru', 'kz'],
+			},
+		})
 		.build()
 
 	const document = SwaggerModule.createDocument(app, config)
