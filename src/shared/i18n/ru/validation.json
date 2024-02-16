@@ -5,5 +5,6 @@
 	"IsNumber": "Поле {property} должно быть числом",
 	"Min": "Поле {property} должно быть как минимум {constraints.0}",
 	"IsArray": "Поле {property} должно быть массивом",
-	"NotEmpty": "Поле {property} не должно быть пустым"
+	"NotEmpty": "Поле {property} не должно быть пустым",
+	"IsPositive": "Поле {property} должно быть положительным числом"
 }

@@ -15,5 +15,9 @@
 		"PropertyNotFound": "The property of one of the method parameters was not found",
 		"MethodExists": "Method with name '{name}' already exists",
 		"NotFound": "Method with id '{id}' not found"
+	},
+	"project": {
+		"InvalidProperties": "One of the propties does not exist or invalid",
+		"Exists": "Project already exists"
 	}
 }

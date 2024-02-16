@@ -5,5 +5,6 @@
 	"IsNumber": "{property} must be number",
 	"Min": "{property} must be at least {constraints.0}",
 	"IsArray": "{property} must be array",
-	"NotEmpty": "{property} must not be empty"
+	"NotEmpty": "{property} must not be empty",
+	"IsPositive": "{property} must be positive number"
 }

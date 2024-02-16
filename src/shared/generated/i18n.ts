@@ -20,6 +20,10 @@ export type I18nTranslations = {
             "MethodExists": string;
             "NotFound": string;
         };
+        "project": {
+            "InvalidProperties": string;
+            "Exists": string;
+        };
     };
     "validation": {
         "IsEmail": string;
@@ -29,6 +33,7 @@ export type I18nTranslations = {
         "Min": string;
         "IsArray": string;
         "NotEmpty": string;
+        "IsPositive": string;
     };
 };
 export type I18nPath = Path<I18nTranslations>;
