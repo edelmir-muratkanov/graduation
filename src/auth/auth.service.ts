@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import type { User } from '@prisma/client'
-import { I18nService } from 'nestjs-i18n'
+import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PasswordService } from 'src/shared/services'
 import { UsersService } from 'src/users/users.service'
@@ -31,7 +31,9 @@ export class AuthService {
 
 		if (!passwordValid) {
 			throw new BadRequestException(
-				this.i18n.t('exceptions.user.InvalidPassword'),
+				this.i18n.t('exceptions.user.InvalidCredentials', {
+					lang: I18nContext.current().lang,
+				}),
 			)
 		}
 
@@ -49,7 +51,9 @@ export class AuthService {
 		try {
 			return await this.usersService.findById(userId)
 		} catch (e) {
-			return null
+			return this.i18n.t('exceptions.user.NotFound', {
+				lang: I18nContext.current().lang,
+			})
 		}
 	}
 

@@ -5,7 +5,7 @@ import {
 	NotFoundException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
-import { I18nService } from 'nestjs-i18n'
+import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaErrors, PrismaService } from 'src/shared/prisma'
 
@@ -57,12 +57,18 @@ export class ProjectsService {
 		} catch (e) {
 			if (e instanceof Prisma.PrismaClientKnownRequestError) {
 				if (e.code === PrismaErrors.UniqueConstraintViolated) {
-					throw new ConflictException(this.i18n.t('exceptions.project.Exists'))
+					throw new ConflictException(
+						this.i18n.t('exceptions.project.Exists', {
+							lang: I18nContext.current().lang,
+						}),
+					)
 				}
 
 				if (e.code === PrismaErrors.ForeignKeyConstraintViolated) {
 					throw new BadRequestException(
-						this.i18n.t('exceptions.project.InvalidProperties'),
+						this.i18n.t('exceptions.project.InvalidProperties', {
+							lang: I18nContext.current().lang,
+						}),
 					)
 				}
 			}
@@ -169,7 +175,11 @@ export class ProjectsService {
 		})
 
 		if (!project) {
-			throw new NotFoundException(this.i18n.t('exceptions.project.NotFound'))
+			throw new NotFoundException(
+				this.i18n.t('exceptions.project.NotFound', {
+					lang: I18nContext.current().lang,
+				}),
+			)
 		}
 
 		return project

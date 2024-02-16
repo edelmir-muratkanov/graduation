@@ -16,7 +16,7 @@ export class MethodsController {
 	@Auth('Admin')
 	@Post()
 	async create(@Body() request: CreateMethodRequest) {
-		await this.methodService.create(request.name, request.data)
+		return this.methodService.create(request.name, request.data)
 	}
 
 	@Get()

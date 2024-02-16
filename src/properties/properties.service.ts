@@ -4,7 +4,7 @@ import {
 	NotFoundException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
-import { I18nService } from 'nestjs-i18n'
+import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaErrors, PrismaService } from 'src/shared/prisma'
 
@@ -24,7 +24,9 @@ export class PropertiesService {
 				e.code === PrismaErrors.UniqueConstraintViolated
 			) {
 				throw new ConflictException(
-					this.i18n.t('exceptions.property.NameExists', { args: { name } }),
+					this.i18n.t('exceptions.property.Exists', {
+						lang: I18nContext.current().lang,
+					}),
 				)
 			}
 		}
@@ -70,7 +72,9 @@ export class PropertiesService {
 				e.code === PrismaErrors.RecordDoesNotExist
 			) {
 				throw new NotFoundException(
-					this.i18n.t('exceptions.property.NotFound', { args: { id } }),
+					this.i18n.t('exceptions.property.NotFound', {
+						lang: I18nContext.current().lang,
+					}),
 				)
 			}
 		}

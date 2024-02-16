@@ -5,7 +5,7 @@ import {
 	NotFoundException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
-import { I18nService } from 'nestjs-i18n'
+import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaErrors, PrismaService } from 'src/shared/prisma'
 
@@ -20,7 +20,7 @@ export class MethodsService {
 
 	async create(name: string, parameters: MethodParametersData[]) {
 		try {
-			await this.prisma.method.create({
+			return await this.prisma.method.create({
 				data: {
 					name,
 					parameters: {
@@ -35,12 +35,16 @@ export class MethodsService {
 			if (e instanceof Prisma.PrismaClientKnownRequestError) {
 				if (e.code === PrismaErrors.ForeignKeyConstraintViolated) {
 					return new BadRequestException(
-						this.i18n.t('exceptions.method.PropertyNotFound'),
+						this.i18n.t('exceptions.method.InvalidProperties', {
+							lang: I18nContext.current().lang,
+						}),
 					)
 				}
 				if (e.code === PrismaErrors.UniqueConstraintViolated) {
 					return new ConflictException(
-						this.i18n.t('exceptions.method.MethodExists', { args: { name } }),
+						this.i18n.t('exceptions.method.MethodExists', {
+							lang: I18nContext.current().lang,
+						}),
 					)
 				}
 			}
@@ -88,7 +92,11 @@ export class MethodsService {
 		})
 
 		if (!method) {
-			throw new NotFoundException(this.i18n.t('exceptions.method.NotFound'))
+			throw new NotFoundException(
+				this.i18n.t('exceptions.method.NotFound', {
+					lang: I18nContext.current().lang,
+				}),
+			)
 		}
 
 		return method

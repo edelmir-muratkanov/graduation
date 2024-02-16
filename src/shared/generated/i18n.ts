@@ -5,18 +5,17 @@ export type I18nTranslations = {
     "exceptions": {
         "user": {
             "EmailExists": string;
-            "NotFoundByEmail": string;
-            "NotFoundById": string;
-            "InvalidPassword": string;
+            "NotFound": string;
+            "InvalidCredentials": string;
             "Unauthorized": string;
             "Forbidden": string;
         };
         "property": {
-            "NameExists": string;
+            "Exists": string;
             "NotFound": string;
         };
         "method": {
-            "PropertyNotFound": string;
+            "InvalidProperties": string;
             "MethodExists": string;
             "NotFound": string;
         };

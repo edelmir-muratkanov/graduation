@@ -40,7 +40,6 @@ export class UsersService {
 				throw new ConflictException(
 					this.i18n.t('exceptions.user.EmailExists', {
 						lang: I18nContext.current().lang,
-						args: { email },
 					}),
 				)
 			}
@@ -54,9 +53,8 @@ export class UsersService {
 
 		if (!user) {
 			throw new NotFoundException(
-				this.i18n.t('exceptions.user.NotFoundByEmail', {
+				this.i18n.t('exceptions.user.NotFound', {
 					lang: I18nContext.current().lang,
-					args: { email },
 				}),
 			)
 		}
@@ -68,9 +66,8 @@ export class UsersService {
 		const user = await this.prisma.user.findUnique({ where: { id } })
 		if (!user) {
 			throw new NotFoundException(
-				this.i18n.t('exceptions.user.NotFoundById', {
+				this.i18n.t('exceptions.user.NotFound', {
 					lang: I18nContext.current().lang,
-					args: { id },
 				}),
 			)
 		}
