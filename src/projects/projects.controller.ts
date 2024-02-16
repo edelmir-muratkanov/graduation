@@ -1,8 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { Auth, Session } from 'src/shared/decorators'
+import { ApiPaginatedResponse, Auth, Session } from 'src/shared/decorators'
 
 import { CreateProjectRequest } from './dto/create-project.request'
+import { GetAllProjectsParams } from './dto/get-all-projects-params.request'
+import { ProjectsResponse } from './dto/projects.response'
 import { ProjectsService } from './projects.service'
 
 @ApiTags('projects')
@@ -23,6 +25,20 @@ export class ProjectsController {
 			request.methodIds,
 			request.parameters,
 			userId,
+		)
+	}
+
+	@Get()
+	@ApiPaginatedResponse(ProjectsResponse)
+	async getAll(
+		@Query()
+		query: GetAllProjectsParams,
+	) {
+		return this.projectsService.getAll(
+			query.userId,
+			query.limit,
+			query.offset,
+			query.lastCursorId,
 		)
 	}
 }

@@ -67,4 +67,53 @@ export class ProjectsService {
 			}
 		}
 	}
+
+	async getAll(
+		userId?: string,
+		limit?: number,
+		offset?: number,
+		lastCursorId?: string,
+	) {
+		const [count, items] = await this.prisma.$transaction([
+			this.prisma.project.count({
+				where: {
+					users: {
+						some: {
+							userId,
+						},
+					},
+				},
+			}),
+			this.prisma.project.findMany({
+				where: {
+					users: {
+						some: {
+							userId,
+						},
+					},
+				},
+				include: {
+					_count: {
+						select: {
+							methods: true,
+							parameters: true,
+							users: true,
+						},
+					},
+				},
+				orderBy: { name: 'asc' },
+				take: limit,
+				...(lastCursorId
+					? {
+							skip: 1,
+							cursor: { id: lastCursorId },
+						}
+					: {
+							skip: offset,
+						}),
+			}),
+		])
+
+		return { count, items }
+	}
 }
