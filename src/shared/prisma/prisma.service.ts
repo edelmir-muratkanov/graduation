@@ -1,14 +1,47 @@
 import type { OnModuleDestroy, OnModuleInit } from '@nestjs/common'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
 
 @Injectable()
 export class PrismaService
-	extends PrismaClient
+	extends PrismaClient<Prisma.PrismaClientOptions, Prisma.LogLevel>
 	implements OnModuleInit, OnModuleDestroy
 {
+	private readonly logger = new Logger(PrismaService.name)
+
+	constructor() {
+		super({
+			log: [
+				{
+					emit: 'event',
+					level: 'query',
+				},
+				{
+					emit: 'event',
+					level: 'error',
+				},
+				{
+					emit: 'event',
+					level: 'info',
+				},
+				{
+					emit: 'event',
+					level: 'warn',
+				},
+			],
+		})
+	}
+
 	async onModuleInit() {
 		await this.$connect()
+
+		this.$on('query', ({ query, params }) =>
+			this.logger.log(`${query} --- Params: ${params}`),
+		)
+		this.$on('error', ({ message }) => this.logger.error(message))
+		this.$on('warn', ({ message }) => this.logger.warn(message))
+		this.$on('info', ({ message }) => this.logger.debug(message))
 	}
 
 	async onModuleDestroy() {

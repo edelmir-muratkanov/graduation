@@ -1,7 +1,6 @@
-import type { MiddlewareConsumer } from '@nestjs/common'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { APP_FILTER, APP_PIPE } from '@nestjs/core'
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import * as Joi from 'joi'
 import {
 	HeaderResolver,
@@ -16,8 +15,8 @@ import { AuthModule } from './auth/auth.module'
 import { MethodsModule } from './methods/methods.module'
 import { ProjectsModule } from './projects/projects.module'
 import { PropertiesModule } from './properties/properties.module'
-import { LoggingMiddleware } from './shared/middleware'
 import { PrismaModule } from './shared/prisma'
+import { LoggingInterceptor } from './shared/services'
 import { UsersModule } from './users/users.module'
 
 @Module({
@@ -71,10 +70,10 @@ import { UsersModule } from './users/users.module'
 			provide: APP_FILTER,
 			useValue: new I18nValidationExceptionFilter(),
 		},
+		{
+			provide: APP_INTERCEPTOR,
+			useValue: new LoggingInterceptor(),
+		},
 	],
 })
-export class AppModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(LoggingMiddleware).forRoutes('*')
-	}
-}
+export class AppModule {}
