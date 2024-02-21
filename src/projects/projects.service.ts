@@ -9,6 +9,8 @@ import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaErrors, PrismaService } from 'src/shared/prisma'
 
+import type { ProjectMethodParameter } from './dto/project.response'
+import { ProjectResponse } from './dto/project.response'
 import type {
 	CreateProjectMethodId,
 	CreateProjectParameters,
@@ -182,6 +184,20 @@ export class ProjectsService {
 			)
 		}
 
-		return project
+		const res = new ProjectResponse()
+
+		res.id = project.id
+		res.country = project.country
+		res.name = project.name
+		res.operator = project.operator
+		res.methods = project.methods.map(m => ({
+			id: m.method.id,
+			name: m.method.name,
+			parameters: m.method.parameters.map(p => p as ProjectMethodParameter),
+		}))
+		res.parameters = project.parameters
+		res.users = project.users.map(u => ({ id: u.user.id, email: u.user.email }))
+
+		return res
 	}
 }
