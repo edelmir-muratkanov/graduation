@@ -4,7 +4,7 @@ import {
 	ArrayNotEmpty,
 	IsArray,
 	IsDefined,
-	IsString,
+	IsNumber,
 	ValidateIf,
 	ValidateNested,
 } from 'class-validator'
@@ -17,9 +17,12 @@ export class ParameterDataDto {
 	@ValidateIf(o => !o.first && !o.second)
 	@IsArray({ message: validationMessage('validation.IsArray') })
 	@ArrayNotEmpty({ message: validationMessage('validation.NotEmpty') })
-	@IsString({ each: true, message: validationMessage('validation.IsString') })
-	@Transform(({ value }) => (value as string[]).map(v => v.trim()))
-	values?: string[]
+	@IsNumber(
+		{},
+		{ each: true, message: validationMessage('validation.IsNumber') },
+	)
+	@Transform(({ value }) => Number(value))
+	values?: number[]
 
 	@ApiPropertyOptional()
 	@ValidateIf(o => !o.values && !o.second)
