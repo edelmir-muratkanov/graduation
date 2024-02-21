@@ -39,7 +39,7 @@ import { UsersModule } from './users/users.module'
 				kz: 'kz',
 			},
 			loaderOptions: {
-				path: join(__dirname, '/shared/i18n/'),
+				path: join(process.cwd(), '/assets/i18n/'),
 				watch: true,
 			},
 			resolvers: [
@@ -49,7 +49,7 @@ import { UsersModule } from './users/users.module'
 				},
 				new HeaderResolver(['x-lang']),
 			],
-			typesOutputPath: join(__dirname, '../src/shared/generated/i18n.ts'),
+			typesOutputPath: join(process.cwd(), '/src/shared/generated/i18n.ts'),
 		}),
 		PrismaModule,
 		AuthModule,

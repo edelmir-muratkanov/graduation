@@ -4,7 +4,13 @@
 	"sourceRoot": "src",
 	"compilerOptions": {
 		"deleteOutDir": true,
-		"assets": [{ "include": "shared/i18n/**/*", "watchAssets": true }],
+		"assets": [
+			{
+				"include": "../assets",
+				"outDir": "dist/assets",
+				"watchAssets": true
+			}
+		],
 		"plugins": [
 			{
 				"name": "@nestjs/swagger",
