@@ -16,6 +16,8 @@ async function bootstrap() {
 
 	const app = await NestFactory.create(AppModule, { logger: logLevels })
 
+	app.setGlobalPrefix('api')
+
 	const config = new DocumentBuilder()
 		.setTitle('Graduation')
 		.setDescription('The Graduation API description')
@@ -32,11 +34,11 @@ async function bootstrap() {
 		.build()
 
 	const document = SwaggerModule.createDocument(app, config)
-	SwaggerModule.setup('api', app, document)
+	SwaggerModule.setup('api/docs', app, document)
 
 	await app.listen(port, () => {
-		logger.log(`Application started at http://localhost:${port}`)
-		logger.log(`Swagger started at http;//localhost:${port}/api`)
+		logger.log(`Application started at http://localhost:${port}/api`)
+		logger.log(`Swagger started at http;//localhost:${port}/api/docs`)
 	})
 }
 

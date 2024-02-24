@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import type { User } from '@prisma/client'
+import type { Users } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PasswordService } from 'src/shared/services'
@@ -57,7 +57,7 @@ export class AuthService {
 		}
 	}
 
-	async generateTokens(user: Partial<User>) {
+	async generateTokens(user: Partial<Users>) {
 		const [accessToken, refreshToken] = await Promise.all([
 			this.jwtService.signAsync(
 				{

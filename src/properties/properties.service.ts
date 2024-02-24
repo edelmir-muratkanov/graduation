@@ -17,7 +17,7 @@ export class PropertiesService {
 
 	async create(name: string) {
 		try {
-			return await this.prisma.property.create({ data: { name } })
+			return await this.prisma.properties.create({ data: { name } })
 		} catch (e) {
 			if (
 				e instanceof Prisma.PrismaClientKnownRequestError &&
@@ -34,8 +34,8 @@ export class PropertiesService {
 
 	async getAll(limit?: number, offset?: number, lastCursorId?: string) {
 		const [count, items] = await this.prisma.$transaction([
-			this.prisma.property.count(),
-			this.prisma.property.findMany({
+			this.prisma.properties.count(),
+			this.prisma.properties.findMany({
 				include: {
 					_count: {
 						select: {
@@ -62,7 +62,7 @@ export class PropertiesService {
 
 	async update(id: string, name: string) {
 		try {
-			await this.prisma.property.update({
+			await this.prisma.properties.update({
 				where: { id },
 				data: { name },
 			})

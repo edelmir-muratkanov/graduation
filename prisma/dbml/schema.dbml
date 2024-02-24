@@ -2,25 +2,25 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
-Table User {
+Table users {
   id String [pk]
   email String [unique, not null]
   passwordHash String [not null]
   role Role [not null, default: 'User']
-  projects ProjectOnUser [not null]
+  projects projects_users [not null]
 }
 
-Table Property {
+Table properties {
   id String [pk]
   name String [unique, not null]
-  methods MethodOnParameter [not null]
-  projects ProjectOnParameter [not null]
+  methods methods_properties [not null]
+  projects projects_properties [not null]
 }
 
-Table MethodOnParameter {
-  method Method [not null]
+Table methods_properties {
+  method methods [not null]
   methodId String [not null]
-  property Property [not null]
+  property properties [not null]
   propertyId String [not null]
   parameters Json [not null]
 
@@ -29,27 +29,27 @@ Table MethodOnParameter {
   }
 }
 
-Table Method {
+Table methods {
   id String [pk]
   name String [unique, not null]
-  parameters MethodOnParameter [not null]
-  projects ProjectOnMethod [not null]
+  parameters methods_properties [not null]
+  projects projects_methods [not null]
 }
 
-Table Project {
+Table projects {
   id String [pk]
   name String [not null]
   country String [not null]
   operator String [not null]
-  parameters ProjectOnParameter [not null]
-  methods ProjectOnMethod [not null]
-  users ProjectOnUser [not null]
+  parameters projects_properties [not null]
+  methods projects_methods [not null]
+  users projects_users [not null]
 }
 
-Table ProjectOnParameter {
-  project Project [not null]
+Table projects_properties {
+  project projects [not null]
   projectId String [not null]
-  property Property [not null]
+  property properties [not null]
   propertyId String [not null]
   value Float [not null]
 
@@ -58,10 +58,10 @@ Table ProjectOnParameter {
   }
 }
 
-Table ProjectOnMethod {
-  project Project [not null]
+Table projects_methods {
+  project projects [not null]
   projectId String [not null]
-  method Method [not null]
+  method methods [not null]
   methodId String [not null]
 
   indexes {
@@ -69,10 +69,10 @@ Table ProjectOnMethod {
   }
 }
 
-Table ProjectOnUser {
-  project Project [not null]
+Table projects_users {
+  project projects [not null]
   projectId String [not null]
-  user User [not null]
+  user users [not null]
   userId String [not null]
 
   indexes {
@@ -85,18 +85,18 @@ Enum Role {
   Admin
 }
 
-Ref: MethodOnParameter.methodId > Method.id
+Ref: methods_properties.methodId > methods.id
 
-Ref: MethodOnParameter.propertyId > Property.id
+Ref: methods_properties.propertyId > properties.id
 
-Ref: ProjectOnParameter.projectId > Project.id
+Ref: projects_properties.projectId > projects.id
 
-Ref: ProjectOnParameter.propertyId > Property.id
+Ref: projects_properties.propertyId > properties.id
 
-Ref: ProjectOnMethod.projectId > Project.id
+Ref: projects_methods.projectId > projects.id
 
-Ref: ProjectOnMethod.methodId > Method.id
+Ref: projects_methods.methodId > methods.id
 
-Ref: ProjectOnUser.projectId > Project.id
+Ref: projects_users.projectId > projects.id
 
-Ref: ProjectOnUser.userId > User.id
+Ref: projects_users.userId > users.id

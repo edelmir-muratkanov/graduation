@@ -20,7 +20,7 @@ export class MethodsService {
 
 	async create(name: string, parameters: MethodParametersData[]) {
 		try {
-			return await this.prisma.method.create({
+			return await this.prisma.methods.create({
 				data: {
 					name,
 					parameters: {
@@ -53,8 +53,8 @@ export class MethodsService {
 
 	async getAll(limit?: number, offset?: number, lastCursorId?: string) {
 		const [count, items] = await this.prisma.$transaction([
-			this.prisma.method.count(),
-			this.prisma.method.findMany({
+			this.prisma.methods.count(),
+			this.prisma.methods.findMany({
 				include: {
 					_count: {
 						select: {
@@ -79,7 +79,7 @@ export class MethodsService {
 	}
 
 	async getById(id: string) {
-		const method = await this.prisma.method.findUnique({
+		const method = await this.prisma.methods.findUnique({
 			where: { id },
 			include: {
 				parameters: {

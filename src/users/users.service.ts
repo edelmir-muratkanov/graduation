@@ -21,7 +21,7 @@ export class UsersService {
 		const hashedPassword = await this.passwordService.hashPassword(password)
 
 		try {
-			return await this.prisma.user.create({
+			return await this.prisma.users.create({
 				data: {
 					email,
 					passwordHash: hashedPassword,
@@ -49,7 +49,7 @@ export class UsersService {
 	}
 
 	async findByEmail(email: string) {
-		const user = await this.prisma.user.findUnique({ where: { email } })
+		const user = await this.prisma.users.findUnique({ where: { email } })
 
 		if (!user) {
 			throw new NotFoundException(
@@ -63,7 +63,7 @@ export class UsersService {
 	}
 
 	async findById(id: string) {
-		const user = await this.prisma.user.findUnique({ where: { id } })
+		const user = await this.prisma.users.findUnique({ where: { id } })
 		if (!user) {
 			throw new NotFoundException(
 				this.i18n.t('exceptions.user.NotFound', {

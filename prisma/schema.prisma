@@ -19,76 +19,89 @@ enum Role {
   Admin
 }
 
-model User {
+model Users {
   id           String          @id @default(cuid())
   email        String          @unique
   passwordHash String
   role         Role            @default(User)
-  projects     ProjectOnUser[]
+  projects     ProjectsUsers[]
+
+  @@map("users")
 }
 
-model Property {
+model Properties {
   id       String               @id @default(cuid())
   name     String               @unique
-  methods  MethodOnParameter[]
-  projects ProjectOnParameter[]
+  methods  MethodsProperties[]
+  projects ProjectsProperties[]
+
+  @@map("properties")
 }
 
-model MethodOnParameter {
-  method     Method   @relation(fields: [methodId], references: [id])
+model MethodsProperties {
+  method     Methods    @relation(fields: [methodId], references: [id])
   methodId   String
-  property   Property @relation(fields: [propertyId], references: [id])
+  property   Properties @relation(fields: [propertyId], references: [id])
   propertyId String
 
   parameters Json
 
   @@id([methodId, propertyId])
+  @@map("methods_properties")
 }
 
-model Method {
+model Methods {
   id         String              @id @default(cuid())
   name       String              @unique
-  parameters MethodOnParameter[]
-  projects   ProjectOnMethod[]
+  parameters MethodsProperties[]
+  projects   ProjectsMethods[]
+
+  @@map("methods")
 }
 
-model Project {
+model Projects {
   id         String               @id @default(cuid())
   name       String
   country    String
   operator   String
-  parameters ProjectOnParameter[]
-  methods    ProjectOnMethod[]
-  users      ProjectOnUser[]
+  parameters ProjectsProperties[]
+  methods    ProjectsMethods[]
+  users      ProjectsUsers[]
+
+  @@map("projects")
 }
 
-model ProjectOnParameter {
-  project   Project @relation(fields: [projectId], references: [id])
+model ProjectsProperties {
+  project   Projects @relation(fields: [projectId], references: [id])
   projectId String
 
-  property   Property @relation(fields: [propertyId], references: [id])
+  property   Properties @relation(fields: [propertyId], references: [id])
   propertyId String
 
   value Float
 
   @@id([projectId, propertyId])
+  @@index([propertyId, projectId])
+  @@map("projects_properties")
 }
 
-model ProjectOnMethod {
-  project   Project @relation(fields: [projectId], references: [id])
+model ProjectsMethods {
+  project   Projects @relation(fields: [projectId], references: [id])
   projectId String
 
-  method   Method @relation(fields: [methodId], references: [id])
+  method   Methods @relation(fields: [methodId], references: [id])
   methodId String
 
   @@id([methodId, projectId])
+  @@map("projects_methods")
 }
 
-model ProjectOnUser {
-  project   Project @relation(fields: [projectId], references: [id])
+model ProjectsUsers {
+  project   Projects @relation(fields: [projectId], references: [id])
   projectId String
-  user      User    @relation(fields: [userId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id])
   userId    String
 
   @@id([userId, projectId])
+  @@map("projects_users")
 }

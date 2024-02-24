@@ -32,7 +32,7 @@ export class ProjectsService {
 		userId: string,
 	) {
 		try {
-			return await this.prisma.project.create({
+			return await this.prisma.projects.create({
 				data: {
 					name,
 					country,
@@ -84,7 +84,7 @@ export class ProjectsService {
 		lastCursorId?: string,
 	) {
 		const [count, items] = await this.prisma.$transaction([
-			this.prisma.project.count({
+			this.prisma.projects.count({
 				where: {
 					users: {
 						some: {
@@ -93,7 +93,7 @@ export class ProjectsService {
 					},
 				},
 			}),
-			this.prisma.project.findMany({
+			this.prisma.projects.findMany({
 				where: {
 					users: {
 						some: {
@@ -127,7 +127,7 @@ export class ProjectsService {
 	}
 
 	async getById(id: string) {
-		const project = await this.prisma.project.findUnique({
+		const project = await this.prisma.projects.findUnique({
 			where: {
 				id,
 			},

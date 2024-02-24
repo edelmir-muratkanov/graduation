@@ -1,8 +1,8 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger'
-import type { User } from '@prisma/client'
+import type { Users } from '@prisma/client'
 import { Role } from '@prisma/client'
 
-export class UserEntity implements User {
+export class UserEntity implements Users {
 	id: string
 
 	email: string

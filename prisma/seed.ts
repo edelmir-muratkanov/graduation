@@ -8,7 +8,7 @@ const prisma = new PrismaClient()
 
 async function main() {
 	/** Users */
-	const user = await prisma.user.create({
+	const user = await prisma.users.create({
 		data: {
 			email: 'admin@gmail.com',
 			passwordHash: await hash('123456', 10),
@@ -17,44 +17,48 @@ async function main() {
 	})
 
 	/** Properties */
-	const p1 = await prisma.property.create({ data: { name: 'Тип коллектора' } })
-	const p2 = await prisma.property.create({
+	const p1 = await prisma.properties.create({
+		data: { name: 'Тип коллектора' },
+	})
+	const p2 = await prisma.properties.create({
 		data: { name: 'Средняя глубина залегания' },
 	})
-	const p3 = await prisma.property.create({ data: { name: 'Толщина пласта' } })
-	const p4 = await prisma.property.create({ data: { name: 'Пористость' } })
-	const p5 = await prisma.property.create({
+	const p3 = await prisma.properties.create({
+		data: { name: 'Толщина пласта' },
+	})
+	const p4 = await prisma.properties.create({ data: { name: 'Пористость' } })
+	const p5 = await prisma.properties.create({
 		data: { name: 'Средняя нефтенасыщенность' },
 	})
-	const p6 = await prisma.property.create({
+	const p6 = await prisma.properties.create({
 		data: { name: 'Проницаемость' },
 	})
-	const p7 = await prisma.property.create({
+	const p7 = await prisma.properties.create({
 		data: { name: 'Пластовая температура' },
 	})
-	const p8 = await prisma.property.create({
+	const p8 = await prisma.properties.create({
 		data: { name: 'Давление насыщения нефти газом' },
 	})
-	const p9 = await prisma.property.create({
+	const p9 = await prisma.properties.create({
 		data: { name: 'Газосодержание' },
 	})
-	const p10 = await prisma.property.create({
+	const p10 = await prisma.properties.create({
 		data: { name: 'Средняя продуктивность' },
 	})
-	const p11 = await prisma.property.create({
+	const p11 = await prisma.properties.create({
 		data: { name: 'Вязкость нефти' },
 	})
-	const p12 = await prisma.property.create({
+	const p12 = await prisma.properties.create({
 		data: { name: 'Плотность нефти' },
 	})
-	const p13 = await prisma.property.create({
+	const p13 = await prisma.properties.create({
 		data: { name: 'Объемный коэффициент нефти' },
 	})
-	const p14 = await prisma.property.create({
+	const p14 = await prisma.properties.create({
 		data: { name: 'Плотность пластовой воды' },
 	})
 
-	const method = await prisma.method.create({
+	const method = await prisma.methods.create({
 		data: {
 			name: 'Закачка СО2',
 			parameters: {
@@ -118,7 +122,7 @@ async function main() {
 	})
 
 	/** Projects */
-	await prisma.project.create({
+	await prisma.projects.create({
 		data: {
 			name: 'Бурмаша',
 			country: 'Казахстан',
