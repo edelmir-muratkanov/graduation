@@ -23,6 +23,7 @@ module.exports = {
 				'@typescript-eslint/no-redundant-type-constituents': 'off',
 				'max-classes-per-file': 'off',
 				'promise/always-return': ['error', { ignoreLastCallback: true }],
+				'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
 			},
 		},
 	],

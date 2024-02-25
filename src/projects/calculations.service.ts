@@ -1,19 +1,9 @@
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/shared/prisma'
 
+import type { GetParams } from './projects.interface'
 import { ProjectsService } from './projects.service'
-
-type Group = {
-	x: number
-	xMin: number
-	xMax: number
-}
-
-type GetParamsFnRes = {
-	paramname: string
-	methodparams: { values: number[] } | { first?: Group; second?: Group }
-	projectparams: number
-}
 
 @Injectable()
 export class CalculationsService {
@@ -27,24 +17,18 @@ export class CalculationsService {
 
 		const res = await Promise.all(
 			methods.map(async method => {
-				const params = await this.prisma.$queryRaw<
-					GetParamsFnRes[]
-				>`SELECT * FROM get_params(${id}, ${method.id})`
+				const params = await this.getParams(id, method.id)
 
-				const paramsRatios = await Promise.all(
-					params.map(async param => {
-						const ratio = await this.calculatePerParam(param)
+				const paramsRatios = params.map(param => {
+					const ratio = this.calculateParamRatio(param)
 
-						return {
-							ratio,
-							name: param.paramname,
-						}
-					}),
-				)
+					return {
+						ratio,
+						name: param.paramname,
+					}
+				})
 
-				const totalRatio =
-					(1 / params.length) *
-					paramsRatios.reduce((sum, paramsRatio) => sum + paramsRatio.ratio, 0)
+				const totalRatio = this.calculateTotalRatio(params.length, paramsRatios)
 
 				return {
 					name: method.name,
@@ -57,79 +41,94 @@ export class CalculationsService {
 		return res
 	}
 
-	async calculatePerParam(param: GetParamsFnRes): Promise<number> {
-		const { methodparams: methodParams, projectparams: x } = param
+	async getParams(projectId: string, methodId: string): Promise<GetParams[]> {
+		const query = Prisma.sql`SELECT * FROM get_params(${projectId}, ${methodId})`
 
-		if ('values' in methodParams) {
-			return methodParams.values.includes(x) ? 1 : -1
+		return this.prisma.$queryRaw<GetParams[]>(query)
+	}
+
+	calculateParamRatio(param: GetParams): number {
+		const { methodparams, projectparams } = param
+
+		if (projectparams === null) {
+			return -1
 		}
 
-		const { first, second } = methodParams
+		if ('values' in methodparams) {
+			return methodparams.values.includes(projectparams) ? 1 : -1
+		}
 
-		if (first && second) {
-			if (x <= first.xMin) {
+		const { first, second } = methodparams
+
+		const calculateHelper = (params, index) => {
+			if (projectparams <= params.xMin) {
 				return -1
 			}
 
-			if (x <= first.xMax) {
+			if (projectparams <= params.xMax) {
 				return (
 					(1 +
-						(((first.xMax - first.x) / (first.x - first.xMin)) ** 2 *
-							((x - first.xMin) / (first.xMax - x)) ** 2) **
-							((-1) ** 1)) **
+						((params.xMax - params.x) / (params.x - params.xMin)) ** 2 *
+							((projectparams - params.xMin) / (params.xMax - projectparams)) **
+								2 *
+							(-1) ** index) *
 					-1
 				)
 			}
 
-			if (x <= second.xMin) {
+			return 1
+		}
+
+		if (first && second) {
+			if (projectparams <= first.xMin) {
+				return -1
+			}
+
+			if (projectparams <= first.xMax) {
+				return calculateHelper(first, 1)
+			}
+
+			if (projectparams <= second.xMin) {
 				return 1
 			}
 
-			if (x <= second.xMax) {
-				return (
-					(1 +
-						(((second.xMax - second.x) / (second.x - second.xMin)) ** 2 *
-							((x - second.xMin) / (second.xMax - x)) ** 2) **
-							((-1) ** 2)) **
-					-1
-				)
+			if (projectparams <= second.xMax) {
+				return calculateHelper(second, 2)
 			}
 
 			return -1
 		}
 
 		if (first) {
-			if (x <= first.xMin) {
+			if (projectparams <= first.xMin) {
 				return -1
 			}
 
-			if (x <= first.xMax) {
-				return (
-					(1 *
-						(((first.xMax - first.x) / (first.x - first.xMin)) ** 2 *
-							((x - first.xMin) / (first.xMax - x)) ** 2) **
-							((-1) ** 1)) **
-					-1
-				)
+			if (projectparams <= first.xMax) {
+				return calculateHelper(first, 1)
 			}
 
 			return 1
 		}
 
 		if (second) {
-			if (x <= second.xMin) return -1
+			if (projectparams <= second.xMin) return -1
 
-			if (x <= second.xMax) {
-				return (
-					(1 +
-						(((second.xMax - second.x) / (second.x - second.xMin)) ** 2 *
-							((x - second.xMin) / (second.xMax - x)) ** 2) **
-							((-1) ** 2)) **
-					-1
-				)
+			if (projectparams <= second.xMax) {
+				return calculateHelper(second, 2)
 			}
 
 			return 1
 		}
+	}
+
+	calculateTotalRatio(
+		paramsCount: number,
+		paramsRatios: { ratio: number; name: string }[],
+	): number {
+		return (
+			(1 / paramsCount) *
+			paramsRatios.reduce((sum, paramsRatio) => sum + paramsRatio.ratio, 0)
+		)
 	}
 }
