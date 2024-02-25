@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
+import { I18nContext, I18nService } from 'nestjs-i18n'
+import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaService } from 'src/shared/prisma'
 
 import type { GetParams } from './projects.interface'
@@ -10,6 +12,7 @@ export class CalculationsService {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly projectsService: ProjectsService,
+		private readonly i18n: I18nService<I18nTranslations>,
 	) {}
 
 	async calculate(projectId: string) {
@@ -32,6 +35,7 @@ export class CalculationsService {
 
 				return {
 					name: method.name,
+					result: this.getResult(totalRatio),
 					totalRatio,
 					paramsRatios,
 				}
@@ -45,6 +49,24 @@ export class CalculationsService {
 		const query = Prisma.sql`SELECT * FROM get_params(${projectId}, ${methodId})`
 
 		return this.prisma.$queryRaw<GetParams[]>(query)
+	}
+
+	getResult(totalRatio: number) {
+		const { lang } = I18nContext.current()
+
+		if (totalRatio < -0.75)
+			return this.i18n.t('results.calculations.NotApplicable', { lang })
+
+		if (totalRatio < -0.25)
+			return this.i18n.t('results.calculations.NotSuitable', { lang })
+
+		if (totalRatio < 0.25)
+			return this.i18n.t('results.calculations.LowEffieciency', { lang })
+
+		if (totalRatio < 0.75)
+			return this.i18n.t('results.calculations.Applicable', { lang })
+
+		return this.i18n.t('results.calculations.Favorable', { lang })
 	}
 
 	calculateParamRatio(param: GetParams): number {

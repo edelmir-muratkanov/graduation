@@ -7,6 +7,8 @@ export class ParamsRatio {
 export class CalculationsResponse {
 	name: string
 
+	result: string
+
 	totalRatio: number
 
 	paramsRations: ParamsRatio[]

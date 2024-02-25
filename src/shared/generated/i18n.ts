@@ -28,6 +28,15 @@ export type I18nTranslations = {
             "NotFound": string;
         };
     };
+    "results": {
+        "calculations": {
+            "NotApplicable": string;
+            "NotSuitable": string;
+            "LowEffieciency": string;
+            "Applicable": string;
+            "Favorable": string;
+        };
+    };
     "validation": {
         "IsEmail": string;
         "IsString": string;
