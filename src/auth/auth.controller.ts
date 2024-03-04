@@ -1,5 +1,15 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
+import {
+	Body,
+	Controller,
+	Get,
+	HttpCode,
+	HttpStatus,
+	Post,
+} from '@nestjs/common'
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import { Users } from '@prisma/client'
+import { Auth, Session } from 'src/shared/decorators'
+import { UserResponse } from 'src/users/dto'
 
 import { AuthRequest } from './dto/auth.request'
 import { AuthResponse } from './dto/auth.response'
@@ -21,5 +31,16 @@ export class AuthController {
 	@ApiOkResponse({ type: AuthResponse })
 	async login(@Body() request: AuthRequest) {
 		return this.authService.login(request.email, request.password)
+	}
+
+	@Get('profile')
+	@Auth()
+	@ApiOkResponse({ type: UserResponse })
+	async getProfile(@Session() session: Users) {
+		return {
+			id: session.id,
+			email: session.email,
+			role: session.role,
+		}
 	}
 }
