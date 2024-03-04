@@ -1,2 +1,2 @@
+export * from './hash.service'
 export * from './logging.interceptor'
-export * from './password.service'

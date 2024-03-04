@@ -9,8 +9,13 @@ export class UserEntity implements Users {
 
 	passwordHash: string
 
+	refreshTokenHash: string
+
 	@ApiProperty({ name: 'role', enum: Role, default: Role.User })
 	role: Role
 }
 
-export class UserResponse extends OmitType(UserEntity, ['passwordHash']) {}
+export class UserResponse extends OmitType(UserEntity, [
+	'passwordHash',
+	'refreshTokenHash',
+]) {}

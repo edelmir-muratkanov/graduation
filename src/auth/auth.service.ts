@@ -3,14 +3,14 @@ import { JwtService } from '@nestjs/jwt'
 import type { Users } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
-import { PasswordService } from 'src/shared/services'
+import { HashService } from 'src/shared/services'
 import { UsersService } from 'src/users/users.service'
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private readonly jwtService: JwtService,
-		private readonly passwordService: PasswordService,
+		private readonly hashService: HashService,
 		private readonly usersService: UsersService,
 		private readonly i18n: I18nService<I18nTranslations>,
 	) {}
@@ -24,7 +24,7 @@ export class AuthService {
 
 	async login(email: string, password: string) {
 		const user = await this.usersService.findByEmail(email)
-		const passwordValid = await this.passwordService.comparePasswords(
+		const passwordValid = await this.hashService.compareData(
 			password,
 			user.passwordHash,
 		)

@@ -7,18 +7,18 @@ import { Prisma } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaService } from 'src/shared/prisma'
-import { PasswordService } from 'src/shared/services'
+import { HashService } from 'src/shared/services'
 
 @Injectable()
 export class UsersService {
 	constructor(
 		private readonly prisma: PrismaService,
-		private readonly passwordService: PasswordService,
+		private readonly hashService: HashService,
 		private readonly i18n: I18nService<I18nTranslations>,
 	) {}
 
 	async createUser(email: string, password: string) {
-		const hashedPassword = await this.passwordService.hashPassword(password)
+		const hashedPassword = await this.hashService.hash(password)
 
 		try {
 			return await this.prisma.users.create({
