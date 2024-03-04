@@ -6,6 +6,7 @@ Table users {
   id String [pk]
   email String [unique, not null]
   passwordHash String [not null]
+  refreshTokenHash String
   role Role [not null, default: 'User']
   projects projects_users [not null]
 }

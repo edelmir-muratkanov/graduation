@@ -20,11 +20,12 @@ enum Role {
 }
 
 model Users {
-  id           String          @id @default(cuid())
-  email        String          @unique
-  passwordHash String
-  role         Role            @default(User)
-  projects     ProjectsUsers[]
+  id               String          @id @default(cuid())
+  email            String          @unique
+  passwordHash     String
+  refreshTokenHash String?
+  role             Role            @default(User)
+  projects         ProjectsUsers[]
 
   @@map("users")
 }

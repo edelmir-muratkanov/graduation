@@ -2,6 +2,7 @@ import type { LogLevel } from '@nestjs/common'
 import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import cookieParser from 'cookie-parser'
 
 import { AppModule } from './app.module'
 
@@ -17,6 +18,7 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule, { logger: logLevels })
 
 	app.setGlobalPrefix('api')
+	app.use(cookieParser())
 
 	const config = new DocumentBuilder()
 		.setTitle('Graduation')
