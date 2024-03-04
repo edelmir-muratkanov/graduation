@@ -74,4 +74,25 @@ export class UsersService {
 
 		return user
 	}
+
+	async updateRefreshToken(userId: string, refreshToken: string | null) {
+		const user = await this.findById(userId)
+
+		if (refreshToken) {
+			const hashed = await this.hashService.hash(refreshToken)
+			return this.prisma.users.update({
+				where: { id: user.id },
+				data: { refreshTokenHash: hashed },
+			})
+		}
+
+		return this.prisma.users.update({
+			where: {
+				id: user.id,
+			},
+			data: {
+				refreshTokenHash: refreshToken,
+			},
+		})
+	}
 }

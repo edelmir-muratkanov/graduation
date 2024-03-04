@@ -17,9 +17,11 @@ export class AuthService {
 
 	async register(email: string, password: string) {
 		const user = await this.usersService.createUser(email, password)
-		const { accessToken } = await this.generateTokens(user)
+		const { accessToken, refreshToken } = await this.generateTokens(user)
 
-		return { accessToken }
+		await this.usersService.updateRefreshToken(user.id, refreshToken)
+
+		return { accessToken, refreshToken }
 	}
 
 	async login(email: string, password: string) {
@@ -37,9 +39,11 @@ export class AuthService {
 			)
 		}
 
-		const { accessToken } = await this.generateTokens(user)
+		const { accessToken, refreshToken } = await this.generateTokens(user)
 
-		return { accessToken }
+		await this.usersService.updateRefreshToken(user.id, refreshToken)
+
+		return { accessToken, refreshToken }
 	}
 
 	async validateUser(userId: string) {
