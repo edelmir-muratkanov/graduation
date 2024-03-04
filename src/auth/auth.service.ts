@@ -1,10 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+	BadRequestException,
+	Injectable,
+	UnauthorizedException,
+} from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import type { Users } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { HashService } from 'src/shared/services'
 import { UsersService } from 'src/users/users.service'
+
+import type { JwtDto } from './dto'
 
 @Injectable()
 export class AuthService {
@@ -15,13 +21,39 @@ export class AuthService {
 		private readonly i18n: I18nService<I18nTranslations>,
 	) {}
 
+	async refreshTokens(refreshToken?: string) {
+		if (!refreshToken) {
+			throw new UnauthorizedException(
+				this.i18n.t('exceptions.user.Unauthorized', {
+					lang: I18nContext.current().lang,
+				}),
+			)
+		}
+		try {
+			const data: JwtDto = await this.jwtService.verifyAsync(refreshToken, {
+				secret: process.env.REFRESH_TOKEN_SECRET,
+			})
+			const tokens = await this.generateTokens(data)
+
+			await this.usersService.updateRefreshToken(data.id, tokens.refreshToken)
+
+			return tokens
+		} catch (e) {
+			throw new UnauthorizedException(
+				this.i18n.t('exceptions.user.Unauthorized', {
+					lang: I18nContext.current().lang,
+				}),
+			)
+		}
+	}
+
 	async register(email: string, password: string) {
 		const user = await this.usersService.createUser(email, password)
-		const { accessToken, refreshToken } = await this.generateTokens(user)
+		const tokens = await this.generateTokens(user)
 
-		await this.usersService.updateRefreshToken(user.id, refreshToken)
+		await this.usersService.updateRefreshToken(user.id, tokens.refreshToken)
 
-		return { accessToken, refreshToken }
+		return tokens
 	}
 
 	async login(email: string, password: string) {
@@ -39,16 +71,31 @@ export class AuthService {
 			)
 		}
 
-		const { accessToken, refreshToken } = await this.generateTokens(user)
+		const tokens = await this.generateTokens(user)
 
-		await this.usersService.updateRefreshToken(user.id, refreshToken)
+		await this.usersService.updateRefreshToken(user.id, tokens.refreshToken)
 
-		return { accessToken, refreshToken }
+		return tokens
 	}
 
 	async validateUser(userId: string) {
 		try {
 			return await this.usersService.findById(userId)
+		} catch (e) {
+			return this.i18n.t('exceptions.user.NotFound', {
+				lang: I18nContext.current().lang,
+			})
+		}
+	}
+
+	async validateUserByRefreshToken(userId: string, refreshToken: string) {
+		try {
+			const user = await this.usersService.findById(userId)
+			const isTokenMatching = await this.hashService.compareData(
+				refreshToken,
+				user.refreshTokenHash,
+			)
+			if (isTokenMatching) return user
 		} catch (e) {
 			return this.i18n.t('exceptions.user.NotFound', {
 				lang: I18nContext.current().lang,

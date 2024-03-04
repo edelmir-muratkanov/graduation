@@ -5,11 +5,12 @@ import {
 	HttpCode,
 	HttpStatus,
 	Post,
+	Req,
 	Res,
 } from '@nestjs/common'
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { Users } from '@prisma/client'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import ms from 'ms'
 import { Auth, Session } from 'src/shared/decorators'
 import { UserResponse } from 'src/users/dto'
@@ -33,7 +34,7 @@ export class AuthController {
 			request.email,
 			request.password,
 		)
-		const maxAge = ms(process.env.ACCESS_TOKEN_EXPIRATION)
+		const maxAge = ms(process.env.REFRESH_TOKEN_EXPIRATION)
 
 		res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge })
 
@@ -52,7 +53,7 @@ export class AuthController {
 			request.password,
 		)
 
-		const maxAge = ms(process.env.ACCESS_TOKEN_EXPIRATION)
+		const maxAge = ms(process.env.REFRESH_TOKEN_EXPIRATION)
 
 		res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge })
 
@@ -68,5 +69,23 @@ export class AuthController {
 			email: session.email,
 			role: session.role,
 		}
+	}
+
+	@Post('refresh')
+	@ApiOkResponse({ type: AuthResponse })
+	async refreshTokens(
+		@Req() req: Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const oldRefreshToken = req.cookies?.refreshToken
+
+		const { accessToken, refreshToken } =
+			await this.authService.refreshTokens(oldRefreshToken)
+
+		const maxAge = ms(process.env.REFRESH_TOKEN_EXPIRATION)
+
+		res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge })
+
+		return { accessToken }
 	}
 }
