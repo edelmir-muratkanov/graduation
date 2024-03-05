@@ -14,7 +14,10 @@ export default defineConfig(({ mode }) => {
     server: {
       port: APP_PORT,
       proxy: {
-        '/api': API_URL,
+        '/api': {
+          target: API_URL,
+          rewrite: path => path.replace(/^\/api/, ''),
+        },
       },
     },
 
