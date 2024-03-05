@@ -4,6 +4,8 @@ import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
+import { getProfile } from './lib/api'
+import { STORAGE_KEYS } from './lib/constants'
 import { App } from './app'
 import type { ProvidersProps } from './providers'
 import { Providers } from './providers'
@@ -34,7 +36,8 @@ const queryClient = new QueryClient({
   }),
 })
 
-const init = () => {
+const init = async () => {
+  const token = localStorage.getItem(STORAGE_KEYS.AccessToken)
   const providerProps: Omit<ProvidersProps, 'children'> = {
     profile: {
       defaultUser: undefined,
@@ -42,6 +45,15 @@ const init = () => {
     query: {
       client: queryClient,
     },
+  }
+
+  if (token) {
+    const getProfileQuery = await queryClient.fetchQuery({
+      queryKey: ['getProfile'],
+      queryFn: () => getProfile(),
+    })
+
+    providerProps.profile.defaultUser = getProfileQuery.data
   }
 
   root.render(
