@@ -107,4 +107,19 @@ export class AuthController {
 
 		return { token: tokens.accessToken }
 	}
+
+	@Auth()
+	@Post('logout')
+	async logout(@Res({ passthrough: true }) res: Response) {
+		const maxAges = this.authService.getTokensExpiration()
+
+		res.clearCookie(COOKIE.AccessToken, {
+			maxAge: maxAges.accessTokenMaxAge,
+			httpOnly: true,
+		})
+		res.clearCookie(COOKIE.RefreshToken, {
+			maxAge: maxAges.refreshTokenMaxAge,
+			httpOnly: true,
+		})
+	}
 }
