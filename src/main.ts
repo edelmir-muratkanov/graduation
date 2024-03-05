@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
 
+import { COOKIE } from './auth/auth.constants'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
@@ -24,7 +25,11 @@ async function bootstrap() {
 		.setTitle('Graduation')
 		.setDescription('The Graduation API description')
 		.setVersion('0.1')
-		.addBearerAuth()
+		.addCookieAuth(COOKIE.AccessToken, {
+			type: 'http',
+			in: 'Cookie',
+			scheme: 'Bearer',
+		})
 		.addGlobalParameters({
 			in: 'query',
 			name: 'lang',
@@ -36,7 +41,11 @@ async function bootstrap() {
 		.build()
 
 	const document = SwaggerModule.createDocument(app, config)
-	SwaggerModule.setup('api/docs', app, document)
+	SwaggerModule.setup('api/docs', app, document, {
+		swaggerOptions: {
+			withCredentials: true,
+		},
+	})
 
 	await app.listen(port, () => {
 		logger.log(`Application started at http://localhost:${port}/api`)

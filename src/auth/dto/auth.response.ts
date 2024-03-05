@@ -1,3 +1,7 @@
+import type { UserResponse } from 'src/users/dto'
+
 export class AuthResponse {
-	accessToken: string
+	token: string
+
+	user: UserResponse
 }

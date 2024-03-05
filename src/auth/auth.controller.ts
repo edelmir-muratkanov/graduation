@@ -11,12 +11,12 @@ import {
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { Users } from '@prisma/client'
 import { Request, Response } from 'express'
-import ms from 'ms'
 import { Auth, Session } from 'src/shared/decorators'
 import { UserResponse } from 'src/users/dto'
 
 import { AuthRequest } from './dto/auth.request'
 import { AuthResponse } from './dto/auth.response'
+import { COOKIE } from './auth.constants'
 import { AuthService } from './auth.service'
 
 @ApiTags('auth')
@@ -30,15 +30,22 @@ export class AuthController {
 		@Body() request: AuthRequest,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		const { accessToken, refreshToken } = await this.authService.register(
+		const { tokens, user, maxAges } = await this.authService.register(
 			request.email,
 			request.password,
 		)
-		const maxAge = ms(process.env.REFRESH_TOKEN_EXPIRATION)
 
-		res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge })
+		res.cookie(COOKIE.RefreshToken, tokens.refreshToken, {
+			httpOnly: true,
+			maxAge: maxAges.refreshTokenMaxAge,
+		})
 
-		return { accessToken }
+		res.cookie(COOKIE.AccessToken, tokens.accessToken, {
+			httpOnly: true,
+			maxAge: maxAges.accessTokenMaxAge,
+		})
+
+		return { user, token: tokens.accessToken }
 	}
 
 	@Post('login')
@@ -48,16 +55,22 @@ export class AuthController {
 		@Body() request: AuthRequest,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		const { accessToken, refreshToken } = await this.authService.login(
+		const { tokens, user, maxAges } = await this.authService.login(
 			request.email,
 			request.password,
 		)
 
-		const maxAge = ms(process.env.REFRESH_TOKEN_EXPIRATION)
+		res.cookie(COOKIE.RefreshToken, tokens.refreshToken, {
+			httpOnly: true,
+			maxAge: maxAges.refreshTokenMaxAge,
+		})
 
-		res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge })
+		res.cookie(COOKIE.AccessToken, tokens.accessToken, {
+			httpOnly: true,
+			maxAge: maxAges.accessTokenMaxAge,
+		})
 
-		return { accessToken }
+		return { user, token: tokens.accessToken }
 	}
 
 	@Get('profile')
@@ -77,15 +90,21 @@ export class AuthController {
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		const oldRefreshToken = req.cookies?.refreshToken
+		const oldRefreshToken = req.cookies[COOKIE.RefreshToken]
 
-		const { accessToken, refreshToken } =
+		const { tokens, maxAges } =
 			await this.authService.refreshTokens(oldRefreshToken)
 
-		const maxAge = ms(process.env.REFRESH_TOKEN_EXPIRATION)
+		res.cookie(COOKIE.RefreshToken, tokens.refreshToken, {
+			httpOnly: true,
+			maxAge: maxAges.refreshTokenMaxAge,
+		})
 
-		res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge })
+		res.cookie(COOKIE.AccessToken, tokens.accessToken, {
+			httpOnly: true,
+			maxAge: maxAges.accessTokenMaxAge,
+		})
 
-		return { accessToken }
+		return { token: tokens.accessToken }
 	}
 }

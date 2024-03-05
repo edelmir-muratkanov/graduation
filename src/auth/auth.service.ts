@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import type { Users } from '@prisma/client'
+import ms from 'ms'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { HashService } from 'src/shared/services'
@@ -36,8 +37,9 @@ export class AuthService {
 			const tokens = await this.generateTokens(data)
 
 			await this.usersService.updateRefreshToken(data.id, tokens.refreshToken)
+			const maxAges = this.getTokensExpiration()
 
-			return tokens
+			return { tokens, maxAges }
 		} catch (e) {
 			throw new UnauthorizedException(
 				this.i18n.t('exceptions.user.Unauthorized', {
@@ -53,7 +55,17 @@ export class AuthService {
 
 		await this.usersService.updateRefreshToken(user.id, tokens.refreshToken)
 
-		return tokens
+		const maxAges = this.getTokensExpiration()
+
+		return {
+			tokens,
+			maxAges,
+			user: {
+				id: user.id,
+				email: user.email,
+				role: user.role,
+			},
+		}
 	}
 
 	async login(email: string, password: string) {
@@ -75,7 +87,17 @@ export class AuthService {
 
 		await this.usersService.updateRefreshToken(user.id, tokens.refreshToken)
 
-		return tokens
+		const maxAges = this.getTokensExpiration()
+
+		return {
+			tokens,
+			maxAges,
+			user: {
+				id: user.id,
+				email: user.email,
+				role: user.role,
+			},
+		}
 	}
 
 	async validateUser(userId: string) {
@@ -130,5 +152,12 @@ export class AuthService {
 		])
 
 		return { accessToken, refreshToken }
+	}
+
+	getTokensExpiration() {
+		return {
+			refreshTokenMaxAge: ms(process.env.REFRESH_TOKEN_EXPIRATION),
+			accessTokenMaxAge: ms(process.env.ACCESS_TOKEN_EXPIRATION),
+		}
 	}
 }
