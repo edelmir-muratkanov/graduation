@@ -1,6 +1,6 @@
 import { Route } from '@/routes/auth'
 
-import { LoginForm } from './components/LoginForm/login-form'
+import { LoginForm } from './LoginForm/login-form'
 
 export const AuthPage = () => {
   const { stage } = Route.useSearch()

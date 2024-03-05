@@ -6,12 +6,14 @@ import type { z } from 'zod'
 
 import { usePostLoginMutation } from '@/lib/api'
 import { STORAGE_KEYS } from '@/lib/constants'
+import { useProfile } from '@/lib/contexts'
 import { Route } from '@/routes/auth'
 
 import { loginFormSchema } from './constants'
 
 export const useLoginForm = () => {
-  const { returnUrl } = Route.useSearch()
+  const { redirectUrl } = Route.useSearch()
+  const { setUser } = useProfile()
   const navigate = useNavigate()
 
   const postLoginMutation = usePostLoginMutation({
@@ -38,14 +40,15 @@ export const useLoginForm = () => {
       params: values,
     })
 
-    if (res.data.accessToken) {
-      localStorage.setItem(STORAGE_KEYS.AccessToken, res.data.accessToken)
-      navigate({ to: returnUrl ?? '/', replace: true })
+    if (res.data.token && res.data.user) {
+      localStorage.setItem(STORAGE_KEYS.AccessToken, res.data.token)
+      setUser(res.data.user)
+      navigate({ to: redirectUrl ?? '/', replace: true })
     }
   })
 
   const goToRegister = () =>
-    navigate({ to: '/auth', search: { returnUrl, stage: 'register' } })
+    navigate({ to: '/auth', search: { redirectUrl, stage: 'register' } })
 
   return {
     loading: postLoginMutation.isPending,

@@ -8,7 +8,7 @@ const authSearchSchema = z.object({
     .enum(['login', 'register'] as const)
     .optional()
     .catch('login'),
-  returnUrl: z.string().optional(),
+  redirectUrl: z.string().optional(),
 })
 
 export const Route = createFileRoute('/auth')({

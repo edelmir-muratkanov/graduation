@@ -3,8 +3,3 @@ export interface User {
   email: string
   role: 'User' | 'Admin'
 }
-
-export interface Tokens {
-  accessToken: string
-  refreshToken: string
-}

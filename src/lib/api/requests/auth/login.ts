@@ -1,3 +1,5 @@
+import type { User } from '@/lib/interfaces'
+
 import { API } from '../../instance'
 
 export interface PostLoginParams {
@@ -5,7 +7,12 @@ export interface PostLoginParams {
   password: string
 }
 
+export interface PostLoginResponse {
+  user: User
+  token: string
+}
+
 export type PostLoginRequestConfig = RequestConfig<PostLoginParams>
 
 export const postLogin = ({ params, config }: PostLoginRequestConfig) =>
-  API.post<{ accessToken: string }>('auth/login', params, config)
+  API.post<PostLoginResponse>('auth/login', params, config)
