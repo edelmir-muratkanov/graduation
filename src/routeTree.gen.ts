@@ -16,8 +16,6 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
 import { Route as UserImport } from './routes/_user'
 import { Route as AdminImport } from './routes/_admin'
-import { Route as UserMyProjectsImport } from './routes/_user/my-projects'
-import { Route as AdminAdminOnlyImport } from './routes/_admin/admin-only'
 
 // Create Virtual Routes
 
@@ -45,16 +43,6 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const UserMyProjectsRoute = UserMyProjectsImport.update({
-  path: '/my-projects',
-  getParentRoute: () => UserRoute,
-} as any)
-
-const AdminAdminOnlyRoute = AdminAdminOnlyImport.update({
-  path: '/admin-only',
-  getParentRoute: () => AdminRoute,
-} as any)
-
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -75,14 +63,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
-    '/_admin/admin-only': {
-      preLoaderRoute: typeof AdminAdminOnlyImport
-      parentRoute: typeof AdminImport
-    }
-    '/_user/my-projects': {
-      preLoaderRoute: typeof UserMyProjectsImport
-      parentRoute: typeof UserImport
-    }
   }
 }
 
@@ -90,8 +70,8 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
-  AdminRoute.addChildren([AdminAdminOnlyRoute]),
-  UserRoute.addChildren([UserMyProjectsRoute]),
+  AdminRoute,
+  UserRoute,
   AuthRoute,
 ])
 
