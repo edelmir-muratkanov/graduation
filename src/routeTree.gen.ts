@@ -14,6 +14,10 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
+import { Route as UserImport } from './routes/_user'
+import { Route as AdminImport } from './routes/_admin'
+import { Route as UserMyProjectsImport } from './routes/_user/my-projects'
+import { Route as AdminAdminOnlyImport } from './routes/_admin/admin-only'
 
 // Create Virtual Routes
 
@@ -26,10 +30,30 @@ const AuthRoute = AuthImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/auth.lazy').then((d) => d.Route))
 
+const UserRoute = UserImport.update({
+  id: '/_user',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminRoute = AdminImport.update({
+  id: '/_admin',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const UserMyProjectsRoute = UserMyProjectsImport.update({
+  path: '/my-projects',
+  getParentRoute: () => UserRoute,
+} as any)
+
+const AdminAdminOnlyRoute = AdminAdminOnlyImport.update({
+  path: '/admin-only',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -39,15 +63,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_admin': {
+      preLoaderRoute: typeof AdminImport
+      parentRoute: typeof rootRoute
+    }
+    '/_user': {
+      preLoaderRoute: typeof UserImport
+      parentRoute: typeof rootRoute
+    }
     '/auth': {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
+    }
+    '/_admin/admin-only': {
+      preLoaderRoute: typeof AdminAdminOnlyImport
+      parentRoute: typeof AdminImport
+    }
+    '/_user/my-projects': {
+      preLoaderRoute: typeof UserMyProjectsImport
+      parentRoute: typeof UserImport
     }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexLazyRoute, AuthRoute])
+export const routeTree = rootRoute.addChildren([
+  IndexLazyRoute,
+  AdminRoute.addChildren([AdminAdminOnlyRoute]),
+  UserRoute.addChildren([UserMyProjectsRoute]),
+  AuthRoute,
+])
 
 /* prettier-ignore-end */
