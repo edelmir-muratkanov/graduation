@@ -15,5 +15,5 @@ export const Route = createFileRoute('/auth')({
       throw redirect({ to: search.redirectUrl })
     }
   },
-  pendingComponent: () => <AuthLoading />,
+  pendingComponent: AuthLoading,
 })
