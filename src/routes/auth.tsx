@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { z } from 'zod'
 
 import { AuthLoading } from '@/pages/auth/loading'
@@ -10,6 +10,10 @@ const authSearchSchema = z.object({
 
 export const Route = createFileRoute('/auth')({
   validateSearch: authSearchSchema,
-  beforeLoad: () => {},
+  beforeLoad: ({ context, search }) => {
+    if (context.user?.id) {
+      throw redirect({ to: search.redirectUrl })
+    }
+  },
   pendingComponent: () => <AuthLoading />,
 })

@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
@@ -41,8 +42,10 @@ export const useLoginForm = () => {
     })
 
     if (res.data.token && res.data.user) {
-      localStorage.setItem(STORAGE_KEYS.AccessToken, res.data.token)
-      setUser(res.data.user)
+      flushSync(() => {
+        localStorage.setItem(STORAGE_KEYS.AccessToken, res.data.token)
+        setUser(res.data.user)
+      })
       navigate({ to: redirectUrl ?? '/', replace: true })
     }
   })
