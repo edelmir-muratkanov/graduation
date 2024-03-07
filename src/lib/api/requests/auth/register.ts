@@ -1,5 +1,3 @@
-import type { User } from '@/lib/interfaces'
-
 import { API } from '../../instance'
 
 export interface PostRegisterParams {

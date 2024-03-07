@@ -1,7 +1,5 @@
 import { type FC, type ReactNode, useMemo, useState } from 'react'
 
-import type { User } from '@/lib/interfaces'
-
 import { ProfileContext } from './profile-context'
 
 export interface ProfileProviderProps {
