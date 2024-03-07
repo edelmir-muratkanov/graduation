@@ -1,3 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/projects/')({})
+import { ProjectsLoading } from '@/pages/projects/loading'
+
+export const Route = createFileRoute('/projects/')({
+  pendingComponent: ProjectsLoading,
+})
