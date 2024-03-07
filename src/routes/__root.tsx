@@ -9,7 +9,7 @@ const TOASTER_DURATION = 5000
 export const Route = createRootRouteWithContext<{ user?: User }>()({
   component: () => (
     <>
-      <div className='flex h-screen items-center justify-center p-4'>
+      <div className='flex container h-screen p-[2rem]'>
         <Outlet />
       </div>
       <Toaster duration={TOASTER_DURATION} position='top-right' />

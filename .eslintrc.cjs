@@ -24,6 +24,7 @@ module.exports = {
         'no-restricted-syntax': 'off',
         'promise/always-return': 'off',
         'jsx-a11y/label-has-associated-control': 'warn',
+        'no-underscore-dangle': 'off',
       },
     },
   ],

@@ -10,3 +10,11 @@ interface Project {
   country: string
   operator: string
 }
+
+interface ProjectStatistic {
+  _count: {
+    methods: number
+    users: number
+    parameters: number
+  }
+}
