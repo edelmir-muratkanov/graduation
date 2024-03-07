@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import type { ColumnDef } from '@tanstack/react-table'
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -8,51 +7,15 @@ import {
 
 import { useGetProjectsQuery } from '@/lib/api'
 
+import { COLUMNS } from './columns'
+
 type PaginationState = {
   pageIndex: number
   pageSize: number
 }
 
 export const useProjectsTable = () => {
-  const columns = useMemo<ColumnDef<Project & ProjectStatistic>[]>(
-    () => [
-      {
-        accessorKey: 'name',
-        header: 'Name',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'country',
-        header: 'Country',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'operator',
-        header: 'Operator',
-        footer: props => props.column.id,
-      },
-      {
-        header: 'Methods',
-        accessorFn: row => row._count.methods,
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      },
-
-      {
-        header: 'Properties',
-        accessorFn: row => row._count.parameters,
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      },
-      {
-        header: 'Users',
-        accessorFn: row => row._count.users,
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      },
-    ],
-    [],
-  )
+  const columns = useMemo(() => COLUMNS, [])
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
