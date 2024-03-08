@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaService } from 'src/shared/prisma'
@@ -16,22 +15,39 @@ export class CalculationsService {
 	) {}
 
 	async calculate(projectId: string) {
-		const { id, methods } = await this.projectsService.getById(projectId)
+		const project = await this.projectsService.getById(projectId)
 
 		const res = await Promise.all(
-			methods.map(async method => {
-				const params = await this.getParams(id, method.id)
+			project.methods.map(async method => {
+				const paramsRatios = await Promise.all(
+					method.parameters.map(async methodParam => {
+						const { name } = await this.prisma.properties.findUnique({
+							where: { id: methodParam.propertyId },
+							select: {
+								name: true,
+							},
+						})
+						const projectParam = project.parameters.filter(
+							p => p.property.id === methodParam.propertyId,
+						)[0]
 
-				const paramsRatios = params.map(param => {
-					const ratio = this.calculateParamRatio(param)
+						const ratio = this.calculateParamRatio({
+							methodparams: methodParam.parameters,
+							paramname: name,
+							projectparams: projectParam ? projectParam.value : null,
+						})
 
-					return {
-						ratio,
-						name: param.paramname,
-					}
-				})
+						return {
+							ratio,
+							name,
+						}
+					}),
+				)
 
-				const totalRatio = this.calculateTotalRatio(params.length, paramsRatios)
+				const totalRatio = this.calculateTotalRatio(
+					method.parameters.length,
+					paramsRatios,
+				)
 
 				return {
 					name: method.name,
@@ -43,12 +59,6 @@ export class CalculationsService {
 		)
 
 		return res
-	}
-
-	async getParams(projectId: string, methodId: string): Promise<GetParams[]> {
-		const query = Prisma.sql`SELECT * FROM get_params(${projectId}, ${methodId})`
-
-		return this.prisma.$queryRaw<GetParams[]>(query)
 	}
 
 	getResult(totalRatio: number) {
