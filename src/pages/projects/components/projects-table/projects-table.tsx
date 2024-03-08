@@ -19,23 +19,24 @@ import {
 import { useProjectsTable } from './useProjectsTable'
 
 export const ProjectsTable = () => {
-  const { table, globalFilter, setGlobalFilter, columns } = useProjectsTable()
+  const { state, functions } = useProjectsTable()
+
   return (
     <div className='flex flex-col gap-4 w-full '>
       <div className='flex justify-between'>
         <Input
-          value={globalFilter}
-          onChange={e => setGlobalFilter(e.target.value)}
+          value={state.globalFilter}
+          onChange={e => functions.setGlobalFilter(e.target.value)}
           placeholder='Search all columns...'
           className='p-2 font-lg shadow border border-block w-[200px]'
         />
         <Select
-          onValueChange={e => table.setPageSize(Number(e))}
-          value={table.getState().pagination.pageSize.toString()}
+          onValueChange={e => state.table.setPageSize(Number(e))}
+          value={state.table.getState().pagination.pageSize.toString()}
         >
           <SelectTrigger className='w-[160px]'>
             <SelectValue placeholder='Show'>
-              Show {table.getState().pagination.pageSize}
+              Show {state.table.getState().pagination.pageSize}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -50,7 +51,7 @@ export const ProjectsTable = () => {
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map(group => (
+            {state.table.getHeaderGroups().map(group => (
               <TableRow key={group.id}>
                 {group.headers.map(header => (
                   <TableHead key={header.id} colSpan={header.colSpan}>
@@ -67,12 +68,13 @@ export const ProjectsTable = () => {
           </TableHeader>
 
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map(row => (
+            {state.table.getRowModel().rows?.length ? (
+              state.table.getRowModel().rows.map(row => (
                 <TableRow
                   id={row.id}
-                  key={row.id}
+                  className='cursor-pointer'
                   data-state={row.getIsSelected() && 'selected'}
+                  onClick={e => functions.handleRowClick(e, row)}
                 >
                   {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
@@ -87,7 +89,7 @@ export const ProjectsTable = () => {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={state.columns.length}
                   className='h-24 text-center'
                 >
                   No results.
@@ -102,8 +104,8 @@ export const ProjectsTable = () => {
           <Button
             variant='outline'
             size='sm'
-            onClick={() => table.firstPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => state.table.firstPage()}
+            disabled={!state.table.getCanPreviousPage()}
           >
             First
           </Button>
@@ -111,8 +113,8 @@ export const ProjectsTable = () => {
           <Button
             size='sm'
             variant='outline'
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => state.table.previousPage()}
+            disabled={!state.table.getCanPreviousPage()}
           >
             Previous
           </Button>
@@ -120,8 +122,8 @@ export const ProjectsTable = () => {
           <Button
             variant='outline'
             size='sm'
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => state.table.nextPage()}
+            disabled={!state.table.getCanNextPage()}
           >
             Next
           </Button>
@@ -129,15 +131,16 @@ export const ProjectsTable = () => {
           <Button
             variant='outline'
             size='sm'
-            onClick={() => table.lastPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => state.table.lastPage()}
+            disabled={!state.table.getCanNextPage()}
           >
             Last
           </Button>
         </div>
 
         <span className='self-end border px-3 h-8 rounded-md'>
-          {table.getState().pagination.pageIndex + 1}/{table.getPageCount()}
+          {state.table.getState().pagination.pageIndex + 1}/
+          {state.table.getPageCount()}
         </span>
       </div>
     </div>
