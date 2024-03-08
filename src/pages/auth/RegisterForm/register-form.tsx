@@ -1,5 +1,3 @@
-import { Loader2 } from 'lucide-react'
-
 import {
   Button,
   Form,
@@ -104,8 +102,7 @@ export const RegisterForm = () => {
               )}
             />
 
-            <Button type='submit' className='w-full' disabled={loading}>
-              {loading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            <Button type='submit' className='w-full' loading={loading}>
               <span>Register</span>
             </Button>
           </form>
