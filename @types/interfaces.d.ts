@@ -11,6 +11,33 @@ interface Project {
   operator: string
 }
 
+interface Property {
+  id: string
+  name: string
+}
+
+interface MethodParamter {
+  x: number
+  xMin: number
+  xMax: number
+}
+
+interface Method {
+  id: string
+  name: string
+  parameters: {
+    propertyId: Pick<Property, 'id'>
+    parameters:
+      | {
+          values: number[]
+        }
+      | {
+          first?: MethodParamter
+          second?: MethodParamter
+        }
+  }[]
+}
+
 interface ProjectStatistic {
   _count: {
     methods: number

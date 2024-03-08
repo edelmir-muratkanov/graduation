@@ -7,13 +7,13 @@ export const useGetProjectsQuery = (
 ) =>
   useQuery({
     queryKey: ['projects', settings?.config?.params],
-    queryFn: () => {
-      return getProjects({
+    queryFn: ({ signal }) =>
+      getProjects({
         config: {
+          signal,
           ...settings?.config,
         },
-      })
-    },
-    ...settings?.options,
+      }),
     placeholderData: keepPreviousData,
+    ...settings?.options,
   })
