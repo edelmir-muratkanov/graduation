@@ -29,7 +29,7 @@ export class ProjectMethodParameter {
 				second?: ProjetcMethodParameterGroup
 		  }
 		| {
-				values: string[]
+				values: number[]
 		  }
 }
 
