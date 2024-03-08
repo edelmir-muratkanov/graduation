@@ -1,12 +1,13 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 
-import { useProfile } from './lib/contexts'
+import { queryClient, useProfile } from './lib/contexts'
 import { routeTree } from './routeTree.gen'
 
 const router = createRouter({
   routeTree,
   context: {
     user: undefined,
+    queryClient,
   },
 })
 
