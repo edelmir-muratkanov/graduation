@@ -44,7 +44,7 @@ export const ProjectInfo = () => {
             </TableHeader>
 
             {data.data.parameters.map(parameter => (
-              <TableRow>
+              <TableRow key={parameter.property.id}>
                 <TableCell>{parameter.property.name}</TableCell>
                 <TableCell>{parameter.value}</TableCell>
               </TableRow>
