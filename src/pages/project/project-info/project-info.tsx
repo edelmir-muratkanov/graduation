@@ -4,6 +4,7 @@ import {
   CardHeader,
   CardTitle,
   Table,
+  TableBody,
   TableCell,
   TableHead,
   TableHeader,
@@ -39,16 +40,20 @@ export const ProjectInfo = () => {
         <CardContent>
           <Table>
             <TableHeader>
-              <TableHead>Name</TableHead>
-              <TableHead>Value</TableHead>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Value</TableHead>
+              </TableRow>
             </TableHeader>
 
-            {data.data.parameters.map(parameter => (
-              <TableRow key={parameter.property.id}>
-                <TableCell>{parameter.property.name}</TableCell>
-                <TableCell>{parameter.value}</TableCell>
-              </TableRow>
-            ))}
+            <TableBody>
+              {data.data.parameters.map(parameter => (
+                <TableRow key={parameter.property.id}>
+                  <TableCell>{parameter.property.name}</TableCell>
+                  <TableCell>{parameter.value}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
         </CardContent>
       </Card>
