@@ -3,7 +3,7 @@ import { API } from '../../instance'
 export type GetProjectCalculationsRequestConfig = RequestConfig | void
 
 export type ProjectCalculationsResponse = {
-  name: Pick<Method, 'name'>
+  name: Method['name']
   result: string
   totalRatio: number
   paramsRatio: {
