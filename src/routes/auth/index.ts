@@ -4,8 +4,11 @@ import { z } from 'zod'
 import { AuthLoading } from '@/pages/auth/loading'
 
 const authSearchSchema = z.object({
-  stage: z.enum(['login', 'register'] as const).catch('login'),
-  redirectUrl: z.string().catch('/'),
+  stage: z
+    .enum(['login', 'register'] as const)
+    .default('login')
+    .optional(),
+  redirectUrl: z.string().optional().default('/'),
 })
 
 export const Route = createFileRoute('/auth/')({
