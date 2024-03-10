@@ -1,18 +1,17 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui'
 
-import { ProjectCalculations } from './project-calculations/project-calculations'
-import { ProjectInfo } from './project-info/project-info'
+import { ProjectCalculationsLoading } from './project-calculations/project-calculations-loading'
+import { ProjectInfoLoading } from './project-info/project-info-loading'
 import { useProjectPage } from './useProjectPage'
 
-export const ProjectPage = () => {
+export const ProjectLoading = () => {
   const { state, functions } = useProjectPage()
-
   return (
     <Tabs
-      className='w-full space-y-10'
       value={state.tab}
       defaultValue='info'
       onValueChange={functions.hanleTabsValueChange}
+      className='w-full'
       orientation='vertical'
     >
       <TabsList>
@@ -20,8 +19,8 @@ export const ProjectPage = () => {
         <TabsTrigger value='calculations'>Calculations</TabsTrigger>
       </TabsList>
 
-      <ProjectInfo />
-      <ProjectCalculations />
+      <ProjectInfoLoading />
+      <ProjectCalculationsLoading />
     </Tabs>
   )
 }
