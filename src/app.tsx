@@ -1,18 +1,7 @@
-import {
-  createRouteMask,
-  createRouter,
-  RouterProvider,
-} from '@tanstack/react-router'
+import { createRouter, RouterProvider } from '@tanstack/react-router'
 
 import { queryClient, useProfile } from './lib/contexts'
 import { routeTree } from './routeTree.gen'
-
-const NoSearchProject = createRouteMask({
-  routeTree,
-  from: '/projects/$projectId',
-  to: '/projects/$projectId',
-  params: prev => ({ projectId: prev.projectId }),
-})
 
 const router = createRouter({
   routeTree,
@@ -20,7 +9,6 @@ const router = createRouter({
     user: undefined,
     queryClient,
   },
-  routeMasks: [NoSearchProject],
 })
 
 declare module '@tanstack/react-router' {
