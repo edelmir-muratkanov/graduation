@@ -72,6 +72,7 @@ export const ProjectsTable = () => {
               state.table.getRowModel().rows.map(row => (
                 <TableRow
                   id={row.id}
+                  key={row.id}
                   className='cursor-pointer'
                   data-state={row.getIsSelected() && 'selected'}
                   onClick={e => functions.handleRowClick(e, row)}
