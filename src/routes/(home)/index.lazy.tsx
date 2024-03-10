@@ -7,6 +7,6 @@ const Home = () => {
   return <div>{user?.email}</div>
 }
 
-export const Route = createLazyFileRoute('/')({
+export const Route = createLazyFileRoute('/(home)/')({
   component: () => <Home />,
 })

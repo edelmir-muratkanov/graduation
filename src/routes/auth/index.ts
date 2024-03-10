@@ -8,12 +8,13 @@ const authSearchSchema = z.object({
   redirectUrl: z.string().catch('/'),
 })
 
-export const Route = createFileRoute('/auth')({
+export const Route = createFileRoute('/auth/')({
   validateSearch: authSearchSchema,
   beforeLoad: ({ context, search }) => {
     if (context.user?.id) {
       throw redirect({ to: search.redirectUrl })
     }
   },
+
   pendingComponent: AuthLoading,
 })

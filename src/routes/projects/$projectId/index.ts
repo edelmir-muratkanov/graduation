@@ -4,10 +4,8 @@ import {
   getProjectCalculationsQueryOptions,
   getProjectQueryOptions,
 } from '@/lib/api'
-import { ProjectPage } from '@/pages/project/page'
 
 export const Route = createFileRoute('/projects/$projectId/')({
-  component: ProjectPage,
   loader: async ({ context, params }) => {
     await context.queryClient.ensureQueryData(
       getProjectQueryOptions(params.projectId),
