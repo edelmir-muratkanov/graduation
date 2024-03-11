@@ -45,3 +45,9 @@ interface ProjectStatistic {
     parameters: number
   }
 }
+
+interface MethodStatistic {
+  _count: {
+    projects: number
+  }
+}
