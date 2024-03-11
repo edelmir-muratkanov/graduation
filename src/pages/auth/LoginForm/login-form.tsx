@@ -15,7 +15,7 @@ import { useLoginForm } from './useLoginForm'
 export const LoginForm = () => {
   const { form, goToRegister, loading, onSubmit } = useLoginForm()
   return (
-    <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
+    <>
       <div className='flex flex-col space-y-2 text-center'>
         <h1 className='text-2xl font-semibold tracking-tight'>
           Login to your account
@@ -93,6 +93,6 @@ export const LoginForm = () => {
           </Button>
         </div>
       </div>
-    </div>
+    </>
   )
 }
