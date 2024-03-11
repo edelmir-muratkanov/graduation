@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 
-import type { PostLoginRequestConfig } from '../../requests/auth/login'
-import { postLogin } from '../../requests/auth/login'
+import type { PostLoginRequestConfig } from '../../requests'
+import { postLogin } from '../../requests'
 
 export const usePostLoginMutation = (
   settings?: MutationSettings<PostLoginRequestConfig, typeof postLogin>,

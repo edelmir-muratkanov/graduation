@@ -1,3 +1,3 @@
-export * from './login'
-export * from './profile'
-export * from './register'
+export * from './get-profile'
+export * from './post-login'
+export * from './post-register'

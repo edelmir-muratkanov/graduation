@@ -1,1 +1,1 @@
-export * from './getMethods'
+export * from './get-methods'
