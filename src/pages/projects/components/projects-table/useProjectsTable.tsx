@@ -48,7 +48,7 @@ export const useProjectsTable = () => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     manualPagination: true,
-    debugTable: true,
+    debugTable: process.env.NODE_ENV !== 'production',
   })
 
   const handleRowClick = (
