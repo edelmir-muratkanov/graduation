@@ -15,7 +15,9 @@ export interface QueryProviderProps {
 }
 
 export const queryClient = new QueryClient({
-  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+  defaultOptions: {
+    queries: { refetchOnWindowFocus: false, staleTime: 60_000 },
+  },
   queryCache: new QueryCache({
     onError: cause => {
       const { response } = cause as AxiosError<BaseResponse>
