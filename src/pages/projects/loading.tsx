@@ -1,11 +1,15 @@
-import { Button, Skeleton } from '@/components/ui'
+import { Link } from '@tanstack/react-router'
+
+import { Button, Heading, Skeleton } from '@/components/ui'
 
 export const ProjectsLoading = () => {
   return (
     <div className='w-full h-full space-y-4'>
       <div className='flex justify-between items-center'>
-        <span>Projects</span>
-        <Button>Create new project</Button>
+        <Heading as='h1'>Projects</Heading>
+        <Link to='/projects/new'>
+          <Button variant='link'>Create new project</Button>
+        </Link>
       </div>
 
       <div className='flex flex-col gap-4 w-full '>
