@@ -54,7 +54,7 @@ const headingVariants = cva('scroll-m-20 font-semibold tracking-tight', {
     },
     size: {
       default: 'text-base font-medium',
-      large: 'text-lg font-semibold',
+      large: 'text-2xl',
       small: 'text-sm font-medium leading-none',
     },
   },
