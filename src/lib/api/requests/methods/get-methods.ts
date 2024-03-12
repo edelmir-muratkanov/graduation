@@ -8,4 +8,4 @@ export interface GetMethodsResponse {
 }
 
 export const getMethods = (params?: GetMethodsRequestConfig) =>
-  API.get<GetMethodsResponse>('projects', params?.config)
+  API.get<GetMethodsResponse>('methods', params?.config)
