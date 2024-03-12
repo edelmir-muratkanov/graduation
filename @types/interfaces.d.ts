@@ -51,3 +51,10 @@ interface MethodStatistic {
     projects: number
   }
 }
+
+interface PropertyStatistic {
+  _count: {
+    methods: number
+    projects: number
+  }
+}
