@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 
+import { NotFound } from '@/components/not-found'
 import { Toaster } from '@/components/ui'
 
 const TOASTER_DURATION = 5000
@@ -39,4 +40,6 @@ export const Route = createRootRouteWithContext<{
       </Suspense>
     </>
   ),
+
+  notFoundComponent: () => <NotFound />,
 })
