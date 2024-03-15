@@ -17,7 +17,7 @@ type ConstantParams = { values: number[] }
 type ToComputeParams = { first?: Group; second?: Group }
 
 export interface GetParams {
-	paramname: string
-	methodparams: ConstantParams | ToComputeParams
-	projectparams: number | null
+	paramName: string
+	methodParams: ConstantParams | ToComputeParams
+	projectParams: number | null
 }

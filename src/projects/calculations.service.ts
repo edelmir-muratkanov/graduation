@@ -3,7 +3,7 @@ import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaService } from 'src/shared/prisma'
 
-import type { GetParams } from './projects.interface'
+import type { GetParams, Group } from './projects.interface'
 import { ProjectsService } from './projects.service'
 
 @Injectable()
@@ -32,9 +32,9 @@ export class CalculationsService {
 						)[0]
 
 						const ratio = this.calculateParamRatio({
-							methodparams: methodParam.parameters,
-							paramname: name,
-							projectparams: projectParam ? projectParam.value : null,
+							methodParams: methodParam.parameters,
+							paramName: name,
+							projectParams: projectParam ? projectParam.value : null,
 						})
 
 						return {
@@ -80,28 +80,28 @@ export class CalculationsService {
 	}
 
 	calculateParamRatio(param: GetParams): number {
-		const { methodparams, projectparams } = param
+		const { methodParams, projectParams } = param
 
-		if (projectparams === null) {
+		if (projectParams === null) {
 			return -1
 		}
 
-		if ('values' in methodparams) {
-			return methodparams.values.includes(projectparams) ? 1 : -1
+		if ('values' in methodParams) {
+			return methodParams.values.includes(projectParams) ? 1 : -1
 		}
 
-		const { first, second } = methodparams
+		const { first, second } = methodParams
 
-		const calculateHelper = (params, index) => {
-			if (projectparams <= params.xMin) {
+		const calculateHelper = (params: Group, index: number) => {
+			if (projectParams <= params.xMin) {
 				return -1
 			}
 
-			if (projectparams <= params.xMax) {
+			if (projectParams <= params.xMax) {
 				return (
 					(1 +
 						((params.xMax - params.x) / (params.x - params.xMin)) ** 2 *
-							((projectparams - params.xMin) / (params.xMax - projectparams)) **
+							((projectParams - params.xMin) / (params.xMax - projectParams)) **
 								2 *
 							(-1) ** index) *
 					-1
@@ -112,19 +112,19 @@ export class CalculationsService {
 		}
 
 		if (first && second) {
-			if (projectparams <= first.xMin) {
+			if (projectParams <= first.xMin) {
 				return -1
 			}
 
-			if (projectparams <= first.xMax) {
+			if (projectParams <= first.xMax) {
 				return calculateHelper(first, 1)
 			}
 
-			if (projectparams <= second.xMin) {
+			if (projectParams <= second.xMin) {
 				return 1
 			}
 
-			if (projectparams <= second.xMax) {
+			if (projectParams <= second.xMax) {
 				return calculateHelper(second, 2)
 			}
 
@@ -132,11 +132,11 @@ export class CalculationsService {
 		}
 
 		if (first) {
-			if (projectparams <= first.xMin) {
+			if (projectParams <= first.xMin) {
 				return -1
 			}
 
-			if (projectparams <= first.xMax) {
+			if (projectParams <= first.xMax) {
 				return calculateHelper(first, 1)
 			}
 
@@ -144,9 +144,9 @@ export class CalculationsService {
 		}
 
 		if (second) {
-			if (projectparams <= second.xMin) return -1
+			if (projectParams <= second.xMin) return -1
 
-			if (projectparams <= second.xMax) {
+			if (projectParams <= second.xMax) {
 				return calculateHelper(second, 2)
 			}
 
