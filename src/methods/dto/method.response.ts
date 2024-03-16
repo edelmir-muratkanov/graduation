@@ -1,9 +1,12 @@
-import type { CollectorType, Methods } from '@prisma/client'
+import { ApiProperty } from '@nestjs/swagger'
+import type { Methods } from '@prisma/client'
+import { CollectorType } from '@prisma/client'
 
 export class MethodResponse implements Methods {
 	id: string
 
-	collectorType: CollectorType[]
+	@ApiProperty({ enum: CollectorType, isArray: true })
+	collectorTypes: CollectorType[]
 
 	name: string
 

@@ -169,7 +169,7 @@ export class ProjectsService {
 							select: {
 								id: true,
 								name: true,
-								collectorType: true,
+								collectorTypes: true,
 								parameters: {
 									select: {
 										propertyId: true,
@@ -201,7 +201,7 @@ export class ProjectsService {
 		res.methods = project.methods.map(m => ({
 			id: m.method.id,
 			name: m.method.name,
-			collectorType: m.method.collectorType,
+			collectorType: m.method.collectorTypes,
 			parameters: m.method.parameters.map(p => p as ProjectMethodParameter),
 		}))
 		res.parameters = project.parameters

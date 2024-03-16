@@ -20,14 +20,14 @@ export class MethodsService {
 
 	async create(
 		name: string,
-		collectoryTypes: CollectorType[],
+		collectorTypes: CollectorType[],
 		parameters: MethodParametersData[],
 	) {
 		try {
 			return await this.prisma.methods.create({
 				data: {
 					name,
-					collectorType: collectoryTypes,
+					collectorTypes,
 					parameters: {
 						createMany: {
 							data: parameters,

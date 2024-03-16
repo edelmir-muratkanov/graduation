@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger'
 import { CollectorType, ProjectType } from '@prisma/client'
 import { Type } from 'class-transformer'
 import {
@@ -52,9 +53,11 @@ export class CreateProjectRequest {
 
 	@IsOptional()
 	@IsEnum(ProjectType)
+	@ApiProperty({ enum: ProjectType })
 	projectType?: ProjectType
 
 	@IsEnum(CollectorType)
+	@ApiProperty({ enum: CollectorType })
 	collectorType: CollectorType
 
 	@IsArray({ message: validationMessage('validation.IsArray') })

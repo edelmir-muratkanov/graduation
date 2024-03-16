@@ -58,7 +58,7 @@ async function main() {
 	const method = await prisma.methods.create({
 		data: {
 			name: 'Закачка СО2',
-			collectorType: ['Terrigen'],
+			collectorTypes: ['Terrigen'],
 			parameters: {
 				create: [
 					{

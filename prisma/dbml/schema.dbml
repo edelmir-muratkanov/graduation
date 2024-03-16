@@ -33,7 +33,7 @@ Table methods_properties {
 Table methods {
   id String [pk]
   name String [unique, not null]
-  collectorType CollectorType[] [not null]
+  collectorTypes CollectorType[] [not null]
   parameters methods_properties [not null]
   projects projects_methods [not null]
 }

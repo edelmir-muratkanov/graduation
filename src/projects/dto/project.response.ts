@@ -1,4 +1,6 @@
-import type { CollectorType, Projects, ProjectType } from '@prisma/client'
+import { ApiProperty } from '@nestjs/swagger'
+import type { Projects } from '@prisma/client'
+import { CollectorType, ProjectType } from '@prisma/client'
 
 export class ProjectUserResponse {
 	id: string
@@ -36,14 +38,17 @@ class ProjectMethodResponse {
 
 	name: string
 
+	@ApiProperty({ enum: CollectorType, isArray: true })
 	collectorType: CollectorType[]
 
 	parameters: ProjectMethodParameter[]
 }
 
 export class ProjectResponse implements Projects {
+	@ApiProperty({ enum: ProjectType })
 	type: ProjectType
 
+	@ApiProperty({ enum: CollectorType })
 	collectorType: CollectorType
 
 	id: string

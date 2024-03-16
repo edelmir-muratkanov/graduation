@@ -62,11 +62,11 @@ model MethodsProperties {
 }
 
 model Methods {
-  id            String              @id @default(cuid())
-  name          String              @unique
-  collectorType CollectorType[]     @default([])
-  parameters    MethodsProperties[]
-  projects      ProjectsMethods[]
+  id             String              @id @default(cuid())
+  name           String              @unique
+  collectorTypes CollectorType[]     @default([])
+  parameters     MethodsProperties[]
+  projects       ProjectsMethods[]
 
   @@map("methods")
 }

@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger'
 import { CollectorType } from '@prisma/client'
 import { Transform, Type } from 'class-transformer'
 import {
@@ -16,6 +17,7 @@ export class CreateMethodRequest {
 	@Transform(({ value }) => (value as string).trim())
 	name: string
 
+	@ApiProperty({ enum: CollectorType, isArray: true })
 	@IsEnum(CollectorType, { each: true })
 	@IsArray({ message: validationMessage('validation.IsArray') })
 	@ArrayNotEmpty({ message: validationMessage('validation.NotEmpty') })
