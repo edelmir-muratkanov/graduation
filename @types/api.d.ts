@@ -27,6 +27,8 @@ type RequestConfig<Params = undefined> = Params extends undefined
   ? { config?: ApiRequestConfig }
   : { params: Params; config?: ApiRequestConfig }
 
-interface BaseResponse {
+interface BaseErrorResponse {
   message: string
+  error: string
+  statusCode: number
 }

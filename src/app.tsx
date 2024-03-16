@@ -1,4 +1,5 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
+import type { AxiosError } from 'axios'
 
 import { queryClient, useProfile } from './lib/contexts'
 import { routeTree } from './routeTree.gen'
@@ -16,6 +17,13 @@ declare module '@tanstack/react-router' {
     router: typeof router
   }
 }
+
+declare module '@tanstack/react-query' {
+  interface Register {
+    defaultError: AxiosError<BaseErrorResponse>
+  }
+}
+
 export const App = () => {
   const { user } = useProfile()
 
