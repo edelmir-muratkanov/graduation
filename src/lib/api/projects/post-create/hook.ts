@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query'
 
 import { queryClient } from '@/lib/contexts'
 
-import type { PostCreateProjectRequestConfig } from '../../requests'
-import { postCreateProject } from '../../requests'
+import type { PostCreateProjectRequestConfig } from './request'
+import { postCreateProject } from './request'
 
 export const usePostCreateProjectMutation = (
   settings?: MutationSettings<
