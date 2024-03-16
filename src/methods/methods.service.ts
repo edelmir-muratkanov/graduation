@@ -1,9 +1,9 @@
 import {
-	BadRequestException,
 	ConflictException,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common'
+import type { CollectorType } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
@@ -18,25 +18,16 @@ export class MethodsService {
 		private readonly i18n: I18nService<I18nTranslations>,
 	) {}
 
-	async create(name: string, parameters: MethodParametersData[]) {
-		if (
-			parameters.some(
-				p =>
-					'values' in p.parameters &&
-					('first' in p.parameters || 'second' in p.parameters),
-			)
-		) {
-			return new BadRequestException(
-				this.i18n.t('exceptions.method.ValuesOrGroups', {
-					lang: I18nContext.current().lang,
-				}),
-			)
-		}
-
+	async create(
+		name: string,
+		collectoryTypes: CollectorType[],
+		parameters: MethodParametersData[],
+	) {
 		try {
 			return await this.prisma.methods.create({
 				data: {
 					name,
+					collectorType: collectoryTypes,
 					parameters: {
 						createMany: {
 							data: parameters,

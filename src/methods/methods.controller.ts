@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { ApiPaginatedResponse, Auth } from 'src/shared/decorators'
 import { PaginationParamsRequest } from 'src/shared/pagination'
 
@@ -15,8 +15,13 @@ export class MethodsController {
 
 	@Auth('Admin')
 	@Post()
+	@ApiCreatedResponse({ type: MethodResponse })
 	async create(@Body() request: CreateMethodRequest) {
-		return this.methodService.create(request.name, request.data)
+		return this.methodService.create(
+			request.name,
+			request.collectoryTypes,
+			request.data,
+		)
 	}
 
 	@Get()

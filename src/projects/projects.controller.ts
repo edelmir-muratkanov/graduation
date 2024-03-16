@@ -27,10 +27,12 @@ export class ProjectsController {
 		return this.projectsService.create(
 			request.name,
 			request.country,
+			request.projectType,
 			request.operator,
 			request.methodIds,
 			request.parameters,
 			userId,
+			request.collectorType,
 		)
 	}
 

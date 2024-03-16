@@ -44,10 +44,12 @@ export class CalculationsService {
 					}),
 				)
 
-				const totalRatio = this.calculateTotalRatio(
-					method.parameters.length,
-					paramsRatios,
-				)
+				paramsRatios.push({
+					name: 'Collector Type',
+					ratio: method.collectorType.includes(project.collectorType) ? 1 : -1,
+				})
+
+				const totalRatio = this.calculateTotalRatio(paramsRatios)
 
 				return {
 					name: method.name,
@@ -63,7 +65,6 @@ export class CalculationsService {
 
 	getResult(totalRatio: number) {
 		const { lang } = I18nContext.current()
-
 		if (totalRatio < -0.75)
 			return this.i18n.t('results.calculations.NotApplicable', { lang })
 
@@ -84,10 +85,6 @@ export class CalculationsService {
 
 		if (projectParams === null) {
 			return -1
-		}
-
-		if ('values' in methodParams) {
-			return methodParams.values.includes(projectParams) ? 1 : -1
 		}
 
 		const { first, second } = methodParams
@@ -154,13 +151,10 @@ export class CalculationsService {
 		}
 	}
 
-	calculateTotalRatio(
-		paramsCount: number,
-		paramsRatios: { ratio: number; name: string }[],
-	): number {
+	calculateTotalRatio(ratios: { ratio: number; name: string }[]): number {
 		return (
-			(1 / paramsCount) *
-			paramsRatios.reduce((sum, paramsRatio) => sum + paramsRatio.ratio, 0)
+			(1 / ratios.length) *
+			ratios.reduce((sum, paramsRatio) => sum + paramsRatio.ratio, 0)
 		)
 	}
 }

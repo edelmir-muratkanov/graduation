@@ -1,5 +1,9 @@
-export class MethodResponse {
+import type { CollectorType, Methods } from '@prisma/client'
+
+export class MethodResponse implements Methods {
 	id: string
+
+	collectorType: CollectorType[]
 
 	name: string
 
@@ -15,8 +19,6 @@ export class Group {
 }
 
 export class NestedParameter {
-	values?: string[]
-
 	first?: Group
 
 	second?: Group

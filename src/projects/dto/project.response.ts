@@ -1,3 +1,5 @@
+import type { CollectorType, Projects, ProjectType } from '@prisma/client'
+
 export class ProjectUserResponse {
 	id: string
 
@@ -23,14 +25,10 @@ class ProjetcMethodParameterGroup {
 export class ProjectMethodParameter {
 	propertyId: string
 
-	parameters:
-		| {
-				first?: ProjetcMethodParameterGroup
-				second?: ProjetcMethodParameterGroup
-		  }
-		| {
-				values: number[]
-		  }
+	parameters: {
+		first?: ProjetcMethodParameterGroup
+		second?: ProjetcMethodParameterGroup
+	}
 }
 
 class ProjectMethodResponse {
@@ -38,10 +36,16 @@ class ProjectMethodResponse {
 
 	name: string
 
+	collectorType: CollectorType[]
+
 	parameters: ProjectMethodParameter[]
 }
 
-export class ProjectResponse {
+export class ProjectResponse implements Projects {
+	type: ProjectType
+
+	collectorType: CollectorType
+
 	id: string
 
 	name: string

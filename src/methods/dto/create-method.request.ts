@@ -1,7 +1,9 @@
+import { CollectorType } from '@prisma/client'
 import { Transform, Type } from 'class-transformer'
 import {
 	ArrayNotEmpty,
 	IsArray,
+	IsEnum,
 	IsString,
 	ValidateNested,
 } from 'class-validator'
@@ -13,6 +15,11 @@ export class CreateMethodRequest {
 	@IsString({ message: validationMessage('validation.IsString') })
 	@Transform(({ value }) => (value as string).trim())
 	name: string
+
+	@IsEnum(CollectorType, { each: true })
+	@IsArray({ message: validationMessage('validation.IsArray') })
+	@ArrayNotEmpty({ message: validationMessage('validation.NotEmpty') })
+	collectoryTypes: CollectorType[]
 
 	@ValidateNested({ each: true })
 	@Type(() => ParameterDto)

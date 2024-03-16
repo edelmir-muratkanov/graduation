@@ -1,9 +1,12 @@
+import { CollectorType, ProjectType } from '@prisma/client'
 import { Type } from 'class-transformer'
 import {
 	ArrayNotEmpty,
 	IsArray,
+	IsEnum,
 	IsNotEmpty,
 	IsNumber,
+	IsOptional,
 	IsPositive,
 	IsString,
 	ValidateNested,
@@ -46,6 +49,13 @@ export class CreateProjectRequest {
 	@IsString({ message: validationMessage('validation.IsString') })
 	@IsNotEmpty({ message: validationMessage('validation.NotEmpty') })
 	operator: string
+
+	@IsOptional()
+	@IsEnum(ProjectType)
+	projectType?: ProjectType
+
+	@IsEnum(CollectorType)
+	collectorType: CollectorType
 
 	@IsArray({ message: validationMessage('validation.IsArray') })
 	@ArrayNotEmpty({ message: validationMessage('validation.NotEmpty') })

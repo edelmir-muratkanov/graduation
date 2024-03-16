@@ -13,11 +13,8 @@ export interface Group {
 	xMax: number
 }
 
-type ConstantParams = { values: number[] }
-type ToComputeParams = { first?: Group; second?: Group }
-
 export interface GetParams {
 	paramName: string
-	methodParams: ConstantParams | ToComputeParams
+	methodParams: { first?: Group; second?: Group }
 	projectParams: number | null
 }

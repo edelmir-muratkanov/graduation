@@ -1,4 +1,8 @@
-export class MethodsResponse {
+import type { CollectorType, Methods } from '@prisma/client'
+
+export class MethodsResponse implements Methods {
+	collectorType: CollectorType[]
+
 	id: string
 
 	name: string

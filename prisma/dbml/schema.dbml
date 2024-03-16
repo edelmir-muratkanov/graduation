@@ -33,6 +33,7 @@ Table methods_properties {
 Table methods {
   id String [pk]
   name String [unique, not null]
+  collectorType CollectorType[] [not null]
   parameters methods_properties [not null]
   projects projects_methods [not null]
 }
@@ -42,6 +43,8 @@ Table projects {
   name String [not null]
   country String [not null]
   operator String [not null]
+  type ProjectType [not null]
+  collectorType CollectorType
   parameters projects_properties [not null]
   methods projects_methods [not null]
   users projects_users [not null]
@@ -84,6 +87,16 @@ Table projects_users {
 Enum Role {
   User
   Admin
+}
+
+Enum CollectorType {
+  Terrigen
+  Carbonate
+}
+
+Enum ProjectType {
+  Ground
+  Shelf
 }
 
 Ref: methods_properties.methodId > methods.id

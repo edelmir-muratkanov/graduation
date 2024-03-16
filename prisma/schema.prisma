@@ -19,6 +19,16 @@ enum Role {
   Admin
 }
 
+enum CollectorType {
+  Terrigen
+  Carbonate
+}
+
+enum ProjectType {
+  Ground
+  Shelf
+}
+
 model Users {
   id               String          @id @default(cuid())
   email            String          @unique
@@ -52,22 +62,25 @@ model MethodsProperties {
 }
 
 model Methods {
-  id         String              @id @default(cuid())
-  name       String              @unique
-  parameters MethodsProperties[]
-  projects   ProjectsMethods[]
+  id            String              @id @default(cuid())
+  name          String              @unique
+  collectorType CollectorType[]     @default([])
+  parameters    MethodsProperties[]
+  projects      ProjectsMethods[]
 
   @@map("methods")
 }
 
 model Projects {
-  id         String               @id @default(cuid())
-  name       String
-  country    String
-  operator   String
-  parameters ProjectsProperties[]
-  methods    ProjectsMethods[]
-  users      ProjectsUsers[]
+  id            String               @id @default(cuid())
+  name          String
+  country       String
+  operator      String
+  type          ProjectType
+  collectorType CollectorType?
+  parameters    ProjectsProperties[]
+  methods       ProjectsMethods[]
+  users         ProjectsUsers[]
 
   @@map("projects")
 }

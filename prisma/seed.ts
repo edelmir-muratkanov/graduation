@@ -17,9 +17,6 @@ async function main() {
 	})
 
 	/** Properties */
-	const p1 = await prisma.properties.create({
-		data: { name: 'Тип коллектора' },
-	})
 	const p2 = await prisma.properties.create({
 		data: { name: 'Средняя глубина залегания' },
 	})
@@ -61,12 +58,9 @@ async function main() {
 	const method = await prisma.methods.create({
 		data: {
 			name: 'Закачка СО2',
+			collectorType: ['Terrigen'],
 			parameters: {
 				create: [
-					{
-						propertyId: p1.id,
-						parameters: { values: [1, 2] },
-					},
 					{
 						propertyId: p6.id,
 						parameters: {
@@ -127,13 +121,11 @@ async function main() {
 			name: 'Бурмаша',
 			country: 'Казахстан',
 			operator: 'АО "Мангистаумунайгаз"',
+			type: 'Ground',
+			collectorType: 'Terrigen',
 			parameters: {
 				createMany: {
 					data: [
-						{
-							propertyId: p1.id,
-							value: 1,
-						},
 						{
 							propertyId: p2.id,
 							value: 1861,

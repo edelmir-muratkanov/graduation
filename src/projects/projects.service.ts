@@ -4,6 +4,7 @@ import {
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common'
+import type { CollectorType, ProjectType } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
@@ -26,10 +27,12 @@ export class ProjectsService {
 	async create(
 		name: string,
 		country: string,
+		type: ProjectType,
 		operator: string,
 		methodIds: CreateProjectMethodId[],
 		parameters: CreateProjectParameters[],
 		userId: string,
+		collectorType?: CollectorType,
 	) {
 		try {
 			return await this.prisma.projects.create({
@@ -37,6 +40,8 @@ export class ProjectsService {
 					name,
 					country,
 					operator,
+					type,
+					collectorType,
 					methods: {
 						createMany: {
 							data: methodIds,
@@ -136,6 +141,7 @@ export class ProjectsService {
 				name: true,
 				country: true,
 				operator: true,
+				collectorType: true,
 				users: {
 					select: {
 						user: {
@@ -163,6 +169,7 @@ export class ProjectsService {
 							select: {
 								id: true,
 								name: true,
+								collectorType: true,
 								parameters: {
 									select: {
 										propertyId: true,
@@ -190,9 +197,11 @@ export class ProjectsService {
 		res.country = project.country
 		res.name = project.name
 		res.operator = project.operator
+		res.collectorType = project.collectorType
 		res.methods = project.methods.map(m => ({
 			id: m.method.id,
 			name: m.method.name,
+			collectorType: m.method.collectorType,
 			parameters: m.method.parameters.map(p => p as ProjectMethodParameter),
 		}))
 		res.parameters = project.parameters
