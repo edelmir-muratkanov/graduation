@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import { getProfile } from './lib/api'
+import { getProfileQueryOptions } from './lib/api'
 import { STORAGE_KEYS } from './lib/constants'
 import { queryClient } from './lib/contexts'
 import { App } from './app'
@@ -25,10 +25,9 @@ const init = async () => {
   }
 
   if (token) {
-    const getProfileQuery = await queryClient.fetchQuery({
-      queryKey: ['getProfile'],
-      queryFn: () => getProfile(),
-    })
+    const getProfileQuery = await queryClient.fetchQuery(
+      getProfileQueryOptions(),
+    )
 
     providerProps.profile.defaultUser = getProfileQuery.data
   }
