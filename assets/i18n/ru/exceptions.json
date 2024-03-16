@@ -11,7 +11,8 @@
 		"NotFound": "Свойство не найдено"
 	},
 	"method": {
-		"InvalidProperties": "Один из параметров метода не существет или неверен",
+		"ValuesOrGroups": "Параметер не может одновременно содержать values и fisrt или second",
+		"InvalidProperties": "Один из параметров не существет или неверен",
 		"MethodExists": "Метод уже существет",
 		"NotFound": "Метод не найден"
 	},

@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
-import { Transform, Type } from 'class-transformer'
+import { Type } from 'class-transformer'
 import {
 	ArrayNotEmpty,
 	IsArray,
@@ -21,7 +21,6 @@ export class ParameterDataDto {
 		{},
 		{ each: true, message: validationMessage('validation.IsNumber') },
 	)
-	@Transform(({ value }) => Number(value))
 	values?: number[]
 
 	@ApiPropertyOptional()

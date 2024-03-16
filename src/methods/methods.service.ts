@@ -19,6 +19,20 @@ export class MethodsService {
 	) {}
 
 	async create(name: string, parameters: MethodParametersData[]) {
+		if (
+			parameters.some(
+				p =>
+					'values' in p.parameters &&
+					('first' in p.parameters || 'second' in p.parameters),
+			)
+		) {
+			return new BadRequestException(
+				this.i18n.t('exceptions.method.ValuesOrGroups', {
+					lang: I18nContext.current().lang,
+				}),
+			)
+		}
+
 		try {
 			return await this.prisma.methods.create({
 				data: {
@@ -34,7 +48,7 @@ export class MethodsService {
 		} catch (e) {
 			if (e instanceof Prisma.PrismaClientKnownRequestError) {
 				if (e.code === PrismaErrors.ForeignKeyConstraintViolated) {
-					return new BadRequestException(
+					return new ConflictException(
 						this.i18n.t('exceptions.method.InvalidProperties', {
 							lang: I18nContext.current().lang,
 						}),
