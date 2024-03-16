@@ -64,6 +64,7 @@ import { UsersModule } from './users/users.module'
 			useValue: new I18nValidationPipe({
 				transform: true,
 				whitelist: true,
+				forbidNonWhitelisted: true,
 			}),
 		},
 		{
