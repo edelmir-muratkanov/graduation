@@ -6,21 +6,18 @@ type Group = {
   xMax: number
 }
 
-type Parameter =
-  | {
-      values: number[]
-    }
-  | {
-      first?: Group
-      second?: Group
-    }
+type Parameters = {
+  first?: Group
+  second?: Group
+}
 
 export interface PostCreateMethodParams {
   name: string
+  collectorTypes: CollectorType[]
   data: {
     propertyId: string
-    parameters: Parameter[]
-  }
+    parameters: Parameters
+  }[]
 }
 
 export type PostCreateMethodRequestConfig =
