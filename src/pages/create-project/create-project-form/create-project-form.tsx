@@ -11,13 +11,13 @@ import {
   FormMessage,
   Heading,
   Input,
+  MultipleSelector,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
-import MultipleSelector from '@/components/ui/multiple-select'
 
 import { useCreateProjectForm } from './useCreateProjectForm'
 
@@ -202,6 +202,7 @@ export const CreateProjectForm = () => {
                           options.map(option => ({ methodId: option.value })),
                         )
                       }
+                      hidePlaceholderWhenSelected
                     />
                   </FormControl>
                   <FormMessage />
