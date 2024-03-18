@@ -27,6 +27,7 @@ export const useCreateProjectForm = () => {
     control: form.control,
     name: 'parameters',
   })
+
   const createProjectMutation = usePostCreateProjectMutation({
     options: {
       onSuccess() {

@@ -109,6 +109,72 @@ export const CreateProjectForm = () => {
             />
             <FormField
               control={state.form.control}
+              name='projectType'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor='type' className='sr-only'>
+                    Type
+                  </FormLabel>
+                  <FormDescription />
+                  <Select
+                    name={field.name}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={field.disabled || state.loading}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          id={field.name}
+                          placeholder='Select type'
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      <SelectItem value='Ground'>Ground</SelectItem>
+                      <SelectItem value='Shelf'>Shelf</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={state.form.control}
+              name='collectorType'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor='collectorType' className='sr-only'>
+                    Collector Type
+                  </FormLabel>
+                  <FormDescription />
+                  <Select
+                    name={field.name}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={field.disabled || state.loading}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          id={field.name}
+                          placeholder='Select collector type'
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      <SelectItem value='Terrigen'>Terrigen</SelectItem>
+                      <SelectItem value='Carbonate'>Carbonate</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={state.form.control}
               name='methodIds'
               render={({ field }) => (
                 <FormItem>
