@@ -79,6 +79,8 @@ export class ProjectsService {
 					)
 				}
 			}
+
+			throw e
 		}
 	}
 

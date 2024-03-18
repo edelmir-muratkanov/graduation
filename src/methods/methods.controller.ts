@@ -19,7 +19,7 @@ export class MethodsController {
 	async create(@Body() request: CreateMethodRequest) {
 		return this.methodService.create(
 			request.name,
-			request.collectoryTypes,
+			request.collectorTypes,
 			request.data,
 		)
 	}

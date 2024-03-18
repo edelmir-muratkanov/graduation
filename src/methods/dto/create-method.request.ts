@@ -21,7 +21,7 @@ export class CreateMethodRequest {
 	@IsEnum(CollectorType, { each: true })
 	@IsArray({ message: validationMessage('validation.IsArray') })
 	@ArrayNotEmpty({ message: validationMessage('validation.NotEmpty') })
-	collectoryTypes: CollectorType[]
+	collectorTypes: CollectorType[]
 
 	@ValidateNested({ each: true })
 	@Type(() => ParameterDto)
