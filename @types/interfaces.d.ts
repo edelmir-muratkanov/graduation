@@ -4,15 +4,8 @@ interface User {
   role: 'User' | 'Admin'
 }
 
-enum ProjectType {
-  Ground,
-  Shelf,
-}
-
-enum CollectorType {
-  Terrigen,
-  Carbonate,
-}
+type CollectorType = 'Terrigen' | 'Carbonate'
+type ProjectType = 'Ground' | 'Shelf'
 
 interface Project {
   id: string
