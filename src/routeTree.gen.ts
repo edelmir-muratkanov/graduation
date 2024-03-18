@@ -16,6 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as UserImport } from './routes/_user'
 import { Route as AdminImport } from './routes/_admin'
 import { Route as ProjectsIndexImport } from './routes/projects/index'
+import { Route as MethodsIndexImport } from './routes/methods/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as ProjectsProjectIdIndexImport } from './routes/projects/$projectId/index'
 import { Route as UserProjectsNewIndexImport } from './routes/_user/projects/new/index'
@@ -50,6 +51,11 @@ const ProjectsIndexRoute = ProjectsIndexImport.update({
 } as any).lazy(() =>
   import('./routes/projects/index.lazy').then((d) => d.Route),
 )
+
+const MethodsIndexRoute = MethodsIndexImport.update({
+  path: '/methods/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/methods/index.lazy').then((d) => d.Route))
 
 const AuthIndexRoute = AuthIndexImport.update({
   path: '/auth/',
@@ -93,6 +99,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof rootRoute
     }
+    '/methods/': {
+      preLoaderRoute: typeof MethodsIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/projects/': {
       preLoaderRoute: typeof ProjectsIndexImport
       parentRoute: typeof rootRoute
@@ -122,6 +132,7 @@ export const routeTree = rootRoute.addChildren([
   AdminRoute.addChildren([AdminMethodsNewIndexRoute]),
   UserRoute.addChildren([UserProjectsNewIndexRoute]),
   AuthIndexRoute,
+  MethodsIndexRoute,
   ProjectsIndexRoute,
   homeIndexLazyRoute,
   ProjectsProjectIdIndexRoute,
