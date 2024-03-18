@@ -136,12 +136,7 @@ export class ProjectsService {
 			where: {
 				id,
 			},
-			select: {
-				id: true,
-				name: true,
-				country: true,
-				operator: true,
-				collectorType: true,
+			include: {
 				users: {
 					select: {
 						user: {
@@ -166,10 +161,7 @@ export class ProjectsService {
 				methods: {
 					select: {
 						method: {
-							select: {
-								id: true,
-								name: true,
-								collectorTypes: true,
+							include: {
 								parameters: {
 									select: {
 										propertyId: true,
@@ -198,10 +190,11 @@ export class ProjectsService {
 		res.name = project.name
 		res.operator = project.operator
 		res.collectorType = project.collectorType
+		res.type = project.type
 		res.methods = project.methods.map(m => ({
 			id: m.method.id,
 			name: m.method.name,
-			collectorType: m.method.collectorTypes,
+			collectorTypes: m.method.collectorTypes,
 			parameters: m.method.parameters.map(p => p as ProjectMethodParameter),
 		}))
 		res.parameters = project.parameters

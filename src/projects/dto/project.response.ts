@@ -39,7 +39,7 @@ class ProjectMethodResponse {
 	name: string
 
 	@ApiProperty({ enum: CollectorType, isArray: true })
-	collectorType: CollectorType[]
+	collectorTypes: CollectorType[]
 
 	parameters: ProjectMethodParameter[]
 }

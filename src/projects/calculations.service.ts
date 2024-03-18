@@ -46,7 +46,7 @@ export class CalculationsService {
 
 				paramsRatios.push({
 					name: 'Collector Type',
-					ratio: method.collectorType.includes(project.collectorType) ? 1 : -1,
+					ratio: method.collectorTypes.includes(project.collectorType) ? 1 : -1,
 				})
 
 				const totalRatio = this.calculateTotalRatio(paramsRatios)
