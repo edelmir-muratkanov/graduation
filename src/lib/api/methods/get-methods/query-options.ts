@@ -6,7 +6,7 @@ export const getMethodsQueryOptions = (
   settings?: QuerySettings<typeof getMethods>,
 ) =>
   queryOptions({
-    queryKey: ['methods'],
+    queryKey: ['methods', settings?.config?.params],
     queryFn: ({ signal }) =>
       getMethods({
         config: {
