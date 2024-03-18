@@ -19,6 +19,7 @@ import { Route as ProjectsIndexImport } from './routes/projects/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as ProjectsProjectIdIndexImport } from './routes/projects/$projectId/index'
 import { Route as UserProjectsNewIndexImport } from './routes/_user/projects/new/index'
+import { Route as AdminMethodsNewIndexImport } from './routes/_admin/methods/new/index'
 
 // Create Virtual Routes
 
@@ -69,6 +70,13 @@ const UserProjectsNewIndexRoute = UserProjectsNewIndexImport.update({
   import('./routes/_user/projects/new/index.lazy').then((d) => d.Route),
 )
 
+const AdminMethodsNewIndexRoute = AdminMethodsNewIndexImport.update({
+  path: '/methods/new/',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/_admin/methods/new/index.lazy').then((d) => d.Route),
+)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -97,6 +105,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsProjectIdIndexImport
       parentRoute: typeof rootRoute
     }
+    '/_admin/methods/new/': {
+      preLoaderRoute: typeof AdminMethodsNewIndexImport
+      parentRoute: typeof AdminImport
+    }
     '/_user/projects/new/': {
       preLoaderRoute: typeof UserProjectsNewIndexImport
       parentRoute: typeof UserImport
@@ -107,7 +119,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  AdminRoute,
+  AdminRoute.addChildren([AdminMethodsNewIndexRoute]),
   UserRoute.addChildren([UserProjectsNewIndexRoute]),
   AuthIndexRoute,
   ProjectsIndexRoute,
