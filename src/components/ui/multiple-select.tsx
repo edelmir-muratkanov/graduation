@@ -499,4 +499,4 @@ const MultipleSelector = forwardRef<MultipleSelectorRef, MultipleSelectorProps>(
 )
 
 MultipleSelector.displayName = 'MultipleSelector'
-export default MultipleSelector
+export { MultipleSelector }
