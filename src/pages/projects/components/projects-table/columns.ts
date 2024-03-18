@@ -17,6 +17,16 @@ export const COLUMNS: ColumnDef<Project & ProjectStatistic>[] = [
     footer: props => props.column.id,
   },
   {
+    accessorKey: 'collectorType',
+    header: 'Collector Type',
+    footer: props => props.column.id,
+  },
+  {
+    accessorKey: 'type',
+    header: 'Project type',
+    footer: props => props.column.id,
+  },
+  {
     header: 'Methods',
     accessorFn: row => row._count.methods,
     cell: info => info.getValue(),

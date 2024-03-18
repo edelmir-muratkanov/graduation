@@ -4,11 +4,23 @@ interface User {
   role: 'User' | 'Admin'
 }
 
+enum ProjectType {
+  Ground,
+  Shelf,
+}
+
+enum CollectorType {
+  Terrigen,
+  Carbonate,
+}
+
 interface Project {
   id: string
   name: string
   country: string
   operator: string
+  type: ProjectType
+  collectorType: CollectorType
 }
 
 interface Property {
@@ -25,6 +37,7 @@ interface MethodParamter {
 interface Method {
   id: string
   name: string
+  collectorTypes: CollectorType[]
   parameters: {
     propertyId: Pick<Property, 'id'>
     parameters:

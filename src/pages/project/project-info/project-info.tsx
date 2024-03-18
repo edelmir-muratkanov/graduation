@@ -29,6 +29,8 @@ export const ProjectInfo = () => {
             <Text>Name: {data.data.name}</Text>
             <Text>Operator: {data.data.operator}</Text>
             <Text>Country: {data.data.country}</Text>
+            <Text>Project type: {data.data.type}</Text>
+            <Text>Collector type: {data.data.collectorType}</Text>
           </div>
         </CardContent>
       </Card>
