@@ -39,14 +39,14 @@ export class MethodsService {
 		} catch (e) {
 			if (e instanceof Prisma.PrismaClientKnownRequestError) {
 				if (e.code === PrismaErrors.ForeignKeyConstraintViolated) {
-					return new ConflictException(
+					throw new ConflictException(
 						this.i18n.t('exceptions.method.InvalidProperties', {
 							lang: I18nContext.current().lang,
 						}),
 					)
 				}
 				if (e.code === PrismaErrors.UniqueConstraintViolated) {
-					return new ConflictException(
+					throw new ConflictException(
 						this.i18n.t('exceptions.method.MethodExists', {
 							lang: I18nContext.current().lang,
 						}),

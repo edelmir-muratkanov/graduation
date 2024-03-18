@@ -101,28 +101,16 @@ export class AuthService {
 	}
 
 	async validateUser(userId: string) {
-		try {
-			return await this.usersService.findById(userId)
-		} catch (e) {
-			return this.i18n.t('exceptions.user.NotFound', {
-				lang: I18nContext.current().lang,
-			})
-		}
+		return this.usersService.findById(userId)
 	}
 
 	async validateUserByRefreshToken(userId: string, refreshToken: string) {
-		try {
-			const user = await this.usersService.findById(userId)
-			const isTokenMatching = await this.hashService.compareData(
-				refreshToken,
-				user.refreshTokenHash,
-			)
-			if (isTokenMatching) return user
-		} catch (e) {
-			return this.i18n.t('exceptions.user.NotFound', {
-				lang: I18nContext.current().lang,
-			})
-		}
+		const user = await this.usersService.findById(userId)
+		const isTokenMatching = await this.hashService.compareData(
+			refreshToken,
+			user.refreshTokenHash,
+		)
+		if (isTokenMatching) return user
 	}
 
 	async generateTokens(user: Partial<Users>) {
