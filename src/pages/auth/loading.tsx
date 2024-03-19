@@ -13,19 +13,13 @@ export const AuthLoading = () => {
       </div>
       <div>
         <div className='flex flex-col gap-4'>
-          <Skeleton className='h-10 w-full' />
-          <Skeleton className='h-10 w-full' />
-
-          <Skeleton className='h-10 w-full' />
+          <Skeleton className='h-9' />
+          <Skeleton className='h-9' />
+          <Skeleton className='h-9' />
         </div>
         <div className='flex justify-center py-3'>
           <Skeleton className='h-4 w-[200px]' />
         </div>
-
-        <p className='mt-4 flex flex-col gap-2 px-8'>
-          <Skeleton className='h-3 w-full' />
-          <Skeleton className='h-3 w-full' />
-        </p>
       </div>
     </div>
   )
