@@ -61,23 +61,33 @@ export class MethodsService {
 		offset?: number,
 		lastCursorId?: string,
 		search?: string,
+		collectorType?: CollectorType,
 	) {
+		const where: Prisma.MethodsWhereInput[] = []
+
+		if (search) {
+			where.push({
+				name: {
+					contains: search,
+					mode: 'insensitive',
+				},
+			})
+		}
+
+		if (collectorType) {
+			where.push({
+				collectorTypes: {
+					has: collectorType,
+				},
+			})
+		}
+
 		const [count, items] = await this.prisma.$transaction([
 			this.prisma.methods.count({
-				where: {
-					name: {
-						contains: search,
-						mode: 'insensitive',
-					},
-				},
+				where: { AND: where },
 			}),
 			this.prisma.methods.findMany({
-				where: {
-					name: {
-						contains: search,
-						mode: 'insensitive',
-					},
-				},
+				where: { AND: where },
 				include: {
 					_count: {
 						select: {

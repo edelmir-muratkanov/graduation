@@ -26,11 +26,14 @@ export class MethodsController {
 
 	@Get()
 	@ApiPaginatedResponse(MethodsResponse)
-	async getAll(
-		@Query()
-		{ limit, offset, lastCursorId, search }: GetAllMethodsRequestParams,
-	) {
-		return this.methodService.getAll(limit, offset, lastCursorId, search)
+	async getAll(@Query() query: GetAllMethodsRequestParams) {
+		return this.methodService.getAll(
+			query.limit,
+			query.offset,
+			query.lastCursorId,
+			query.search,
+			query.collectorType,
+		)
 	}
 
 	@Get(':id')
