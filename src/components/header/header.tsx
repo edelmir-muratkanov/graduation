@@ -1,6 +1,13 @@
 import { useProfile } from '@/lib/contexts'
 
-import { Text } from '../ui'
+import {
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Separator,
+  Text,
+} from '../ui'
 
 import { LoginButton } from './login-button'
 import { LogoutButton } from './logout-button'
@@ -14,13 +21,16 @@ export const Header = () => {
         <Nav />
         <div className='flex flex-1 items-center justify-between space-x-2 md:justify-end'>
           {user?.id ? (
-            <div className='flex items-center gap-2'>
-              <Text className='text-sm text-nowrap'>
-                {user.email} | {user.role.toUpperCase()}
-              </Text>
-
-              <LogoutButton />
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant='secondary'>{user.email}</Button>
+              </PopoverTrigger>
+              <PopoverContent className='flex flex-col w-max'>
+                <Text className='text-center'>{user.role}</Text>
+                <Separator className='my-2' />
+                <LogoutButton />
+              </PopoverContent>
+            </Popover>
           ) : (
             <LoginButton />
           )}
