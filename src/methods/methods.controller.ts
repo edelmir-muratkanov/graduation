@@ -1,11 +1,10 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { ApiPaginatedResponse, Auth } from 'src/shared/decorators'
-import { PaginationParamsRequest } from 'src/shared/pagination'
 
 import { CreateMethodRequest } from './dto/create-method.request'
+import { GetAllMethodsRequestParams } from './dto/get-all-methods-params.request'
 import { MethodResponse } from './dto/method.response'
-import { GetAllMethodsRequestParams } from './dto/methods.request'
 import { MethodsResponse } from './dto/methods.response'
 import { MethodsService } from './methods.service'
 
@@ -28,10 +27,10 @@ export class MethodsController {
 	@Get()
 	@ApiPaginatedResponse(MethodsResponse)
 	async getAll(
-		@Query() { limit, offset, lastCursorId }: PaginationParamsRequest,
-		@Query() params: GetAllMethodsRequestParams,
+		@Query()
+		{ limit, offset, lastCursorId, search }: GetAllMethodsRequestParams,
 	) {
-		return this.methodService.getAll(limit, offset, lastCursorId, params.search)
+		return this.methodService.getAll(limit, offset, lastCursorId, search)
 	}
 
 	@Get(':id')
