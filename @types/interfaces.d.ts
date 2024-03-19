@@ -32,15 +32,11 @@ interface Method {
   name: string
   collectorTypes: CollectorType[]
   parameters: {
-    propertyId: Pick<Property, 'id'>
-    parameters:
-      | {
-          values: number[]
-        }
-      | {
-          first?: MethodParamter
-          second?: MethodParamter
-        }
+    propertyId: Property['id']
+    parameters: {
+      first?: MethodParamter
+      second?: MethodParamter
+    }
   }[]
 }
 
