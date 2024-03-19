@@ -3,6 +3,7 @@ import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
+import helmet from 'helmet'
 
 import { COOKIE } from './auth/auth.constants'
 import { AppModule } from './app.module'
@@ -20,6 +21,7 @@ async function bootstrap() {
 
 	app.setGlobalPrefix('api')
 	app.use(cookieParser())
+	app.use(helmet())
 
 	const config = new DocumentBuilder()
 		.setTitle('Graduation')
