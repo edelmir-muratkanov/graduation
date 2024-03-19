@@ -5,6 +5,7 @@ import { PaginationParamsRequest } from 'src/shared/pagination'
 
 import { CreateMethodRequest } from './dto/create-method.request'
 import { MethodResponse } from './dto/method.response'
+import { GetAllMethodsRequestParams } from './dto/methods.request'
 import { MethodsResponse } from './dto/methods.response'
 import { MethodsService } from './methods.service'
 
@@ -28,8 +29,9 @@ export class MethodsController {
 	@ApiPaginatedResponse(MethodsResponse)
 	async getAll(
 		@Query() { limit, offset, lastCursorId }: PaginationParamsRequest,
+		@Query() params: GetAllMethodsRequestParams,
 	) {
-		return this.methodService.getAll(limit, offset, lastCursorId)
+		return this.methodService.getAll(limit, offset, lastCursorId, params.search)
 	}
 
 	@Get(':id')

@@ -56,10 +56,28 @@ export class MethodsService {
 		}
 	}
 
-	async getAll(limit?: number, offset?: number, lastCursorId?: string) {
+	async getAll(
+		limit?: number,
+		offset?: number,
+		lastCursorId?: string,
+		search?: string,
+	) {
 		const [count, items] = await this.prisma.$transaction([
-			this.prisma.methods.count(),
+			this.prisma.methods.count({
+				where: {
+					name: {
+						contains: search,
+						mode: 'insensitive',
+					},
+				},
+			}),
 			this.prisma.methods.findMany({
+				where: {
+					name: {
+						contains: search,
+						mode: 'insensitive',
+					},
+				},
 				include: {
 					_count: {
 						select: {
