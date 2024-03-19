@@ -1,4 +1,16 @@
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui'
+import { Link } from '@tanstack/react-router'
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui'
 
 import { ProjectCalculations } from './project-calculations/project-calculations'
 import { ProjectInfo } from './project-info/project-info'
@@ -9,16 +21,37 @@ export const ProjectPage = () => {
 
   return (
     <Tabs
-      className='w-full space-y-10'
+      className='w-full space-y-4'
       value={state.tab}
       defaultValue='info'
       onValueChange={functions.hanleTabsValueChange}
       orientation='vertical'
     >
-      <TabsList>
-        <TabsTrigger value='info'>Info</TabsTrigger>
-        <TabsTrigger value='calculations'>Calculations</TabsTrigger>
-      </TabsList>
+      <div className='flex items-center justify-between'>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to='/'>Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to='/projects'>Projects</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{state.project}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <TabsList className=''>
+          <TabsTrigger value='info'>Info</TabsTrigger>
+          <TabsTrigger value='calculations'>Calculations</TabsTrigger>
+        </TabsList>
+      </div>
 
       <ProjectInfo />
       <ProjectCalculations />
