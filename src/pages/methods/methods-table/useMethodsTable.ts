@@ -56,7 +56,10 @@ export const useMethodsTable = () => {
       const win = window.open(`/parameters/${row.original.id}`, '_blank')
       win?.focus()
     } else {
-      // navigate()
+      navigate({
+        to: '/methods/$methodId',
+        params: { methodId: row.original.id },
+      })
     }
   }
 
