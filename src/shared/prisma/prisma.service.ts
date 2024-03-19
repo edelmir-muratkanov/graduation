@@ -36,12 +36,24 @@ export class PrismaService
 	async onModuleInit() {
 		await this.$connect()
 
-		this.$on('query', ({ query, params }) =>
-			this.logger.log(`${query} --- Params: ${params}`),
-		)
-		this.$on('error', ({ message }) => this.logger.error(message))
-		this.$on('warn', ({ message }) => this.logger.warn(message))
-		this.$on('info', ({ message }) => this.logger.debug(message))
+		this.$on('query', ({ query, params, target, duration }) => {
+			this.logger.log(`QUERY: ${query}`)
+			this.logger.log(`PARAMS: ${params}`)
+			this.logger.log(`TARGET: ${target}`)
+			this.logger.log(`DURATION: ${duration}`)
+		})
+		this.$on('error', ({ message, target }) => {
+			this.logger.error(`MESSAGE: ${message}`)
+			this.logger.error(`TARGET: ${target}`)
+		})
+		this.$on('warn', ({ message, target }) => {
+			this.logger.warn(`MESSAGE: ${message}`)
+			this.logger.warn(`TARGET: ${target}`)
+		})
+		this.$on('info', ({ message, target }) => {
+			this.logger.debug(`MESSAGE: ${message}`)
+			this.logger.debug(`TARGET: ${target}`)
+		})
 	}
 
 	async onModuleDestroy() {
