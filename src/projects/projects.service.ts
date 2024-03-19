@@ -89,25 +89,42 @@ export class ProjectsService {
 		limit?: number,
 		offset?: number,
 		lastCursorId?: string,
+		search?: string,
+		projectType?: ProjectType,
+		collectorType?: CollectorType,
 	) {
+		const where: Prisma.ProjectsWhereInput[] = []
+
+		if (userId) {
+			where.push({
+				users: { some: { userId } },
+			})
+		}
+
+		if (search) {
+			where.push({
+				OR: [
+					{ name: { contains: search, mode: 'insensitive' } },
+					{ country: { contains: search, mode: 'insensitive' } },
+					{ operator: { contains: search, mode: 'insensitive' } },
+				],
+			})
+		}
+
+		if (projectType) {
+			where.push({ type: projectType })
+		}
+
+		if (collectorType) {
+			where.push({ collectorType })
+		}
+
 		const [count, items] = await this.prisma.$transaction([
 			this.prisma.projects.count({
-				where: {
-					users: {
-						some: {
-							userId,
-						},
-					},
-				},
+				where: { AND: where },
 			}),
 			this.prisma.projects.findMany({
-				where: {
-					users: {
-						some: {
-							userId,
-						},
-					},
-				},
+				where: { AND: where },
 				include: {
 					_count: {
 						select: {

@@ -47,6 +47,9 @@ export class ProjectsController {
 			query.limit,
 			query.offset,
 			query.lastCursorId,
+			query.search,
+			query.projectType,
+			query.collectorType,
 		)
 	}
 
