@@ -3,6 +3,8 @@ import type { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 
 import { ErrorComponent } from '@/components/error-component'
+import { Footer } from '@/components/footer'
+import { Header } from '@/components/header'
 import { NotFound } from '@/components/not-found'
 import { Toaster } from '@/components/ui'
 
@@ -30,16 +32,18 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
   component: () => (
-    <>
-      <div className='flex container h-screen p-[2rem]'>
+    <div className='relative flex min-h-screen flex-col bg-background'>
+      <Header />
+      <main className='flex flex-1 container pt-[1.5rem]'>
         <Outlet />
-      </div>
+      </main>
+      <Footer />
       <Toaster duration={TOASTER_DURATION} position='top-right' />
       <Suspense fallback={null}>
         <TanStackRouterDevtools />
         <ReactQueryDevtools />
       </Suspense>
-    </>
+    </div>
   ),
 
   notFoundComponent: () => <NotFound />,

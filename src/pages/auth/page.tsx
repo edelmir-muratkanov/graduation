@@ -8,7 +8,7 @@ export const AuthPage = () => {
   const { stage } = useSearch()
 
   return (
-    <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
+    <div className='m-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
       {stage === 'register' ? <RegisterForm /> : <LoginForm />}
     </div>
   )
