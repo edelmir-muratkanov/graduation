@@ -22,18 +22,18 @@ export const MethodsPage = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to='/'>Home</Link>
+                <Link to='/'>Главная</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Methods</BreadcrumbPage>
+              <BreadcrumbPage>Методы</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
         {user?.role === 'Admin' ? (
           <Link to='/methods/new'>
-            <Button variant='secondary'>Create new method</Button>
+            <Button variant='secondary'>Создать новый метод</Button>
           </Link>
         ) : null}
       </div>

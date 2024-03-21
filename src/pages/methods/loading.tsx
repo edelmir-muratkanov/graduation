@@ -1,15 +1,34 @@
 import { Link } from '@tanstack/react-router'
 
-import { Button, Heading, Skeleton } from '@/components/ui'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  Skeleton,
+} from '@/components/ui'
 
 export const MethodsLoading = () => {
   return (
     <div className='w-full h-full space-y-4'>
       <div className='flex justify-between items-center'>
-        <Heading as='h1'>Methods</Heading>
-        <Link to='/methods/new'>
-          <Button variant='link'>Create new method</Button>
-        </Link>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to='/'>Главная</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Методы</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
+        <Skeleton className='w-[154px] h-9' />
       </div>
 
       <div className='flex flex-col gap-4 w-full '>

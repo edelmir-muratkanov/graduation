@@ -26,7 +26,7 @@ export const MethodsTable = () => {
         <Input
           value={state.globalFilter}
           onChange={e => functions.setGlobalFilter(e.target.value)}
-          placeholder='Search all columns...'
+          placeholder='Поиск...'
           className='p-2 font-lg shadow border border-block w-[200px]'
         />
         <Select
@@ -34,14 +34,14 @@ export const MethodsTable = () => {
           value={state.table.getState().pagination.pageSize.toString()}
         >
           <SelectTrigger className='w-[160px]'>
-            <SelectValue placeholder='Show'>
-              Show {state.table.getState().pagination.pageSize}
+            <SelectValue>
+              Показать {state.table.getState().pagination.pageSize}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {[10, 20, 30, 40, 50].map(pageSize => (
               <SelectItem key={pageSize} value={pageSize.toString()}>
-                Show {pageSize}
+                Показать {pageSize}
               </SelectItem>
             ))}
           </SelectContent>
@@ -92,7 +92,7 @@ export const MethodsTable = () => {
                   colSpan={state.columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  Нет результатов
                 </TableCell>
               </TableRow>
             )}
@@ -103,21 +103,12 @@ export const MethodsTable = () => {
       <div className='flex items-center justify-center'>
         <div className='flex gap-1 m-auto'>
           <Button
-            variant='outline'
-            size='sm'
-            onClick={() => state.table.firstPage()}
-            disabled={!state.table.getCanPreviousPage()}
-          >
-            First
-          </Button>
-
-          <Button
             size='sm'
             variant='outline'
             onClick={() => state.table.previousPage()}
             disabled={!state.table.getCanPreviousPage()}
           >
-            Previous
+            Предыдущая страница
           </Button>
 
           <Button
@@ -126,21 +117,12 @@ export const MethodsTable = () => {
             onClick={() => state.table.nextPage()}
             disabled={!state.table.getCanNextPage()}
           >
-            Next
-          </Button>
-
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => state.table.lastPage()}
-            disabled={!state.table.getCanNextPage()}
-          >
-            Last
+            Следующая страница
           </Button>
         </div>
 
         <span className='self-end border px-3 h-8 rounded-md'>
-          {state.table.getState().pagination.pageIndex + 1}/
+          {state.table.getState().pagination.pageIndex + 1} /{' '}
           {state.table.getPageCount()}
         </span>
       </div>
