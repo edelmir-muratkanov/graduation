@@ -20,17 +20,17 @@ export const ProjectsPage = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to='/'>Home</Link>
+                <Link to='/'>Главная</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Projects</BreadcrumbPage>
+              <BreadcrumbPage>Проекты</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
         <Link to='/projects/new'>
-          <Button variant='secondary'>Create new project</Button>
+          <Button variant='secondary'>Создать новый проект</Button>
         </Link>
       </div>
       <ProjectsTable />
