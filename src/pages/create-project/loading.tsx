@@ -6,13 +6,13 @@ export const CreateProjectLoading = () => (
   <div className='mx-auto flex flex-col w-full justify-center space-y-6 sm:w-[650px]'>
     <div className='flex flex-col space-y-2 text-center'>
       <Heading as='h1' className='text-2xl font-semibold tracking-tight'>
-        Create new project
+        Создать новый проект
       </Heading>
     </div>
 
     <form className='space-y-12'>
       <div className='space-y-2'>
-        <Heading as='h2'>Base Info</Heading>
+        <Heading as='h2'>Базовая информация</Heading>
         <Skeleton className='w-full h-9' />
         <Skeleton className='w-full h-9' />
         <Skeleton className='w-full h-9' />
@@ -20,7 +20,7 @@ export const CreateProjectLoading = () => (
       </div>
 
       <div className='flex flex-col gap-2'>
-        <Heading as='h2'>Parameters</Heading>
+        <Heading as='h2'>Список параметров</Heading>
         <ul>
           <li className='flex gap-2 items-center justify-center'>
             <Skeleton className='h-9 w-full' />
@@ -42,7 +42,7 @@ export const CreateProjectLoading = () => (
       </div>
 
       <Button className='w-full' size='lg' type='submit'>
-        Create
+        Создать
       </Button>
     </form>
   </div>

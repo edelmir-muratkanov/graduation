@@ -7,6 +7,7 @@ import {
   useGetPropertiesQuery,
   usePostCreateProjectMutation,
 } from '@/lib/api'
+import { queryClient } from '@/lib/contexts'
 
 import type { CreateProjectFormSchema } from './constants'
 import { createProjectFormSchema } from './constants'
@@ -31,7 +32,8 @@ export const useCreateProjectForm = () => {
   const createProjectMutation = usePostCreateProjectMutation({
     options: {
       onSuccess() {
-        toast.success('Project created sucessfull')
+        toast.success('Проект успешно создан.')
+        queryClient.invalidateQueries({ queryKey: ['projects'] })
       },
     },
   })
