@@ -1,14 +1,35 @@
 import { Link } from '@tanstack/react-router'
 
-import { Button, Heading, Skeleton } from '@/components/ui'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  Button,
+  Skeleton,
+} from '@/components/ui'
 
 export const ProjectsLoading = () => {
   return (
-    <div className='w-full h-full space-y-4'>
+    <div className='w-full space-y-6'>
       <div className='flex justify-between items-center'>
-        <Heading as='h1'>Projects</Heading>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to='/'>Главная</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Проекты</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <Link to='/projects/new'>
-          <Button variant='link'>Create new project</Button>
+          <Button variant='secondary'>Создать новый проект</Button>
         </Link>
       </div>
 
