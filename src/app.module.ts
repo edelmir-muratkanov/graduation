@@ -32,7 +32,7 @@ import { UsersModule } from './users/users.module'
 			}),
 		}),
 		I18nModule.forRoot({
-			fallbackLanguage: 'en',
+			fallbackLanguage: 'ru',
 			fallbacks: {
 				en: 'en',
 				ru: 'ru',
