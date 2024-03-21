@@ -20,6 +20,7 @@ import {
   TableRow,
   Text,
 } from '@/components/ui'
+import { CollectorTypeTranslates } from '@/lib/constants'
 
 import { useMethodPage } from './useMethodPage'
 
@@ -32,13 +33,13 @@ export const MethodPage = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to='/'>Home</Link>
+              <Link to='/'>Главная</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to='/methods'>Methods</Link>
+              <Link to='/methods'>Методы</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
@@ -51,32 +52,32 @@ export const MethodPage = () => {
       <div className='w-full space-y-5'>
         <Card className='h-fit'>
           <CardHeader>
-            <CardTitle>Base info</CardTitle>
+            <CardTitle>Базовая информация</CardTitle>
           </CardHeader>
           <CardContent className='space-y-0'>
             <div className='space-x-2'>
-              <Text>Name:</Text>
+              <Text>Название:</Text>
               <Text>{method.data.name}</Text>
             </div>
             <div className='space-x-2'>
-              <Text>Collector types:</Text>
+              <Text>Типы коллекторов: </Text>
               {method.data.collectorTypes.map(type => (
-                <Badge key={type}>{type}</Badge>
+                <Badge key={type}>{CollectorTypeTranslates[type]}</Badge>
               ))}
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Parameters</CardTitle>
+            <CardTitle>Список параметров</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Property</TableHead>
-                  <TableHead>Min value</TableHead>
-                  <TableHead>Max value</TableHead>
+                  <TableHead>Свойство</TableHead>
+                  <TableHead>Минимальное значение</TableHead>
+                  <TableHead>Максимальное значение</TableHead>
                 </TableRow>
               </TableHeader>
 

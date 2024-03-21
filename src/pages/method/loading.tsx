@@ -17,7 +17,7 @@ export const MethodLoading = () => {
     <div className='w-full space-y-5'>
       <Card className='h-fit'>
         <CardHeader>
-          <CardTitle>Base info</CardTitle>
+          <CardTitle>Базовая информация</CardTitle>
         </CardHeader>
         <CardContent className='space-y-1'>
           <Skeleton className='h-7' />
@@ -26,15 +26,15 @@ export const MethodLoading = () => {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Parameters</CardTitle>
+          <CardTitle>Список параметров</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Property</TableHead>
-                <TableHead>Min value</TableHead>
-                <TableHead>Max value</TableHead>
+                <TableHead>Свойство</TableHead>
+                <TableHead>Минимальное значение</TableHead>
+                <TableHead>Максимальное значение</TableHead>
               </TableRow>
             </TableHeader>
 
