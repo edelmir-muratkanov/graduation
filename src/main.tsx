@@ -25,11 +25,14 @@ const init = async () => {
   }
 
   if (token) {
-    const getProfileQuery = await queryClient.fetchQuery(
-      getProfileQueryOptions(),
-    )
-
-    providerProps.profile.defaultUser = getProfileQuery.data
+    await queryClient
+      .fetchQuery(getProfileQueryOptions())
+      .catch(() => {})
+      .then(data => {
+        if (data) {
+          providerProps.profile.defaultUser = data.data
+        }
+      })
   }
 
   root.render(

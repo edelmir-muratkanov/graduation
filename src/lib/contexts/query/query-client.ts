@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom'
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
@@ -10,7 +11,10 @@ export const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       staleTime: 30_000,
       retry: (count, error) => {
-        if ([400, 401, 403, 404].includes(error.response?.status || 0)) {
+        if (
+          error.config?.url?.includes('auth') &&
+          [400, 401, 403, 404].includes(error.response?.status || 0)
+        ) {
           return false
         }
 
@@ -23,15 +27,19 @@ export const queryClient = new QueryClient({
       if (response?.status === 401) {
         postRefresh({})
           .then(({ data }) => {
-            localStorage.setItem(STORAGE_KEYS.AccessToken, data.token)
+            flushSync(() => {
+              localStorage.setItem(STORAGE_KEYS.AccessToken, data.token)
+            })
           })
-          .catch(() => {})
-
-        return
+          .catch(() => {
+            flushSync(() => {
+              localStorage.removeItem(STORAGE_KEYS.AccessToken)
+            })
+          })
       }
 
       toast.error(response?.data.message ?? DEFAULT_ERROR, {
-        cancel: { label: 'Close' },
+        cancel: { label: 'Закрыть' },
       })
     },
   }),
@@ -40,15 +48,19 @@ export const queryClient = new QueryClient({
       if (response?.status === 401) {
         postRefresh({})
           .then(({ data }) => {
-            localStorage.setItem(STORAGE_KEYS.AccessToken, data.token)
+            flushSync(() => {
+              localStorage.setItem(STORAGE_KEYS.AccessToken, data.token)
+            })
           })
-          .catch(() => {})
-
-        return
+          .catch(() => {
+            flushSync(() => {
+              localStorage.removeItem(STORAGE_KEYS.AccessToken)
+            })
+          })
       }
 
       toast.error(response?.data.message ?? DEFAULT_ERROR, {
-        cancel: { label: 'Close' },
+        cancel: { label: 'Закрыть' },
       })
     },
   }),
