@@ -99,18 +99,18 @@ Enum ProjectType {
   Shelf
 }
 
-Ref: methods_properties.methodId > methods.id
+Ref: methods_properties.methodId > methods.id [delete: Cascade]
 
-Ref: methods_properties.propertyId > properties.id
+Ref: methods_properties.propertyId > properties.id [delete: Cascade]
 
-Ref: projects_properties.projectId > projects.id
+Ref: projects_properties.projectId > projects.id [delete: Cascade]
 
-Ref: projects_properties.propertyId > properties.id
+Ref: projects_properties.propertyId > properties.id [delete: Cascade]
 
-Ref: projects_methods.projectId > projects.id
+Ref: projects_methods.projectId > projects.id [delete: Cascade]
 
-Ref: projects_methods.methodId > methods.id
+Ref: projects_methods.methodId > methods.id [delete: Cascade]
 
-Ref: projects_users.projectId > projects.id
+Ref: projects_users.projectId > projects.id [delete: Cascade]
 
-Ref: projects_users.userId > users.id
+Ref: projects_users.userId > users.id [delete: Cascade]

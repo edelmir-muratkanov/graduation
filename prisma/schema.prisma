@@ -50,9 +50,9 @@ model Properties {
 }
 
 model MethodsProperties {
-  method     Methods    @relation(fields: [methodId], references: [id])
+  method     Methods    @relation(fields: [methodId], references: [id], onDelete: Cascade)
   methodId   String
-  property   Properties @relation(fields: [propertyId], references: [id])
+  property   Properties @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   propertyId String
 
   parameters Json
@@ -86,10 +86,10 @@ model Projects {
 }
 
 model ProjectsProperties {
-  project   Projects @relation(fields: [projectId], references: [id])
+  project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
 
-  property   Properties @relation(fields: [propertyId], references: [id])
+  property   Properties @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   propertyId String
 
   value Float
@@ -100,10 +100,10 @@ model ProjectsProperties {
 }
 
 model ProjectsMethods {
-  project   Projects @relation(fields: [projectId], references: [id])
+  project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
 
-  method   Methods @relation(fields: [methodId], references: [id])
+  method   Methods @relation(fields: [methodId], references: [id], onDelete: Cascade)
   methodId String
 
   @@id([methodId, projectId])
@@ -111,9 +111,9 @@ model ProjectsMethods {
 }
 
 model ProjectsUsers {
-  project   Projects @relation(fields: [projectId], references: [id])
+  project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
-  user      Users    @relation(fields: [userId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 
   @@id([userId, projectId])
