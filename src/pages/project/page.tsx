@@ -32,13 +32,13 @@ export const ProjectPage = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to='/'>Home</Link>
+                <Link to='/'>Главная</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to='/projects'>Projects</Link>
+                <Link to='/projects'>Проекты</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -48,8 +48,8 @@ export const ProjectPage = () => {
           </BreadcrumbList>
         </Breadcrumb>
         <TabsList className=''>
-          <TabsTrigger value='info'>Info</TabsTrigger>
-          <TabsTrigger value='calculations'>Calculations</TabsTrigger>
+          <TabsTrigger value='info'>Информация</TabsTrigger>
+          <TabsTrigger value='calculations'>Расчеты</TabsTrigger>
         </TabsList>
       </div>
 

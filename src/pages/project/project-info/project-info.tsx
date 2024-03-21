@@ -12,6 +12,7 @@ import {
   TabsContent,
   Text,
 } from '@/components/ui'
+import { CollectorTypeTranslates, ProjectTypeTranslates } from '@/lib/constants'
 
 import { useProjectInfo } from './useProjectInfo'
 
@@ -21,30 +22,32 @@ export const ProjectInfo = () => {
     <TabsContent value='info' className='space-y-5'>
       <Card className='h-fit'>
         <CardHeader>
-          <CardTitle>Base Info</CardTitle>
+          <CardTitle>Базовая информация</CardTitle>
         </CardHeader>
 
         <CardContent>
           <div className='flex flex-col space-y-0'>
-            <Text>Name: {data.data.name}</Text>
-            <Text>Operator: {data.data.operator}</Text>
-            <Text>Country: {data.data.country}</Text>
-            <Text>Project type: {data.data.type}</Text>
-            <Text>Collector type: {data.data.collectorType}</Text>
+            <Text>Название: {data.data.name}</Text>
+            <Text>Оператор: {data.data.operator}</Text>
+            <Text>Страна: {data.data.country}</Text>
+            <Text>Тип проекта: {ProjectTypeTranslates[data.data.type]}</Text>
+            <Text>
+              Тип коллектора: {CollectorTypeTranslates[data.data.collectorType]}
+            </Text>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Parameters</CardTitle>
+          <CardTitle>Список параметров</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Value</TableHead>
+                <TableHead>Название</TableHead>
+                <TableHead>Значение</TableHead>
               </TableRow>
             </TableHeader>
 

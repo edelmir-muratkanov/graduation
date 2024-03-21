@@ -12,7 +12,7 @@ export const ProjectInfoLoading = () => {
     <TabsContent value='info' className='space-y-5'>
       <Card className='h-fit'>
         <CardHeader>
-          <CardTitle>Base Info</CardTitle>
+          <CardTitle>Базовая информация</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -28,7 +28,7 @@ export const ProjectInfoLoading = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Parameters</CardTitle>
+          <CardTitle>Список параметров</CardTitle>
         </CardHeader>
         <CardContent className='space-y-3'>
           {Array(10)

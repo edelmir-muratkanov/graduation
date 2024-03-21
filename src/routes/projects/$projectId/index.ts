@@ -6,6 +6,7 @@ import {
   getProjectCalculationsQueryOptions,
   getProjectQueryOptions,
 } from '@/lib/api'
+import { ProjectLoading } from '@/pages/project/loading'
 
 const projectSearchSchema = z.object({
   tab: z
@@ -31,4 +32,5 @@ export const Route = createFileRoute('/projects/$projectId/')({
     })
   },
   validateSearch: projectSearchSchema,
+  pendingComponent: ProjectLoading,
 })
