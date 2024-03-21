@@ -20,7 +20,7 @@ export const LoginButton = () => {
         redirectUrl: history.location.pathname,
       }}
     >
-      Login
+      Войти
     </Link>
   )
 }

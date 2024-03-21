@@ -1,3 +1,4 @@
+import { RoleTranslates } from '@/lib/constants'
 import { useProfile } from '@/lib/contexts'
 
 import {
@@ -26,7 +27,7 @@ export const Header = () => {
                 <Button variant='secondary'>{user.email}</Button>
               </PopoverTrigger>
               <PopoverContent className='flex flex-col w-max'>
-                <Text className='text-center'>{user.role}</Text>
+                <Text className='text-center'>{RoleTranslates[user.role]}</Text>
                 <Separator className='my-2' />
                 <LogoutButton />
               </PopoverContent>

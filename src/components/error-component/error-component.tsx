@@ -13,14 +13,14 @@ export const ErrorComponent = () => {
         500
       </Heading>
       <Text className='text-xl m-0 uppercase tracking-wide'>
-        Oops! Something went wrong
+        Упс! Что-то пошло не так.
       </Text>
       <Button
         variant='link'
-        className='text-lg uppercase'
+        className='text-base uppercase'
         onClick={() => router.history.back()}
       >
-        Back
+        Вернуться назад
       </Button>
     </div>
   )

@@ -16,7 +16,7 @@ export const LogoutButton = () => {
 
   return (
     <Button onClick={handleClick} size='default' variant='link'>
-      Logout
+      Выйти
     </Button>
   )
 }

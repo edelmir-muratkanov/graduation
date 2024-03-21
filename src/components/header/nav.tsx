@@ -27,7 +27,7 @@ export const Nav = () => {
                 className: 'text-foreground/90 font-semibold',
               }}
             >
-              Projects
+              Проекты
             </Link>
           </li>
           <li>
@@ -38,7 +38,7 @@ export const Nav = () => {
                 className: 'text-foreground/90 font-semibold',
               }}
             >
-              Methods
+              Методы
             </Link>
           </li>
         </ul>
