@@ -30,13 +30,13 @@ export const ParameterField = ({ index, type }: ParameterFieldProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel className='sr-only'>
-              Data {index} parameters {type} xMin
+              Минимальный x {type === 'first' ? 1 : 2} параметра {index}
             </FormLabel>
             <FormDescription />
             <FormControl>
               <Input
                 type='number'
-                placeholder={`x${type === 'first' ? 1 : 2} min`}
+                placeholder={`Введите минимальный x${type === 'first' ? 1 : 2}`}
                 {...field}
                 value={field.value.toString()}
                 onChange={e => field.onChange(functions.convertToNumber(e))}
@@ -53,13 +53,13 @@ export const ParameterField = ({ index, type }: ParameterFieldProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel className='sr-only'>
-              Data {index} parameters second x
+              x {type === 'first' ? 1 : 2} параметра {index}
             </FormLabel>
             <FormDescription />
             <FormControl>
               <Input
                 type='number'
-                placeholder={`x${type === 'first' ? 1 : 2}`}
+                placeholder={`Введите x${type === 'first' ? 1 : 2}`}
                 {...field}
                 value={field.value.toString()}
                 onChange={e => field.onChange(functions.convertToNumber(e))}
@@ -75,13 +75,13 @@ export const ParameterField = ({ index, type }: ParameterFieldProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel className='sr-only'>
-              Data {index} parameters second xMax
+              Максимальный x {type === 'first' ? 1 : 2} параметра {index}
             </FormLabel>
             <FormDescription />
             <FormControl>
               <Input
                 type='number'
-                placeholder={`x${type === 'first' ? 1 : 2} max`}
+                placeholder={`Введите максимальный x${type === 'first' ? 1 : 2}`}
                 {...field}
                 value={field.value}
                 onChange={e => field.onChange(functions.convertToNumber(e))}

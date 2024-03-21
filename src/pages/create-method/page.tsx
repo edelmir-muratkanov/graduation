@@ -15,7 +15,7 @@ export const CreateMethodPage = () => {
     <div className='mx-auto flex flex-col w-full justify-center space-y-6 sm:w-[650px]'>
       <div className='flex flex-col space-y-2 text-center'>
         <Heading as='h1' className='text-2xl font-semibold tracking-tight'>
-          Create new method
+          Создать новый метод
         </Heading>
       </div>
 
@@ -33,8 +33,8 @@ export const CreateMethodPage = () => {
           </div>
 
           <div className='flex flex-col'>
-            <Heading>Parameters</Heading>
-            <FormMessage>{state.formErrors.data?.root?.message}</FormMessage>
+            <Heading>Список параметров</Heading>
+            <FormMessage>{state.formErrors.data?.message}</FormMessage>
             <ul className='space-y-4'>
               {state.dataFields.map((field, index) => {
                 return (
@@ -61,7 +61,7 @@ export const CreateMethodPage = () => {
                           className='mt-2 col-span-12 row-span-1'
                           onClick={() => functions.setParameter(index, 'first')}
                         >
-                          Add x1
+                          Добавить x1
                         </Button>
                       )}
 
@@ -76,7 +76,7 @@ export const CreateMethodPage = () => {
                             functions.setParameter(index, 'second')
                           }
                         >
-                          Add x2
+                          Добавить x2
                         </Button>
                       )}
                       <FormMessage>
@@ -96,10 +96,10 @@ export const CreateMethodPage = () => {
               size='lg'
               onClick={() => functions.addData()}
             >
-              Add parameter
+              Добавить параметр
             </Button>
             <Button size='lg' type='submit'>
-              Create
+              Создать
             </Button>
           </div>
         </form>

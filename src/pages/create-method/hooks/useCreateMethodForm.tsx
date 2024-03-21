@@ -5,6 +5,8 @@ import { toast } from 'sonner'
 
 import type { Option } from '@/components/ui'
 import { useGetPropertiesQuery, usePostCreateMethodMutation } from '@/lib/api'
+import { CollectorTypeTranslates } from '@/lib/constants'
+import { queryClient } from '@/lib/contexts'
 
 import {
   type CreateMethodFormSchema,
@@ -28,9 +30,12 @@ export const useCreateMethodForm = () => {
   const postCreateMethodMutation = usePostCreateMethodMutation({
     options: {
       onSuccess() {
-        toast.success('Method successfully created', {
-          cancel: { label: 'Close' },
+        queryClient.invalidateQueries({ queryKey: ['methods'] })
+        toast.success('Метод успешно создан.', {
+          cancel: { label: 'Закрыть' },
         })
+
+        form.reset()
       },
     },
   })
@@ -68,7 +73,10 @@ export const useCreateMethodForm = () => {
   const getPropertiesQuery = useGetPropertiesQuery()
 
   const getMultipleSelectorValue = (value: CollectorType): Option => ({
-    label: value === 'Carbonate' ? 'Carbonate' : 'Terrigen',
+    label:
+      value === 'Carbonate'
+        ? CollectorTypeTranslates.Carbonate
+        : CollectorTypeTranslates.Terrigen,
     value: value === 'Carbonate' ? 'Carbonate' : 'Terrigen',
   })
 

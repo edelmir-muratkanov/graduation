@@ -5,7 +5,7 @@ export const CreateMethodLoading = () => {
     <div className='mx-auto flex flex-col w-full justify-center space-y-6 sm:w-[650px]'>
       <div className='flex flex-col space-y-2 text-center'>
         <Heading as='h1' className='text-2xl font-semibold tracking-tight'>
-          Create new method
+          Создать новый метод
         </Heading>
       </div>
 
@@ -16,7 +16,7 @@ export const CreateMethodLoading = () => {
         </div>
 
         <div className='flex flex-col'>
-          <Heading>Parameters</Heading>
+          <Heading>Список параметров</Heading>
         </div>
 
         <div className='flex justify-between items-center gap-2 *:w-full'>

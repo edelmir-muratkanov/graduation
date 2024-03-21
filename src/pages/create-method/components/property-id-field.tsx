@@ -29,7 +29,9 @@ export const PropertyIdField = ({ index }: PropertyIdFieldProps) => {
       name={`data.${index}.propertyId`}
       render={({ field }) => (
         <FormItem className='w-full'>
-          <FormLabel className='sr-only'>Data {index} propertyId</FormLabel>
+          <FormLabel className='sr-only'>
+            Идентификатор {index} свойства
+          </FormLabel>
           <FormDescription />
           <Select
             name={`data.${index}.propertyId`}
@@ -39,7 +41,7 @@ export const PropertyIdField = ({ index }: PropertyIdFieldProps) => {
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder='Property' />
+                <SelectValue placeholder='Выберите свойство' />
               </SelectTrigger>
             </FormControl>
 

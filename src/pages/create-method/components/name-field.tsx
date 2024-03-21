@@ -22,13 +22,13 @@ export const NameField = () => {
       render={({ field }) => (
         <FormItem>
           <FormLabel htmlFor={field.name} className='sr-only'>
-            Name
+            Название
           </FormLabel>
           <FormDescription />
           <FormControl>
             <Input
               id='name'
-              placeholder='Enter name'
+              placeholder='Введите название'
               disabled={field.disabled || state.loading}
               autoComplete='on'
               {...field}

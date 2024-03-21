@@ -10,6 +10,7 @@ import {
   MultipleSelector,
   Text,
 } from '@/components/ui'
+import { CollectorTypeTranslates } from '@/lib/constants'
 
 import { useCreateMethodForm } from '../hooks/useCreateMethodForm'
 
@@ -25,7 +26,7 @@ export const CollectorTypesField = () => {
         return (
           <FormItem>
             <FormLabel htmlFor=':r9:' className='sr-only'>
-              Collector types
+              Типы коллекторов
             </FormLabel>
             <FormDescription />
             <FormControl>
@@ -39,11 +40,17 @@ export const CollectorTypesField = () => {
                   functions.getMultipleSelectorValue(v),
                 )}
                 defaultOptions={[
-                  { label: 'Terrigen', value: 'Terrigen' },
-                  { label: 'Carbonate', value: 'Carbonate' },
+                  {
+                    label: CollectorTypeTranslates.Terrigen,
+                    value: 'Terrigen',
+                  },
+                  {
+                    label: CollectorTypeTranslates.Carbonate,
+                    value: 'Carbonate',
+                  },
                 ]}
                 onChange={options => field.onChange(options.map(o => o.value))}
-                placeholder='Select collector types'
+                placeholder='Выберите типы коллекторов'
                 hidePlaceholderWhenSelected
                 emptyIndicator={<Text>Nothing to select</Text>}
               />
