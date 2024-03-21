@@ -1,7 +1,9 @@
+type Role = 'User' | 'Admin'
+
 interface User {
   id: string
   email: string
-  role: 'User' | 'Admin'
+  role: Role
 }
 
 type CollectorType = 'Terrigen' | 'Carbonate'
