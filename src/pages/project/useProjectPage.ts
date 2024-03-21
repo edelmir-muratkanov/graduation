@@ -16,12 +16,12 @@ export const useProjectPage = () => {
     },
   } = useGetProjectQuery(params.projectId)
 
-  const hanleTabsValueChange = (value: Tab) =>
+  const hanleTabsValueChange = (value: string) =>
     navigate({
       to: '/projects/$projectId',
       params,
       search: {
-        tab: value,
+        tab: value as Tab,
       },
     })
 
