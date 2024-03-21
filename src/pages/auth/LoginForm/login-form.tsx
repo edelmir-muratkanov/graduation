@@ -18,10 +18,10 @@ export const LoginForm = () => {
     <>
       <div className='flex flex-col space-y-2 text-center'>
         <h1 className='text-2xl font-semibold tracking-tight'>
-          Login to your account
+          Войдите в свою учетную запись
         </h1>
         <p className='text-sm text-muted-foreground'>
-          Enter your email and password
+          Введите ваш адрес электронной почты и пароль
         </p>
       </div>
       <div>
@@ -39,12 +39,12 @@ export const LoginForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <Label className='sr-only' htmlFor='email'>
-                    Email
+                    Адрес электронной почты
                   </Label>
                   <FormControl>
                     <Input
                       id='email'
-                      placeholder='Enter email'
+                      placeholder='Введите адрес электронной почты'
                       autoCapitalize='none'
                       autoCorrect='off'
                       disabled={loading}
@@ -61,12 +61,12 @@ export const LoginForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <Label className='sr-only' htmlFor='password'>
-                    Password
+                    Пароль
                   </Label>
                   <FormControl>
                     <PasswordInput
                       id='password'
-                      placeholder='Enter password'
+                      placeholder='Введите пароль'
                       autoComplete='password'
                       autoCapitalize='none'
                       autoCorrect='off'
@@ -80,7 +80,7 @@ export const LoginForm = () => {
             />
 
             <Button type='submit' className='w-full' loading={loading}>
-              <span>Login</span>
+              <span>Войти</span>
             </Button>
           </form>
         </Form>
@@ -88,7 +88,7 @@ export const LoginForm = () => {
         <div className='flex justify-center'>
           <Button disabled={loading} variant='link' onClick={goToRegister}>
             <span className='bg-background px-2 text-muted-foreground'>
-              Create new account
+              Создать новую учетную запись
             </span>
           </Button>
         </div>

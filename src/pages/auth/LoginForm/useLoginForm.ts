@@ -21,9 +21,9 @@ export const useLoginForm = () => {
   const postLoginMutation = usePostLoginMutation({
     options: {
       onSuccess: () => {
-        toast.success('Sign in is successful 👍', {
-          cancel: { label: 'Close' },
-          description: 'We are very glad to see you, have fun',
+        toast.success('Вход успешно выполнен 👍', {
+          cancel: { label: 'Закрыть' },
+          description: 'Мы очень рады видеть вас!',
         })
       },
     },

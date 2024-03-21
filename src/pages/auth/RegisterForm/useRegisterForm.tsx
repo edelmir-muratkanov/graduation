@@ -21,9 +21,9 @@ export const useRegisterForm = () => {
   const postRegisterMutation = usePostRegisterMutation({
     options: {
       onSuccess: () => {
-        toast.success('Your account has been created 👍', {
-          cancel: { label: 'Close' },
-          description: 'We are very glad to see you, have fun',
+        toast.success('Ваша учетная запись была создана. 👍', {
+          cancel: { label: 'Закрыть' },
+          description: 'Мы очень рады видеть вас!',
         })
       },
     },

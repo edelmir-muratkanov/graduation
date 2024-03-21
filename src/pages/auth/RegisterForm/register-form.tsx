@@ -18,10 +18,10 @@ export const RegisterForm = () => {
     <>
       <div className='flex flex-col space-y-2 text-center'>
         <h1 className='text-2xl font-semibold tracking-tight'>
-          Create new account
+          Создать новую учетную запись
         </h1>
         <p className='text-sm text-muted-foreground'>
-          Enter your email and password
+          Введите свой адрес электронной почты и пароль
         </p>
       </div>
       <div>
@@ -39,12 +39,12 @@ export const RegisterForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <Label className='sr-only' htmlFor='email'>
-                    Email
+                    Адрес электронной почты
                   </Label>
                   <FormControl>
                     <Input
                       id='email'
-                      placeholder='Enter email'
+                      placeholder='Введите адрес электронной почты'
                       autoCapitalize='none'
                       autoCorrect='off'
                       disabled={loading}
@@ -61,12 +61,12 @@ export const RegisterForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <Label className='sr-only' htmlFor='password'>
-                    Password
+                    Пароль
                   </Label>
                   <FormControl>
                     <PasswordInput
                       id='password'
-                      placeholder='Enter password'
+                      placeholder='Введите пароль'
                       autoComplete='password'
                       autoCapitalize='none'
                       autoCorrect='off'
@@ -84,12 +84,12 @@ export const RegisterForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <Label className='sr-only' htmlFor='confirmPassword'>
-                    Confirm Password
+                    Подтвердите пароль
                   </Label>
                   <FormControl>
                     <PasswordInput
                       id='confirmPassword'
-                      placeholder='Confirm password'
+                      placeholder='Подтвердите пароль'
                       autoComplete='confirmPassword'
                       autoCapitalize='none'
                       autoCorrect='off'
@@ -103,7 +103,7 @@ export const RegisterForm = () => {
             />
 
             <Button type='submit' className='w-full' loading={loading}>
-              <span>Register</span>
+              <span>Зарегистрироваться</span>
             </Button>
           </form>
         </Form>
@@ -111,7 +111,7 @@ export const RegisterForm = () => {
         <div className='flex justify-center'>
           <Button disabled={loading} variant='link' onClick={goToLogin}>
             <span className='bg-background px-2 text-muted-foreground'>
-              Have account alredy
+              Уже есть аккаунт
             </span>
           </Button>
         </div>
