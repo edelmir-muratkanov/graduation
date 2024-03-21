@@ -10,7 +10,21 @@ module.exports = {
     './src/**/*.{ts,tsx}',
   ],
   prefix: '',
+  purge: {
+    enabled: true,
+    content: [
+      './pages/**/*.{ts,tsx}',
+      './components/**/*.{ts,tsx}',
+      './app/**/*.{ts,tsx}',
+      './src/**/*.{ts,tsx}',
+    ],
+  },
   theme: {
+    fontFamily: {
+      oswald: ['Oswald', 'Roboto', 'sans-serif'],
+      openSans: ['Open-Sans', 'Roboto', 'sans-serif'],
+      poppins: ['Poppins', 'Roboto', 'sans-serif'],
+    },
     container: {
       center: true,
       padding: '2rem',
