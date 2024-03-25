@@ -22,15 +22,17 @@ import { useProjectCalculations } from './useProjectCalculations'
 const CustomTooltip = ({ active, payload: payloads, label }: any) => {
   if (active && payloads && payloads.length) {
     const { payload } = payloads[0]
-    const { result, totalRatio } = payload
+    const { applicability, ratio } = payload
     return (
       <Card>
         <CardHeader className='p-3'>
           <CardTitle>{label}</CardTitle>
         </CardHeader>
         <CardContent className='p-3'>
-          <p>TotalRatio: {totalRatio.toLocaleString('ru-KZ')}</p>
-          <p>Result: {result}</p>
+          <p>
+            Коэфицент применимости (от -1 до 1): {ratio.toLocaleString('ru-KZ')}
+          </p>
+          <p>Применимость: {applicability}</p>
         </CardContent>
       </Card>
     )
@@ -45,8 +47,8 @@ export const ProjectCalculations = () => {
   return (
     <TabsContent value='calculations'>
       <ResponsiveContainer height={400}>
-        <LineChart data={state.data.data}>
-          <XAxis dataKey='name' tickMargin={10} />
+        <LineChart data={state.calculations}>
+          <XAxis dataKey='method.name' tickMargin={10} />
           <YAxis
             domain={[-1.25, 1.25]}
             ticks={[-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]}
@@ -74,7 +76,7 @@ export const ProjectCalculations = () => {
             fill='#69B34C'
           />
 
-          <Line dataKey='totalRatio' activeDot={{ r: 10 }} />
+          <Line dataKey='ratio' activeDot={{ r: 10 }} />
         </LineChart>
       </ResponsiveContainer>
     </TabsContent>

@@ -6,5 +6,5 @@ export const useProjectCalculations = () => {
   const { projectId } = useParams({ from: '/projects/$projectId/' })
   const getProjectCalculationsQuery = useGetProjectCalculationsQuery(projectId)
 
-  return { state: { data: getProjectCalculationsQuery.data } }
+  return { state: { calculations: getProjectCalculationsQuery.data.data } }
 }
