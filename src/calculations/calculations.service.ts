@@ -37,6 +37,7 @@ export class CalculationsService {
 					applicability: true,
 					method: {
 						select: {
+							id: true,
 							name: true,
 						},
 					},
@@ -76,6 +77,7 @@ export class CalculationsService {
 					applicability: true,
 					method: {
 						select: {
+							id: true,
 							name: true,
 						},
 					},
