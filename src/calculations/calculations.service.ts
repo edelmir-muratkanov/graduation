@@ -17,52 +17,81 @@ export class CalculationsService {
 	) {}
 
 	async getByProject(projectId: string) {
-		return this.prisma.calculation.findMany({
-			where: {
-				projectId,
-			},
-			include: {
-				items: {
-					select: {
-						collectorType: true,
-						property: {
-							select: {
-								name: true,
-							},
+		return this.prisma
+			.$extends({
+				result: {
+					calculation: {
+						applicability: {
+							needs: { ratio: true },
+							compute: calculation => this.getApplicability(calculation.ratio),
 						},
-						ratio: true,
 					},
 				},
-			},
-		})
+			})
+			.calculation.findMany({
+				where: {
+					projectId,
+				},
+				select: {
+					ratio: true,
+					applicability: true,
+					method: {
+						select: {
+							name: true,
+						},
+					},
+					items: {
+						select: {
+							collectorType: true,
+							ratio: true,
+							property: {
+								select: {
+									name: true,
+								},
+							},
+						},
+					},
+				},
+			})
 	}
 
 	async getByMethod(methodId: string) {
-		const calculations = await this.prisma.calculation.findMany({
-			where: {
-				methodId,
-			},
-			include: {
-				items: {
-					select: {
-						collectorType: true,
-						property: {
-							select: {
-								name: true,
-							},
+		return this.prisma
+			.$extends({
+				result: {
+					calculation: {
+						applicability: {
+							needs: { ratio: true },
+							compute: calculation => this.getApplicability(calculation.ratio),
 						},
-						ratio: true,
 					},
 				},
-			},
-		})
-
-		const res = calculations.map(c => ({
-			...c,
-			result: this.getResult(c.ratio),
-		}))
-
-		return res
+			})
+			.calculation.findMany({
+				where: {
+					methodId,
+				},
+				select: {
+					ratio: true,
+					applicability: true,
+					method: {
+						select: {
+							name: true,
+						},
+					},
+					items: {
+						select: {
+							collectorType: true,
+							ratio: true,
+							property: {
+								select: {
+									name: true,
+								},
+							},
+						},
+					},
+				},
+			})
 	}
 
 	@OnEvent('project.created')
@@ -97,7 +126,6 @@ export class CalculationsService {
 
 		methods.map(async method => {
 			const paramsRatios: {
-				methodId: string
 				ratio: number
 				propertyId?: string
 				collectorType?: CollectorType
@@ -114,41 +142,40 @@ export class CalculationsService {
 
 					return {
 						ratio,
-						methodId: method.id,
 						propertyId: property.id,
 					}
 				}),
 			)
 
 			paramsRatios.push({
-				methodId: method.id,
 				ratio: method.collectorTypes.includes(project.collectorType) ? 1 : -1,
 				collectorType: project.collectorType,
 			})
 
 			const totalRatio = this.calculateTotalRatio(paramsRatios)
 
-			await this.prisma.calculation.create({
+			const calculation = await this.prisma.calculation.create({
 				data: {
 					ratio: totalRatio,
 					methodId: method.id,
 					projectId,
-					items: {
-						createMany: {
-							data: paramsRatios.map(p => ({
-								ratio: p.ratio,
-								collectorType: p.collectorType,
-								propertyId: p.propertyId,
-							})),
-							skipDuplicates: true,
-						},
-					},
 				},
+			})
+
+			paramsRatios.map(async ({ ratio, propertyId, collectorType }) => {
+				await this.prisma.calculationItem.create({
+					data: {
+						calculationId: calculation.id,
+						ratio,
+						collectorType,
+						propertyId,
+					},
+				})
 			})
 		})
 	}
 
-	private getResult(totalRatio: number) {
+	private getApplicability(totalRatio: number) {
 		const { lang } = I18nContext.current()
 		if (totalRatio < -0.75)
 			return this.i18n.t('results.calculations.NotApplicable', { lang })

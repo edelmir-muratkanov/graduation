@@ -88,6 +88,7 @@ Table projects_users {
 }
 
 Table calculations {
+  id String [pk]
   project projects [not null]
   projectId String [not null]
   method methods [not null]
@@ -96,21 +97,21 @@ Table calculations {
   items calculation_items [not null]
 
   indexes {
-    (methodId, projectId) [pk]
+    (methodId, projectId) [unique]
   }
 }
 
 Table calculation_items {
-  calculation calculations [not null]
+  id String [pk]
+  calculation calculations
+  calculationId String
   property properties
-  methodId String [not null]
-  projectId String [not null]
   propertyId String
   collectorType CollectorType
   ratio Float [not null]
 
   indexes {
-    (methodId, projectId) [pk]
+    (calculationId, propertyId, collectorType) [unique]
   }
 }
 
@@ -149,6 +150,6 @@ Ref: calculations.projectId > projects.id [delete: Cascade]
 
 Ref: calculations.methodId > methods.id [delete: Cascade]
 
-Ref: calculation_items.(methodId, projectId) > calculations.(methodId, projectId) [delete: Cascade]
+Ref: calculation_items.calculationId > calculations.id
 
 Ref: calculation_items.propertyId > properties.id [delete: Cascade]

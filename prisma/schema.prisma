@@ -120,6 +120,8 @@ model ProjectsUsers {
 }
 
 model Calculation {
+  id String @id @default(cuid())
+
   project   Projects          @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
   method    Methods           @relation(fields: [methodId], references: [id], onDelete: Cascade)
@@ -127,19 +129,20 @@ model Calculation {
   ratio     Float
   items     CalculationItem[]
 
-  @@id([methodId, projectId])
+  @@unique([methodId, projectId])
   @@map("calculations")
 }
 
 model CalculationItem {
-  calculation   Calculation    @relation(fields: [methodId, projectId], references: [methodId, projectId], onDelete: Cascade)
+  id String @id @default(cuid())
+
+  calculation   Calculation?   @relation(fields: [calculationId], references: [id])
+  calculationId String?
   property      Properties?    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  methodId      String
-  projectId     String
   propertyId    String?
   collectorType CollectorType?
   ratio         Float
 
-  @@id([methodId, projectId])
+  @@unique([calculationId, propertyId, collectorType])
   @@map("calculation_items")
 }
