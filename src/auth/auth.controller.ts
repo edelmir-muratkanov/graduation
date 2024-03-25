@@ -41,7 +41,6 @@ export class AuthController {
 		})
 
 		res.cookie(COOKIE.AccessToken, tokens.accessToken, {
-			httpOnly: true,
 			maxAge: maxAges.accessTokenMaxAge,
 		})
 
