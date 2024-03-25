@@ -4,6 +4,7 @@ import {
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common'
+import { EventEmitter2 } from '@nestjs/event-emitter'
 import type { CollectorType, ProjectType } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
@@ -12,6 +13,7 @@ import { PrismaErrors, PrismaService } from 'src/shared/prisma'
 
 import type { ProjectMethodParameter } from './dto/project.response'
 import { ProjectResponse } from './dto/project.response'
+import { ProjectCreatedEvent } from './project-created.event'
 import type {
 	CreateProjectMethodId,
 	CreateProjectParameters,
@@ -22,6 +24,7 @@ export class ProjectsService {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly i18n: I18nService<I18nTranslations>,
+		private readonly eventEmitter: EventEmitter2,
 	) {}
 
 	async create(
@@ -35,7 +38,7 @@ export class ProjectsService {
 		collectorType?: CollectorType,
 	) {
 		try {
-			return await this.prisma.projects.create({
+			const project = await this.prisma.projects.create({
 				data: {
 					name,
 					country,
@@ -61,6 +64,13 @@ export class ProjectsService {
 					},
 				},
 			})
+
+			await this.eventEmitter.emitAsync(
+				'project.created',
+				new ProjectCreatedEvent(project.id),
+			)
+
+			return project
 		} catch (e) {
 			if (e instanceof Prisma.PrismaClientKnownRequestError) {
 				if (e.code === PrismaErrors.UniqueConstraintViolated) {

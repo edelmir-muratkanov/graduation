@@ -16,6 +16,7 @@ Table properties {
   name String [unique, not null]
   methods methods_properties [not null]
   projects projects_properties [not null]
+  calculationItems calculation_items [not null]
 }
 
 Table methods_properties {
@@ -36,6 +37,7 @@ Table methods {
   collectorTypes CollectorType[] [not null]
   parameters methods_properties [not null]
   projects projects_methods [not null]
+  calculation calculations [not null]
 }
 
 Table projects {
@@ -48,6 +50,7 @@ Table projects {
   parameters projects_properties [not null]
   methods projects_methods [not null]
   users projects_users [not null]
+  calculation calculations [not null]
 }
 
 Table projects_properties {
@@ -84,6 +87,33 @@ Table projects_users {
   }
 }
 
+Table calculations {
+  project projects [not null]
+  projectId String [not null]
+  method methods [not null]
+  methodId String [not null]
+  ratio Float [not null]
+  items calculation_items [not null]
+
+  indexes {
+    (methodId, projectId) [pk]
+  }
+}
+
+Table calculation_items {
+  calculation calculations [not null]
+  property properties
+  methodId String [not null]
+  projectId String [not null]
+  propertyId String
+  collectorType CollectorType
+  ratio Float [not null]
+
+  indexes {
+    (methodId, projectId) [pk]
+  }
+}
+
 Enum Role {
   User
   Admin
@@ -114,3 +144,11 @@ Ref: projects_methods.methodId > methods.id [delete: Cascade]
 Ref: projects_users.projectId > projects.id [delete: Cascade]
 
 Ref: projects_users.userId > users.id [delete: Cascade]
+
+Ref: calculations.projectId > projects.id [delete: Cascade]
+
+Ref: calculations.methodId > methods.id [delete: Cascade]
+
+Ref: calculation_items.(methodId, projectId) > calculations.(methodId, projectId) [delete: Cascade]
+
+Ref: calculation_items.propertyId > properties.id [delete: Cascade]

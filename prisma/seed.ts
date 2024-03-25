@@ -17,6 +17,9 @@ async function main() {
 	})
 
 	/** Properties */
+	const p1 = await prisma.properties.create({
+		data: { name: 'Пластовое давление' },
+	})
 	const p2 = await prisma.properties.create({
 		data: { name: 'Средняя глубина залегания' },
 	})

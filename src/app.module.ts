@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
+import { EventEmitterModule } from '@nestjs/event-emitter'
 import * as Joi from 'joi'
 import {
 	HeaderResolver,
@@ -12,6 +13,7 @@ import {
 import { join } from 'path'
 
 import { AuthModule } from './auth/auth.module'
+import { CalculationsModule } from './calculations/calculations.module'
 import { MethodsModule } from './methods/methods.module'
 import { ProjectsModule } from './projects/projects.module'
 import { PropertiesModule } from './properties/properties.module'
@@ -21,6 +23,7 @@ import { UsersModule } from './users/users.module'
 
 @Module({
 	imports: [
+		EventEmitterModule.forRoot(),
 		ConfigModule.forRoot({
 			isGlobal: true,
 			validationSchema: Joi.object({
@@ -57,6 +60,7 @@ import { UsersModule } from './users/users.module'
 		PropertiesModule,
 		MethodsModule,
 		ProjectsModule,
+		CalculationsModule,
 	],
 	providers: [
 		{
