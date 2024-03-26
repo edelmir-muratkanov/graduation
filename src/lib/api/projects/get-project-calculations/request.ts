@@ -4,7 +4,7 @@ export type GetProjectCalculationsRequestConfig = RequestConfig | void
 
 export type ProjectCalculationsResponse = {
   ratio: number
-  method: Pick<Method, 'name'>
+  method: Pick<Method, 'name' | 'id'>
   applicability: string
   items: {
     collectorType: CollectorType
