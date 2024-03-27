@@ -12,24 +12,25 @@ export const queryClient = new QueryClient({
       staleTime: 30_000,
       retry: (count, error) => {
         if (
-          error.config?.url?.includes('auth') &&
-          [400, 401, 403, 404].includes(error.response?.status || 0)
+          error.config?.url?.includes('auth') ||
+          [400, 403, 404].includes(error.response?.status || 0)
         ) {
           return false
         }
 
-        return count <= 1
+        return count <= 3
       },
     },
   },
   queryCache: new QueryCache({
-    onError: ({ response }) => {
+    onError: ({ response }, query) => {
       if (response?.status === 401) {
         postRefresh({})
           .then(({ data }) => {
             flushSync(() => {
               localStorage.setItem(STORAGE_KEYS.AccessToken, data.token)
             })
+            return query.fetch()
           })
           .catch(() => {
             flushSync(() => {
@@ -44,24 +45,24 @@ export const queryClient = new QueryClient({
     },
   }),
   mutationCache: new MutationCache({
-    onError: ({ response }) => {
+    onError: ({ response }, vars, _, mutation) => {
       if (response?.status === 401) {
         postRefresh({})
           .then(({ data }) => {
             flushSync(() => {
               localStorage.setItem(STORAGE_KEYS.AccessToken, data.token)
             })
+            return mutation.execute(vars)
           })
           .catch(() => {
             flushSync(() => {
               localStorage.removeItem(STORAGE_KEYS.AccessToken)
             })
           })
+        toast.error(response?.data.message ?? DEFAULT_ERROR, {
+          cancel: { label: 'Закрыть' },
+        })
       }
-
-      toast.error(response?.data.message ?? DEFAULT_ERROR, {
-        cancel: { label: 'Закрыть' },
-      })
     },
   }),
 })
