@@ -38,7 +38,7 @@ export const Route = createRootRouteWithContext<{
         <Outlet />
       </main>
       <Footer />
-      <Toaster duration={TOASTER_DURATION} position='top-right' />
+      <Toaster duration={TOASTER_DURATION} position='top-center' />
       <Suspense fallback={null}>
         <TanStackRouterDevtools />
         <ReactQueryDevtools />

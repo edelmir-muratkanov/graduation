@@ -1,12 +1,7 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 
-import { useProfile } from '@/lib/contexts'
-
-const Home = () => {
-  const { user } = useProfile()
-  return <div>{user?.email}</div>
-}
+import { HomePage } from '@/pages/home/page'
 
 export const Route = createLazyFileRoute('/(home)/')({
-  component: () => <Home />,
+  component: HomePage,
 })
