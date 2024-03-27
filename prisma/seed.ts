@@ -58,10 +58,69 @@ async function main() {
 		data: { name: 'Плотность пластовой воды' },
 	})
 
-	const method = await prisma.methods.create({
+	const co2 = await prisma.methods.create({
+		data: {
+			name: 'Закачка УВ газа',
+			collectorTypes: ['Terrigen', 'Carbonate'],
+			parameters: {
+				create: [
+					{
+						propertyId: p6.id,
+						parameters: {
+							first: { x: 1, xMin: 0.1, xMax: 1.5 },
+							second: { x: 3000, xMin: 726, xMax: 5000 },
+						},
+					},
+					{
+						propertyId: p4.id,
+						parameters: { first: { x: 0.1, xMin: 0.04, xMax: 0.15 } },
+					},
+					{
+						propertyId: p5.id,
+						parameters: { first: { x: 0.35, xMin: 0.3, xMax: 0.4 } },
+					},
+					{
+						propertyId: p3.id,
+						parameters: {
+							first: { x: 8, xMin: 5.9999, xMax: 10 },
+							second: { x: 35, xMin: 30, xMax: 40 },
+						},
+					},
+					{
+						propertyId: p2.id,
+						parameters: {
+							first: { x: 1350, xMax: 1500, xMin: 1219 },
+							second: { x: 4700, xMin: 4500, xMax: 4850 },
+						},
+					},
+					{
+						propertyId: p7.id,
+						parameters: {
+							first: { x: 32, xMin: 29, xMax: 35 },
+							second: { x: 120, xMin: 100, xMax: 121 },
+						},
+					},
+					{
+						propertyId: p12.id,
+						parameters: {
+							first: { x: 770, xMin: 750, xMax: 780 },
+							second: { x: 910, xMin: 900, xMax: 916 },
+						},
+					},
+					{
+						propertyId: p11.id,
+						parameters: {
+							second: { x: 36, xMin: 35, xMax: 37 },
+						},
+					},
+				],
+			},
+		},
+	})
+	const uvgas = await prisma.methods.create({
 		data: {
 			name: 'Закачка СО2',
-			collectorTypes: ['Terrigen'],
+			collectorTypes: ['Terrigen', 'Carbonate'],
 			parameters: {
 				create: [
 					{
@@ -110,7 +169,71 @@ async function main() {
 					{
 						propertyId: p11.id,
 						parameters: {
-							second: { x: 36, xMin: 35, xMax: 37 },
+							first: { x: 5, xMin: 0.04, xMax: 10 },
+							second: { x: 400, xMin: 286, xMax: 18000 },
+						},
+					},
+				],
+			},
+		},
+	})
+
+	const vgv = await prisma.methods.create({
+		data: {
+			name: 'Водогазовое воздействие',
+			collectorTypes: ['Terrigen', 'Carbonate'],
+			parameters: {
+				create: [
+					{
+						propertyId: p6.id,
+						parameters: {
+							first: { x: 150, xMin: 130, xMax: 200 },
+							second: { x: 900, xMin: 800, xMax: 1000 },
+						},
+					},
+					{
+						propertyId: p4.id,
+						parameters: {
+							first: { x: 0.105, xMin: 0.1, xMax: 0.11 },
+							second: { xMax: 0.3, xMin: 0.24, x: 0.28 },
+						},
+					},
+					{
+						propertyId: p5.id,
+						parameters: { first: { x: 0.42, xMin: 0.4, xMax: 0.42 } },
+					},
+					{
+						propertyId: p3.id,
+						parameters: {
+							first: { x: 8, xMin: 6, xMax: 10 },
+							second: { x: 35, xMin: 30, xMax: 40 },
+						},
+					},
+					{
+						propertyId: p2.id,
+						parameters: {
+							first: { x: 2350, xMax: 2400, xMin: 2300 },
+							second: { x: 2700, xMin: 2650, xMax: 2708 },
+						},
+					},
+					{
+						propertyId: p7.id,
+						parameters: {
+							first: { x: 92, xMin: 90, xMax: 95 },
+							second: { x: 122, xMin: 120, xMax: 123 },
+						},
+					},
+					{
+						propertyId: p12.id,
+						parameters: {
+							first: { x: 832, xMin: 829, xMax: 835 },
+							second: { x: 855, xMin: 850, xMax: 860 },
+						},
+					},
+					{
+						propertyId: p11.id,
+						parameters: {
+							second: { x: 1, xMin: 0.3, xMax: 0.5 },
 						},
 					},
 				],
@@ -119,7 +242,7 @@ async function main() {
 	})
 
 	/** Projects */
-	await prisma.projects.create({
+	const project = await prisma.projects.create({
 		data: {
 			name: 'Бурмаша',
 			country: 'Казахстан',
@@ -169,9 +292,11 @@ async function main() {
 				},
 			},
 			methods: {
-				create: {
-					methodId: method.id,
-				},
+				create: [
+					{ methodId: co2.id },
+					{ methodId: vgv.id },
+					{ methodId: uvgas.id },
+				],
 			},
 			users: {
 				create: {

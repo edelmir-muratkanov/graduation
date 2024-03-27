@@ -1,3 +1,4 @@
+import type { OnModuleInit } from '@nestjs/common'
 import { Injectable } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
 import type { CollectorType } from '@prisma/client'
@@ -10,11 +11,25 @@ import { PrismaService } from 'src/shared/prisma'
 import type { MethodParams } from './calculations.interface'
 
 @Injectable()
-export class CalculationsService {
+export class CalculationsService implements OnModuleInit {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly i18n: I18nService<I18nTranslations>,
 	) {}
+
+	async onModuleInit() {
+		const calcs = await this.prisma.calculation.count()
+
+		if (calcs === 0) {
+			const projects = await this.prisma.projects.findMany()
+
+			await Promise.all(
+				projects.map(project =>
+					this.handleProjectCreatedEvent(new ProjectCreatedEvent(project.id)),
+				),
+			)
+		}
+	}
 
 	async getByProject(projectId: string) {
 		return this.prisma
