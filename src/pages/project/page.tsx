@@ -27,7 +27,7 @@ export const ProjectPage = () => {
       onValueChange={functions.hanleTabsValueChange}
       orientation='vertical'
     >
-      <div className='flex items-center justify-between'>
+      <div className='flex items-center justify-between mb-8'>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>

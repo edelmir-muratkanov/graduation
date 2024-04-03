@@ -1,70 +1,22 @@
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+import { TabsContent } from '@/components/ui'
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  TabsContent,
-} from '@/components/ui'
-
-import { useProjectCalculations } from './useProjectCalculations'
-
-const CustomTooltip = ({ active, payload: payloads, label }: any) => {
-  if (active && payloads && payloads.length) {
-    const { payload } = payloads[0]
-    const { applicability, ratio } = payload
-    return (
-      <Card>
-        <CardHeader className='p-3'>
-          <CardTitle>{label}</CardTitle>
-        </CardHeader>
-        <CardContent className='p-3'>
-          <p>
-            Коэфицент применимости (от -1 до 1): {ratio.toLocaleString('ru-KZ')}
-          </p>
-          <p>Применимость: {applicability}</p>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  return null
-}
+import { AcceptableParametersChart } from './components/acceptable-parameters-chart'
+import { MethodsApplecabilityChart } from './components/methods-applecability-chart'
+import { ParametersApplecabilityTable } from './components/parameters-applecability-table'
 
 export const ProjectCalculations = () => {
-  const { state } = useProjectCalculations()
-
   return (
-    <TabsContent value='calculations' className='space-y-5'>
-      <div className='w-full h-96'>
-        <ResponsiveContainer>
-          <LineChart data={state.calculations}>
-            <XAxis
-              dataKey='method.name'
-              tick={{ fontSize: 12 }}
-              tickMargin={10}
-              padding={{ left: 30, right: 30 }}
-            />
-            <YAxis
-              domain={[-1.25, 1.25]}
-              ticks={[-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <CartesianGrid strokeDasharray='5 5' />
-
-            <Line type='monotone' dataKey='ratio' activeDot={{ r: 10 }} />
-          </LineChart>
-        </ResponsiveContainer>
+    <TabsContent value='calculations' className='space-y-10'>
+      <div className='w-full flex h-96'>
+        <div className='w-[500px] text-center'>
+          <AcceptableParametersChart />
+        </div>
+        <div className='w-full text-center'>
+          <MethodsApplecabilityChart />
+        </div>
       </div>
+
+      <ParametersApplecabilityTable />
     </TabsContent>
   )
 }

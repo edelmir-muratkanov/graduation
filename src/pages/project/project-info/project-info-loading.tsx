@@ -19,8 +19,8 @@ export const ProjectInfoLoading = () => {
           <div className='flex flex-col space-y-3'>
             {Array(3)
               .fill(1)
-              .map(() => (
-                <Skeleton className='h-[27px]' />
+              .map(v => (
+                <Skeleton key={v} className='h-[27px]' />
               ))}
           </div>
         </CardContent>
@@ -33,8 +33,8 @@ export const ProjectInfoLoading = () => {
         <CardContent className='space-y-3'>
           {Array(10)
             .fill(1)
-            .map(() => (
-              <Skeleton className='h-[27px]' />
+            .map(v => (
+              <Skeleton key={v} className='h-[27px]' />
             ))}
         </CardContent>
       </Card>
