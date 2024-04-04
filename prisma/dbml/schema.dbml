@@ -103,8 +103,8 @@ Table calculations {
 
 Table calculation_items {
   id String [pk]
-  calculation calculations
-  calculationId String
+  calculation calculations [not null]
+  calculationId String [not null]
   property properties
   propertyId String
   collectorType CollectorType
@@ -150,6 +150,6 @@ Ref: calculations.projectId > projects.id [delete: Cascade]
 
 Ref: calculations.methodId > methods.id [delete: Cascade]
 
-Ref: calculation_items.calculationId > calculations.id
+Ref: calculation_items.calculationId > calculations.id [delete: Cascade]
 
 Ref: calculation_items.propertyId > properties.id [delete: Cascade]

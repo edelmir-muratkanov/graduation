@@ -2,7 +2,6 @@ import { BullModule } from '@nestjs/bull'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
-import { EventEmitterModule } from '@nestjs/event-emitter'
 import * as Joi from 'joi'
 import {
 	HeaderResolver,
@@ -24,7 +23,6 @@ import { UsersModule } from './users/users.module'
 
 @Module({
 	imports: [
-		EventEmitterModule.forRoot(),
 		ConfigModule.forRoot({
 			isGlobal: true,
 			validationSchema: Joi.object({

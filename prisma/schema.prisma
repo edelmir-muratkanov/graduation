@@ -136,8 +136,8 @@ model Calculation {
 model CalculationItem {
   id String @id @default(cuid())
 
-  calculation   Calculation?   @relation(fields: [calculationId], references: [id])
-  calculationId String?
+  calculation   Calculation    @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+  calculationId String
   property      Properties?    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   propertyId    String?
   collectorType CollectorType?
