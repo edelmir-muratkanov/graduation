@@ -9,7 +9,7 @@
 		"build": "nest build",
 		"format": "prettier --write \"**/*.{ts,tsx,js}\"",
 		"start": "nest start",
-		"dev": "nest start --watch",
+		"dev": "yarn prisma db seed && nest start --watch",
 		"debug": "nest start --debug --watch",
 		"prod": "node dist/main",
 		"lint": "eslint . --ext ts --ext tsx",
