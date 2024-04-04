@@ -30,7 +30,7 @@ export class PropertiesController {
 	@Post()
 	@ApiCreatedResponse({ type: PropertyResponse })
 	async create(@Body() request: CreatePropertyRequest) {
-		return this.propertiesService.create(request.name)
+		return this.propertiesService.create(request.name, request.unit)
 	}
 
 	@Get()

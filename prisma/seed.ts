@@ -18,44 +18,46 @@ async function main() {
 
 	/** Properties */
 	const p1 = await prisma.properties.create({
-		data: { name: 'Пластовое давление' },
+		data: { name: 'Пластовое давление', unit: 'МПа' },
 	})
 	const p2 = await prisma.properties.create({
-		data: { name: 'Средняя глубина залегания' },
+		data: { name: 'Средняя глубина залегания', unit: 'м' },
 	})
 	const p3 = await prisma.properties.create({
-		data: { name: 'Толщина пласта' },
+		data: { name: 'Толщина пласта', unit: 'м' },
 	})
-	const p4 = await prisma.properties.create({ data: { name: 'Пористость' } })
+	const p4 = await prisma.properties.create({
+		data: { name: 'Пористость', unit: 'д.ед' },
+	})
 	const p5 = await prisma.properties.create({
-		data: { name: 'Средняя нефтенасыщенность' },
+		data: { name: 'Средняя нефтенасыщенность', unit: 'д.ед' },
 	})
 	const p6 = await prisma.properties.create({
-		data: { name: 'Проницаемость' },
+		data: { name: 'Проницаемость', unit: 'мД' },
 	})
 	const p7 = await prisma.properties.create({
-		data: { name: 'Пластовая температура' },
+		data: { name: 'Пластовая температура', unit: '°С' },
 	})
 	const p8 = await prisma.properties.create({
-		data: { name: 'Давление насыщения нефти газом' },
+		data: { name: 'Давление насыщения нефти газом', unit: 'МПа' },
 	})
 	const p9 = await prisma.properties.create({
-		data: { name: 'Газосодержание' },
+		data: { name: 'Газосодержание', unit: 'м3/т' },
 	})
 	const p10 = await prisma.properties.create({
-		data: { name: 'Средняя продуктивность' },
+		data: { name: 'Средняя продуктивность', unit: 'т/сут*МПа' },
 	})
 	const p11 = await prisma.properties.create({
-		data: { name: 'Вязкость нефти' },
+		data: { name: 'Вязкость нефти', unit: 'мПа*с' },
 	})
 	const p12 = await prisma.properties.create({
-		data: { name: 'Плотность нефти' },
+		data: { name: 'Плотность нефти', unit: 'кг/м3' },
 	})
 	const p13 = await prisma.properties.create({
-		data: { name: 'Объемный коэффициент нефти' },
+		data: { name: 'Объемный коэффициент нефти', unit: 'д.ед' },
 	})
 	const p14 = await prisma.properties.create({
-		data: { name: 'Плотность пластовой воды' },
+		data: { name: 'Плотность пластовой воды', unit: 'кг/м3' },
 	})
 
 	const co2 = await prisma.methods.create({

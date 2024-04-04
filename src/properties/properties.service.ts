@@ -15,9 +15,9 @@ export class PropertiesService {
 		private readonly i18n: I18nService<I18nTranslations>,
 	) {}
 
-	async create(name: string) {
+	async create(name: string, unit: string) {
 		try {
-			return await this.prisma.properties.create({ data: { name } })
+			return await this.prisma.properties.create({ data: { name, unit } })
 		} catch (e) {
 			if (
 				e instanceof Prisma.PrismaClientKnownRequestError &&

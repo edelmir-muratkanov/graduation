@@ -43,6 +43,7 @@ model Users {
 model Properties {
   id               String               @id @default(cuid())
   name             String               @unique
+  unit             String
   methods          MethodsProperties[]
   projects         ProjectsProperties[]
   calculationItems CalculationItem[]
