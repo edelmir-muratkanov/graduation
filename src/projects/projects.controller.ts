@@ -1,5 +1,7 @@
+import { InjectQueue } from '@nestjs/bull'
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import { Queue } from 'bull'
 import { ApiPaginatedResponse, Auth, Session } from 'src/shared/decorators'
 
 import { CreateProjectRequest } from './dto/create-project.request'
@@ -11,7 +13,10 @@ import { ProjectsService } from './projects.service'
 @ApiTags('projects')
 @Controller('projects')
 export class ProjectsController {
-	constructor(private readonly projectsService: ProjectsService) {}
+	constructor(
+		private readonly projectsService: ProjectsService,
+		@InjectQueue('calculations') private readonly calculationsQueue: Queue,
+	) {}
 
 	@Auth('User')
 	@Post()
@@ -19,7 +24,7 @@ export class ProjectsController {
 		@Body() request: CreateProjectRequest,
 		@Session('id') userId: string,
 	) {
-		return this.projectsService.create(
+		const project = await this.projectsService.create(
 			request.name,
 			request.country,
 			request.projectType,
@@ -29,6 +34,10 @@ export class ProjectsController {
 			userId,
 			request.collectorType,
 		)
+		await this.calculationsQueue.add('project.created', {
+			projectId: project.id,
+		})
+		return project
 	}
 
 	@Get()

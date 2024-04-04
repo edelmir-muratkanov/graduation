@@ -1,3 +1,4 @@
+import { BullModule } from '@nestjs/bull'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
@@ -32,6 +33,8 @@ import { UsersModule } from './users/users.module'
 				ACCESS_TOKEN_EXPIRATION: Joi.string().required(),
 				REFRESH_TOKEN_SECRET: Joi.string().required(),
 				REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
+				REDIS_HOST: Joi.string().required(),
+				REDIS_PORT: Joi.number().required(),
 			}),
 		}),
 		I18nModule.forRoot({
@@ -53,6 +56,12 @@ import { UsersModule } from './users/users.module'
 				new HeaderResolver(['x-lang']),
 			],
 			typesOutputPath: join(process.cwd(), '/src/shared/generated/i18n.ts'),
+		}),
+		BullModule.forRoot({
+			redis: {
+				host: process.env.REDIS_HOST,
+				port: +process.env.REDIS_PORT,
+			},
 		}),
 		PrismaModule,
 		AuthModule,

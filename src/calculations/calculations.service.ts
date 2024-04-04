@@ -1,9 +1,6 @@
-import type { OnModuleInit } from '@nestjs/common'
 import { Injectable } from '@nestjs/common'
-import { OnEvent } from '@nestjs/event-emitter'
 import type { CollectorType } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
-import { ProjectCreatedEvent } from 'src/projects/project-created.event'
 import type { Group } from 'src/projects/projects.interface'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaService } from 'src/shared/prisma'
@@ -11,25 +8,11 @@ import { PrismaService } from 'src/shared/prisma'
 import type { MethodParams } from './calculations.interface'
 
 @Injectable()
-export class CalculationsService implements OnModuleInit {
+export class CalculationsService {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly i18n: I18nService<I18nTranslations>,
 	) {}
-
-	async onModuleInit() {
-		const calcs = await this.prisma.calculation.count()
-
-		if (calcs === 0) {
-			const projects = await this.prisma.projects.findMany()
-
-			await Promise.all(
-				projects.map(project =>
-					this.handleProjectCreatedEvent(new ProjectCreatedEvent(project.id)),
-				),
-			)
-		}
-	}
 
 	async getByProject(projectId: string) {
 		return this.prisma
@@ -111,76 +94,85 @@ export class CalculationsService implements OnModuleInit {
 			})
 	}
 
-	@OnEvent('project.created')
-	private async handleProjectCreatedEvent({ projectId }: ProjectCreatedEvent) {
-		const project = await this.prisma.projects.findUnique({
-			where: { id: projectId },
-			include: {
-				parameters: {
-					select: {
-						propertyId: true,
-						value: true,
-					},
-				},
-				methods: {
-					include: {
-						method: {
-							include: {
-								parameters: {
-									include: {
-										property: true,
-									},
-								},
-							},
-						},
-					},
-				},
+	async calculate(projectId: string, methodId: string) {
+		const projectParams = await this.prisma.projectsProperties.findMany({
+			where: {
+				projectId,
+			},
+			select: {
+				propertyId: true,
+				value: true,
 			},
 		})
 
-		const projectParameters = project.parameters
-		const methods = project.methods.map(m => m.method)
-
-		methods.map(async method => {
-			const paramsRatios: {
-				ratio: number
-				propertyId?: string
-				collectorType?: CollectorType
-			}[] = await Promise.all(
-				method.parameters.map(async ({ parameters, property }) => {
-					const projectParam = projectParameters.find(
-						p => p.propertyId === property.id,
-					)
-
-					const ratio = await this.calculateParamRatio(
-						projectParam ? projectParam.value : null,
-						parameters as MethodParams,
-					)
-
-					return {
-						ratio,
-						propertyId: property.id,
-					}
-				}),
-			)
-
-			paramsRatios.push({
-				ratio: method.collectorTypes.includes(project.collectorType) ? 1 : -1,
-				collectorType: project.collectorType,
-			})
-
-			const totalRatio = this.calculateTotalRatio(paramsRatios)
-
-			const calculation = await this.prisma.calculation.create({
-				data: {
-					ratio: totalRatio,
-					methodId: method.id,
-					projectId,
+		const { collectorTypes: methodCollectorTypes } =
+			await this.prisma.methods.findUnique({
+				where: { id: methodId },
+				select: {
+					collectorTypes: true,
 				},
 			})
 
-			paramsRatios.map(async ({ ratio, propertyId, collectorType }) => {
-				await this.prisma.calculationItem.create({
+		const { collectorType: projectCollectorType } =
+			await this.prisma.projects.findUnique({
+				where: { id: projectId },
+				select: { collectorType: true },
+			})
+
+		const methodParams = await this.prisma.methodsProperties.findMany({
+			where: {
+				methodId,
+			},
+			select: {
+				property: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+				parameters: true,
+			},
+		})
+
+		const paramsRatios: {
+			ratio: number
+			propertyId?: string
+			collectorType?: CollectorType
+		}[] = await Promise.all(
+			methodParams.map(({ parameters, property }) => {
+				const projectParam = projectParams.find(
+					p => p.propertyId === property.id,
+				)
+				const ratio = this.calculateParamRatio(
+					projectParam ? projectParam.value : null,
+					parameters as MethodParams,
+				)
+
+				return {
+					ratio,
+					propertyId: property.id,
+				}
+			}),
+		)
+
+		paramsRatios.push({
+			ratio: methodCollectorTypes.includes(projectCollectorType) ? 1 : -1,
+			collectorType: projectCollectorType,
+		})
+
+		const totalRatio = this.calculateTotalRatio(paramsRatios)
+
+		const calculation = await this.prisma.calculation.create({
+			data: {
+				ratio: totalRatio,
+				methodId,
+				projectId,
+			},
+		})
+
+		await Promise.all(
+			paramsRatios.map(({ ratio, propertyId, collectorType }) => {
+				return this.prisma.calculationItem.create({
 					data: {
 						calculationId: calculation.id,
 						ratio,
@@ -188,8 +180,8 @@ export class CalculationsService implements OnModuleInit {
 						propertyId,
 					},
 				})
-			})
-		})
+			}),
+		)
 	}
 
 	private getApplicability(totalRatio: number) {
