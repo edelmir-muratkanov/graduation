@@ -28,7 +28,10 @@ export class NestedParameter {
 }
 
 export class Parameter {
-	propertyId: string
+	property: {
+		name: string
+		unit: string
+	}
 
 	parameters: NestedParameter[]
 }

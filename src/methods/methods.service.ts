@@ -173,7 +173,13 @@ export class MethodsService {
 			include: {
 				parameters: {
 					select: {
-						propertyId: true,
+						// propertyId: true,
+						property: {
+							select: {
+								name: true,
+								unit: true,
+							},
+						},
 						parameters: true,
 					},
 				},
