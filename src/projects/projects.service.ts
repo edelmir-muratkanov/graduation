@@ -1,7 +1,9 @@
 import {
 	BadRequestException,
 	ConflictException,
+	ForbiddenException,
 	Injectable,
+	Logger,
 	NotFoundException,
 } from '@nestjs/common'
 import type { CollectorType, ProjectType } from '@prisma/client'
@@ -15,6 +17,8 @@ import type { CreateProjectParameters } from './projects.interface'
 
 @Injectable()
 export class ProjectsService {
+	private logger = new Logger(ProjectsService.name)
+
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly i18n: I18nService<I18nTranslations>,
@@ -58,6 +62,8 @@ export class ProjectsService {
 				},
 			})
 		} catch (e) {
+			this.logger.error(e)
+
 			if (e instanceof Prisma.PrismaClientKnownRequestError) {
 				if (e.code === PrismaErrors.UniqueConstraintViolated) {
 					throw new ConflictException(
@@ -197,5 +203,79 @@ export class ProjectsService {
 		res.users = project.users.map(u => u.userId)
 
 		return res
+	}
+
+	async update(
+		id: string,
+		userId: string,
+		name: string,
+		operator: string,
+		country: string,
+		collectorType: CollectorType,
+		projectType: ProjectType,
+		methodIds: string[],
+		parameters: CreateProjectParameters[],
+	) {
+		const { users } = await this.prisma.projects.findUnique({
+			where: { id },
+			select: { users: true },
+		})
+
+		if (!users.some(up => up.userId === userId)) {
+			throw new ForbiddenException()
+		}
+
+		try {
+			await this.prisma.$transaction([
+				this.prisma.projectsMethods.deleteMany({
+					where: { projectId: id },
+				}),
+				this.prisma.projectsMethods.createMany({
+					data: methodIds.map(methodId => ({ projectId: id, methodId })),
+					skipDuplicates: true,
+				}),
+				this.prisma.projectsProperties.deleteMany({
+					where: { projectId: id },
+				}),
+				this.prisma.projectsProperties.createMany({
+					data: parameters.map(p => ({
+						projectId: id,
+						propertyId: p.propertyId,
+						value: p.value,
+					})),
+					skipDuplicates: true,
+				}),
+				this.prisma.projects.update({
+					where: { id },
+					data: {
+						name,
+						operator,
+						country,
+						collectorType,
+						type: projectType,
+					},
+				}),
+			])
+		} catch (e) {
+			this.logger.error(e)
+
+			if (e instanceof Prisma.PrismaClientKnownRequestError) {
+				if (e.code === PrismaErrors.RecordDoesNotExist) {
+					throw new NotFoundException(
+						this.i18n.t('exceptions.project.NotFound', {
+							lang: I18nContext.current().lang,
+						}),
+					)
+				}
+
+				if (e.code === PrismaErrors.ForeignKeyConstraintViolated) {
+					throw new BadRequestException(
+						this.i18n.t('exceptions.project.InvalidProperties', {
+							lang: I18nContext.current().lang,
+						}),
+					)
+				}
+			}
+		}
 	}
 }

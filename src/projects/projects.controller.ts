@@ -8,16 +8,20 @@ import {
 	Logger,
 	Param,
 	Post,
+	Put,
 	Query,
 } from '@nestjs/common'
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import { ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { Queue } from 'bull'
 import { ApiPaginatedResponse, Auth, Session } from 'src/shared/decorators'
 
-import { CreateProjectRequest } from './dto/create-project.request'
-import { GetAllProjectsParams } from './dto/get-all-projects-params.request'
-import { ProjectResponse } from './dto/project.response'
-import { ProjectsResponse } from './dto/projects.response'
+import {
+	CreateProjectRequest,
+	GetAllProjectsParams,
+	ProjectResponse,
+	ProjectsResponse,
+	UpdateProjectRequest,
+} from './dto'
 import { PROJECT_CACHE_KEY, PROJECTS_CACHE_KEY } from './projects.constants'
 import { ProjectsService } from './projects.service'
 
@@ -116,5 +120,29 @@ export class ProjectsController {
 		const project = await this.projectsService.getById(id)
 		await this.cacheManager.set(key, project)
 		return project
+	}
+
+	@Auth()
+	@ApiNoContentResponse()
+	@Put(':id')
+	async update(
+		@Param('id') id: string,
+		@Session('id') userId: string,
+		@Body() request: UpdateProjectRequest,
+	) {
+		await this.projectsService.update(
+			id,
+			userId,
+			request.name,
+			request.operator,
+			request.country,
+			request.collectorType,
+			request.projectType,
+			request.methodIds,
+			request.parameters,
+		)
+
+		await this.clearCache()
+		await this.cacheManager.del(`${PROJECT_CACHE_KEY}-${id}`)
 	}
 }
