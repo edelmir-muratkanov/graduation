@@ -2,12 +2,6 @@ import { ApiProperty } from '@nestjs/swagger'
 import type { Projects } from '@prisma/client'
 import { CollectorType, ProjectType } from '@prisma/client'
 
-export class ProjectUserResponse {
-	id: string
-
-	email: string
-}
-
 class ProjectParameterResponse {
 	value: number
 
@@ -15,33 +9,6 @@ class ProjectParameterResponse {
 		id: string
 		name: string
 	}
-}
-class ProjetcMethodParameterGroup {
-	x: number
-
-	xMin: number
-
-	xMax: number
-}
-
-export class ProjectMethodParameter {
-	propertyId: string
-
-	parameters: {
-		first?: ProjetcMethodParameterGroup
-		second?: ProjetcMethodParameterGroup
-	}
-}
-
-class ProjectMethodResponse {
-	id: string
-
-	name: string
-
-	@ApiProperty({ enum: CollectorType, isArray: true })
-	collectorTypes: CollectorType[]
-
-	parameters: ProjectMethodParameter[]
 }
 
 export class ProjectResponse implements Projects {
@@ -59,9 +26,9 @@ export class ProjectResponse implements Projects {
 
 	operator: string
 
-	users: ProjectUserResponse[]
+	users: string[]
 
 	parameters: ProjectParameterResponse[]
 
-	methods: ProjectMethodResponse[]
+	methods: string[]
 }

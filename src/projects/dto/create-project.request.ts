@@ -14,16 +14,7 @@ import {
 } from 'class-validator'
 import { validationMessage } from 'src/shared/utils'
 
-import type {
-	CreateProjectMethodId,
-	CreateProjectParameters,
-} from '../projects.interface'
-
-export class CreateProjectMethodIdRequest implements CreateProjectMethodId {
-	@IsString({ message: validationMessage('validation.IsString') })
-	@IsNotEmpty({ message: validationMessage('validation.NotEmpty') })
-	methodId: string
-}
+import type { CreateProjectParameters } from '../projects.interface'
 
 export class CreateProjectParameterRequest implements CreateProjectParameters {
 	@IsString({ message: validationMessage('validation.IsString') })
@@ -62,9 +53,8 @@ export class CreateProjectRequest {
 
 	@IsArray({ message: validationMessage('validation.IsArray') })
 	@ArrayNotEmpty({ message: validationMessage('validation.NotEmpty') })
-	@ValidateNested()
-	@Type(() => CreateProjectMethodIdRequest)
-	methodIds: CreateProjectMethodIdRequest[]
+	@IsString({ each: true, message: validationMessage('validation.IsString') })
+	methodIds: string[]
 
 	@IsArray({ message: validationMessage('validation.IsArray') })
 	@ArrayNotEmpty({ message: validationMessage('validation.NotEmpty') })

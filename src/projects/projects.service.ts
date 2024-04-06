@@ -10,12 +10,8 @@ import { I18nContext, I18nService } from 'nestjs-i18n'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaErrors, PrismaService } from 'src/shared/prisma'
 
-import type { ProjectMethodParameter } from './dto/project.response'
 import { ProjectResponse } from './dto/project.response'
-import type {
-	CreateProjectMethodId,
-	CreateProjectParameters,
-} from './projects.interface'
+import type { CreateProjectParameters } from './projects.interface'
 
 @Injectable()
 export class ProjectsService {
@@ -29,7 +25,7 @@ export class ProjectsService {
 		country: string,
 		type: ProjectType,
 		operator: string,
-		methodIds: CreateProjectMethodId[],
+		methodIds: string[],
 		parameters: CreateProjectParameters[],
 		userId: string,
 		collectorType?: CollectorType,
@@ -44,7 +40,7 @@ export class ProjectsService {
 					collectorType,
 					methods: {
 						createMany: {
-							data: methodIds,
+							data: methodIds.map(id => ({ methodId: id })),
 							skipDuplicates: true,
 						},
 					},
@@ -158,12 +154,7 @@ export class ProjectsService {
 			include: {
 				users: {
 					select: {
-						user: {
-							select: {
-								id: true,
-								email: true,
-							},
-						},
+						userId: true,
 					},
 				},
 				parameters: {
@@ -179,16 +170,7 @@ export class ProjectsService {
 				},
 				methods: {
 					select: {
-						method: {
-							include: {
-								parameters: {
-									select: {
-										propertyId: true,
-										parameters: true,
-									},
-								},
-							},
-						},
+						methodId: true,
 					},
 				},
 			},
@@ -210,14 +192,9 @@ export class ProjectsService {
 		res.operator = project.operator
 		res.collectorType = project.collectorType
 		res.type = project.type
-		res.methods = project.methods.map(m => ({
-			id: m.method.id,
-			name: m.method.name,
-			collectorTypes: m.method.collectorTypes,
-			parameters: m.method.parameters.map(p => p as ProjectMethodParameter),
-		}))
 		res.parameters = project.parameters
-		res.users = project.users.map(u => ({ id: u.user.id, email: u.user.email }))
+		res.methods = project.methods.map(m => m.methodId)
+		res.users = project.users.map(u => u.userId)
 
 		return res
 	}

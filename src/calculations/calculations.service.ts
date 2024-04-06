@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import type { CollectorType } from '@prisma/client'
 import { I18nContext, I18nService } from 'nestjs-i18n'
-import type { Group } from 'src/projects/projects.interface'
 import type { I18nTranslations } from 'src/shared/generated'
 import { PrismaService } from 'src/shared/prisma'
 
-import type { MethodParams } from './calculations.interface'
+import type { Group, MethodParams } from './calculations.interface'
 
 @Injectable()
 export class CalculationsService {
