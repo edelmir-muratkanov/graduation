@@ -3,6 +3,8 @@ export class PropertyResponse {
 
 	name: string
 
+	unit: string
+
 	_count: {
 		methods: number
 		projects: number
