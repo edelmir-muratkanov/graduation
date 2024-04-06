@@ -170,6 +170,7 @@ export class ProjectsService {
 							select: {
 								id: true,
 								name: true,
+								unit: true,
 							},
 						},
 					},
@@ -199,8 +200,8 @@ export class ProjectsService {
 		res.collectorType = project.collectorType
 		res.type = project.type
 		res.parameters = project.parameters
-		res.methods = project.methods.map(m => m.methodId)
-		res.users = project.users.map(u => u.userId)
+		res.methodIds = project.methods.map(m => m.methodId)
+		res.userIds = project.users.map(u => u.userId)
 
 		return res
 	}

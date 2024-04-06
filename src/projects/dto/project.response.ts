@@ -8,6 +8,7 @@ class ProjectParameterResponse {
 	property: {
 		id: string
 		name: string
+		unit: string
 	}
 }
 
@@ -26,9 +27,9 @@ export class ProjectResponse implements Projects {
 
 	operator: string
 
-	users: string[]
+	userIds: string[]
 
 	parameters: ProjectParameterResponse[]
 
-	methods: string[]
+	methodIds: string[]
 }
