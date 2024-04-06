@@ -2,6 +2,7 @@ import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager'
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	HttpCode,
 	HttpStatus,
@@ -92,6 +93,16 @@ export class PropertiesController {
 		@Body() request: CreatePropertyRequest,
 	) {
 		await this.propertiesService.update(id, request.name)
+		await this.clearCache()
+		await this.cacheManager.del(`${PROPERTY_CACHE_KEY}-${id}`)
+	}
+
+	@Auth('Admin')
+	@Delete(':id')
+	@HttpCode(HttpStatus.NO_CONTENT)
+	@ApiNoContentResponse()
+	async delete(@Param('id') id: string) {
+		await this.propertiesService.delete(id)
 		await this.clearCache()
 		await this.cacheManager.del(`${PROPERTY_CACHE_KEY}-${id}`)
 	}

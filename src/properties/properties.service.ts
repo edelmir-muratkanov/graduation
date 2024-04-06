@@ -1,6 +1,7 @@
 import {
 	ConflictException,
 	Injectable,
+	Logger,
 	NotFoundException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
@@ -10,6 +11,8 @@ import { PrismaErrors, PrismaService } from 'src/shared/prisma'
 
 @Injectable()
 export class PropertiesService {
+	private logger = new Logger(PropertiesService.name)
+
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly i18n: I18nService<I18nTranslations>,
@@ -67,6 +70,27 @@ export class PropertiesService {
 				data: { name },
 			})
 		} catch (e) {
+			if (
+				e instanceof Prisma.PrismaClientKnownRequestError &&
+				e.code === PrismaErrors.RecordDoesNotExist
+			) {
+				throw new NotFoundException(
+					this.i18n.t('exceptions.property.NotFound', {
+						lang: I18nContext.current().lang,
+					}),
+				)
+			}
+		}
+	}
+
+	async delete(id: string) {
+		try {
+			await this.prisma.properties.delete({
+				where: { id },
+			})
+		} catch (e) {
+			this.logger.error(e)
+
 			if (
 				e instanceof Prisma.PrismaClientKnownRequestError &&
 				e.code === PrismaErrors.RecordDoesNotExist
