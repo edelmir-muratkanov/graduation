@@ -182,6 +182,8 @@ export class CalculationsService {
 				})
 			}),
 		)
+
+		return calculation.id
 	}
 
 	private getApplicability(totalRatio: number) {

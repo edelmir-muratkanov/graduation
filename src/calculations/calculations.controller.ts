@@ -1,20 +1,49 @@
-import { Controller, Get, Param } from '@nestjs/common'
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager'
+import { Controller, Get, Inject, Logger, Param } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 
+import {
+	METHOD_CALCULATIONS_CACHE_KEY,
+	PROJECT_CALCULATIONS_CACHE_KEY,
+} from './calculations.constants'
 import { CalculationsService } from './calculations.service'
 
 @ApiTags('calculations')
 @Controller()
 export class CalculationsController {
-	constructor(private readonly calculationsService: CalculationsService) {}
+	constructor(
+		private readonly calculationsService: CalculationsService,
+		@Inject(CACHE_MANAGER) private cacheManager: Cache,
+	) {}
+
+	private logger = new Logger(CalculationsController.name)
 
 	@Get('projects/:projectId/calculations')
 	async getByProjectId(@Param('projectId') id: string) {
-		return this.calculationsService.getByProject(id)
+		const key = `${PROJECT_CALCULATIONS_CACHE_KEY}-${id}`
+		const cached = await this.cacheManager.get(key)
+
+		if (cached) {
+			this.logger.log('GET Project calculations from cache')
+			return cached
+		}
+		const calculations = await this.calculationsService.getByProject(id)
+		await this.cacheManager.set(key, calculations)
+		return calculations
 	}
 
 	@Get('methods/:methodId/calculations')
 	async getByMethodId(@Param('methodId') id: string) {
-		return this.calculationsService.getByMethod(id)
+		const key = `${METHOD_CALCULATIONS_CACHE_KEY}-${id}`
+		const cached = await this.cacheManager.get(key)
+		if (cached) {
+			this.logger.log('GET Method calculations from cache')
+			return cached
+		}
+
+		const calculations = await this.calculationsService.getByMethod(id)
+		await this.cacheManager.set(key, calculations)
+
+		return calculations
 	}
 }

@@ -1,9 +1,12 @@
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager'
 import {
 	Body,
 	Controller,
 	Get,
 	HttpCode,
 	HttpStatus,
+	Inject,
+	Logger,
 	Param,
 	Post,
 	Put,
@@ -19,18 +22,43 @@ import { PaginationParamsRequest } from 'src/shared/pagination'
 
 import { CreatePropertyRequest } from './dto/create-property.request'
 import { PropertyResponse } from './dto/property.response'
+import {
+	PROPERTIES_CACHE_KEY,
+	PROPERTY_CACHE_KEY,
+} from './properties.constants'
 import { PropertiesService } from './properties.service'
 
 @ApiTags('properties')
 @Controller('properties')
 export class PropertiesController {
-	constructor(private readonly propertiesService: PropertiesService) {}
+	private logger = new Logger(PropertiesController.name)
+
+	constructor(
+		private readonly propertiesService: PropertiesService,
+		@Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+	) {}
+
+	async clearCache() {
+		const keys = await this.cacheManager.store.keys()
+
+		keys.map(async key => {
+			if (key.startsWith(PROPERTIES_CACHE_KEY)) {
+				await this.cacheManager.del(key)
+			}
+		})
+	}
 
 	@Auth('Admin')
 	@Post()
 	@ApiCreatedResponse({ type: PropertyResponse })
 	async create(@Body() request: CreatePropertyRequest) {
-		return this.propertiesService.create(request.name, request.unit)
+		const property = await this.propertiesService.create(
+			request.name,
+			request.unit,
+		)
+		await this.clearCache()
+
+		return property
 	}
 
 	@Get()
@@ -38,7 +66,21 @@ export class PropertiesController {
 	async getAll(
 		@Query() { limit, offset, lastCursorId }: PaginationParamsRequest,
 	) {
-		return this.propertiesService.getAll(limit, offset, lastCursorId)
+		const key = [PROPERTIES_CACHE_KEY, limit, offset, lastCursorId].join('-')
+		const cached = await this.cacheManager.get(key)
+		if (cached) {
+			this.logger.log('GET properties from cache')
+			return cached
+		}
+		const properties = await this.propertiesService.getAll(
+			limit,
+			offset,
+			lastCursorId,
+		)
+
+		await this.cacheManager.set(key, properties)
+
+		return properties
 	}
 
 	@Auth('Admin')
@@ -49,6 +91,8 @@ export class PropertiesController {
 		@Param('id') id: string,
 		@Body() request: CreatePropertyRequest,
 	) {
-		return this.propertiesService.update(id, request.name)
+		await this.propertiesService.update(id, request.name)
+		await this.clearCache()
+		await this.cacheManager.del(`${PROPERTY_CACHE_KEY}-${id}`)
 	}
 }

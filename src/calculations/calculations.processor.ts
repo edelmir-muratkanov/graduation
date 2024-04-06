@@ -1,8 +1,13 @@
 import { Process, Processor } from '@nestjs/bull'
-import { Logger } from '@nestjs/common'
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager'
+import { Inject, Logger } from '@nestjs/common'
 import { Job } from 'bull'
 import { PrismaService } from 'src/shared/prisma'
 
+import {
+	METHOD_CALCULATIONS_CACHE_KEY,
+	PROJECT_CALCULATIONS_CACHE_KEY,
+} from './calculations.constants'
 import { CalculationsService } from './calculations.service'
 
 @Processor('calculations')
@@ -10,6 +15,7 @@ export class CalculationsProcessor {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly calculationsService: CalculationsService,
+		@Inject(CACHE_MANAGER) private cacheManager: Cache,
 	) {}
 
 	private logger = new Logger(CalculationsProcessor.name)
@@ -26,7 +32,19 @@ export class CalculationsProcessor {
 		})
 
 		methods.map(async ({ methodId, projectId }) => {
-			await this.calculationsService.calculate(projectId, methodId)
+			const calculationId = await this.calculationsService.calculate(
+				projectId,
+				methodId,
+			)
+
+			if (calculationId) {
+				await this.cacheManager.del(
+					`${PROJECT_CALCULATIONS_CACHE_KEY}-${projectId}`,
+				)
+				await this.cacheManager.del(
+					`${METHOD_CALCULATIONS_CACHE_KEY}-${methodId}`,
+				)
+			}
 		})
 
 		this.logger.debug(
