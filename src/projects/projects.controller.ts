@@ -64,7 +64,7 @@ export class ProjectsController {
 			request.collectorType,
 		)
 		await this.clearCache()
-		await this.calculationsQueue.add('project.created', {
+		await this.calculationsQueue.add({
 			projectId: project.id,
 		})
 		return project
@@ -142,6 +142,8 @@ export class ProjectsController {
 			request.methodIds,
 			request.parameters,
 		)
+
+		await this.calculationsQueue.add({ projectId: id })
 
 		await this.clearCache()
 		await this.cacheManager.del(`${PROJECT_CACHE_KEY}-${id}`)
