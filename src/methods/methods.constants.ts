@@ -1,0 +1,2 @@
+export const METHODS_CACHE_KEY = 'METHODS_CACHE'
+export const METHOD_CACHE_KEY = 'METHOD_CACHE'

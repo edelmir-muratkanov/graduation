@@ -1,7 +1,10 @@
 import { BullModule } from '@nestjs/bull'
+import type { CacheStore } from '@nestjs/cache-manager'
+import { CacheModule } from '@nestjs/cache-manager'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
+import { redisStore } from 'cache-manager-redis-store'
 import * as Joi from 'joi'
 import {
 	HeaderResolver,
@@ -11,6 +14,7 @@ import {
 	QueryResolver,
 } from 'nestjs-i18n'
 import { join } from 'path'
+import type { RedisClientOptions } from 'redis'
 
 import { AuthModule } from './auth/auth.module'
 import { CalculationsModule } from './calculations/calculations.module'
@@ -59,6 +63,23 @@ import { UsersModule } from './users/users.module'
 			redis: {
 				host: process.env.REDIS_HOST,
 				port: +process.env.REDIS_PORT,
+			},
+		}),
+		CacheModule.registerAsync<RedisClientOptions>({
+			isGlobal: true,
+			useFactory: async () => {
+				const store = await redisStore({
+					socket: {
+						host: process.env.REDIS_HOST,
+						port: parseInt(process.env.REDIS_PORT, 10),
+					},
+					// url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+				})
+
+				return {
+					store: store as unknown as CacheStore,
+					ttl: 30_000,
+				}
 			},
 		}),
 		PrismaModule,
