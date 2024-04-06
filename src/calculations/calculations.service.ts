@@ -161,26 +161,36 @@ export class CalculationsService {
 
 		const totalRatio = this.calculateTotalRatio(paramsRatios)
 
-		const calculation = await this.prisma.calculation.create({
-			data: {
+		const calculation = await this.prisma.calculation.upsert({
+			where: {
+				methodId_projectId: {
+					methodId,
+					projectId,
+				},
+			},
+			create: {
 				ratio: totalRatio,
 				methodId,
 				projectId,
 			},
+			update: {
+				ratio: totalRatio,
+			},
 		})
 
-		await Promise.all(
-			paramsRatios.map(({ ratio, propertyId, collectorType }) => {
-				return this.prisma.calculationItem.create({
-					data: {
-						calculationId: calculation.id,
-						ratio,
-						collectorType,
-						propertyId,
-					},
-				})
+		await this.prisma.$transaction([
+			this.prisma.calculationItem.deleteMany({
+				where: { calculationId: calculation.id },
 			}),
-		)
+			this.prisma.calculationItem.createMany({
+				data: paramsRatios.map(p => ({
+					calculationId: calculation.id,
+					propertyId: p.propertyId,
+					ratio: p.ratio,
+					collectorType: p.collectorType,
+				})),
+			}),
+		])
 
 		return calculation.id
 	}

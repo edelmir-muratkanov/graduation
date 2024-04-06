@@ -20,18 +20,23 @@ export class CalculationsProcessor {
 
 	private logger = new Logger(CalculationsProcessor.name)
 
-	@Process('project.created')
-	async handleProjectCreated(job: Job<{ projectId: string }>) {
-		this.logger.debug(
-			`Starting calculation on project created with id: ${JSON.stringify(job.data)}`,
-		)
-		const methods = await this.prisma.projectsMethods.findMany({
+	@Process()
+	async process(job: Job<{ projectId?: string; methodId?: string }>) {
+		this.logger.debug(`Starting calculation: ${JSON.stringify(job.data)}`)
+		const projectsToMethods = await this.prisma.projectsMethods.findMany({
 			where: {
-				projectId: job.data.projectId,
+				OR: [
+					{
+						projectId: job.data.projectId,
+					},
+					{
+						methodId: job.data.methodId,
+					},
+				],
 			},
 		})
 
-		methods.map(async ({ methodId, projectId }) => {
+		projectsToMethods.map(async ({ methodId, projectId }) => {
 			const calculationId = await this.calculationsService.calculate(
 				projectId,
 				methodId,
@@ -47,8 +52,6 @@ export class CalculationsProcessor {
 			}
 		})
 
-		this.logger.debug(
-			`Ending calculation on project created with id: ${job.data.projectId}`,
-		)
+		this.logger.debug(`Ending calculation ${JSON.stringify(job.data)}`)
 	}
 }
