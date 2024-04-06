@@ -1,7 +1,8 @@
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Controller, Get, Inject, Logger, Param } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
 
+import { CalculationsResponse } from './dto/calculations.response'
 import {
 	METHOD_CALCULATIONS_CACHE_KEY,
 	PROJECT_CALCULATIONS_CACHE_KEY,
@@ -18,6 +19,7 @@ export class CalculationsController {
 
 	private logger = new Logger(CalculationsController.name)
 
+	@ApiOkResponse({ type: CalculationsResponse, isArray: true })
 	@Get('projects/:projectId/calculations')
 	async getByProjectId(@Param('projectId') id: string) {
 		const key = `${PROJECT_CALCULATIONS_CACHE_KEY}-${id}`
@@ -33,6 +35,7 @@ export class CalculationsController {
 	}
 
 	@Get('methods/:methodId/calculations')
+	@ApiOkResponse({ type: CalculationsResponse, isArray: true })
 	async getByMethodId(@Param('methodId') id: string) {
 		const key = `${METHOD_CALCULATIONS_CACHE_KEY}-${id}`
 		const cached = await this.cacheManager.get(key)
