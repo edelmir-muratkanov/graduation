@@ -223,7 +223,11 @@ export class ProjectsService {
 		})
 
 		if (!users.some(up => up.userId === userId)) {
-			throw new ForbiddenException()
+			throw new ForbiddenException(
+				this.i18n.t('exceptions.project.InvalidUser', {
+					lang: I18nContext.current().lang,
+				}),
+			)
 		}
 
 		try {
@@ -278,5 +282,32 @@ export class ProjectsService {
 				}
 			}
 		}
+	}
+
+	async delete(id: string, userId: string) {
+		const project = await this.prisma.projects.findUnique({
+			where: { id },
+			select: { users: true },
+		})
+
+		if (!project) {
+			throw new NotFoundException(
+				this.i18n.t('exceptions.project.NotFound', {
+					lang: I18nContext.current().lang,
+				}),
+			)
+		}
+
+		if (!project.users.some(up => up.userId === userId)) {
+			throw new ForbiddenException(
+				this.i18n.t('exceptions.project.InvalidUser', {
+					lang: I18nContext.current().lang,
+				}),
+			)
+		}
+
+		await this.prisma.projects.delete({
+			where: { id },
+		})
 	}
 }

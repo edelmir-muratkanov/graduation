@@ -27,6 +27,7 @@ export type I18nTranslations = {
             "InvalidProperties": string;
             "Exists": string;
             "NotFound": string;
+            "InvalidUser": string;
         };
     };
     "results": {

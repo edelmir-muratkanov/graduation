@@ -3,6 +3,7 @@ import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager'
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Inject,
 	Logger,
@@ -141,6 +142,16 @@ export class ProjectsController {
 			request.methodIds,
 			request.parameters,
 		)
+
+		await this.clearCache()
+		await this.cacheManager.del(`${PROJECT_CACHE_KEY}-${id}`)
+	}
+
+	@Auth()
+	@ApiNoContentResponse()
+	@Delete(':id')
+	async delete(@Param('id') id: string, @Session('id') userId: string) {
+		await this.projectsService.delete(id, userId)
 
 		await this.clearCache()
 		await this.cacheManager.del(`${PROJECT_CACHE_KEY}-${id}`)

@@ -19,6 +19,7 @@
 	"project": {
 		"InvalidProperties": "One of the project properties does not exist or invalid",
 		"Exists": "Project already exists",
-		"NotFound": "Project not found"
+		"NotFound": "Project not found",
+		"InvalidUser": "You cannot modify this project, please contact owners"
 	}
 }
