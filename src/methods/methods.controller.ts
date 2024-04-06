@@ -8,6 +8,7 @@ import {
 	Logger,
 	Param,
 	Post,
+	Put,
 	Query,
 } from '@nestjs/common'
 import {
@@ -18,10 +19,13 @@ import {
 } from '@nestjs/swagger'
 import { ApiPaginatedResponse, Auth } from 'src/shared/decorators'
 
-import { CreateMethodRequest } from './dto/create-method.request'
-import { GetAllMethodsRequestParams } from './dto/get-all-methods-params.request'
 import { MethodResponse } from './dto/method.response'
 import { MethodsResponse } from './dto/methods.response'
+import {
+	CreateMethodRequest,
+	GetAllMethodsRequestParams,
+	UpdateMethodRequest,
+} from './dto'
 import { METHOD_CACHE_KEY, METHODS_CACHE_KEY } from './methods.constants'
 import { MethodsService } from './methods.service'
 
@@ -111,10 +115,25 @@ export class MethodsController {
 		return method
 	}
 
+	@Auth('Admin')
 	@Delete(':id')
 	@ApiNoContentResponse()
 	async delete(@Param('id') id: string) {
 		await this.methodService.delete(id)
+		await this.clearCache()
+		await this.cacheManager.del(`${METHOD_CACHE_KEY}-${id}`)
+	}
+
+	@Auth('Admin')
+	@Put(':id')
+	@ApiNoContentResponse()
+	async update(@Param('id') id: string, @Body() request: UpdateMethodRequest) {
+		await this.methodService.update(
+			id,
+			request.name,
+			request.collectorTypes,
+			request.data,
+		)
 		await this.clearCache()
 		await this.cacheManager.del(`${METHOD_CACHE_KEY}-${id}`)
 	}

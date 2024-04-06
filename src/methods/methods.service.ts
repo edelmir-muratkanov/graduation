@@ -60,6 +60,58 @@ export class MethodsService {
 		}
 	}
 
+	async update(
+		id: string,
+		name: string,
+		collectorTypes: CollectorType[],
+		parameters: MethodParametersData[],
+	) {
+		try {
+			await this.prisma.methods.update({
+				where: { id },
+				data: {
+					name,
+					collectorTypes,
+					parameters: {
+						upsert: parameters.map(({ parameters, propertyId }) => ({
+							where: {
+								methodId_propertyId: {
+									methodId: id,
+									propertyId,
+								},
+							},
+							create: {
+								parameters,
+								propertyId,
+							},
+							update: { parameters },
+						})),
+					},
+				},
+			})
+		} catch (e) {
+			this.logger.error(e)
+
+			if (e instanceof Prisma.PrismaClientKnownRequestError) {
+				if (e.code === PrismaErrors.RecordDoesNotExist) {
+					throw new NotFoundException(
+						this.i18n.t('exceptions.method.NotFound', {
+							lang: I18nContext.current().lang,
+						}),
+					)
+				}
+
+				if (e.code === PrismaErrors.ForeignKeyConstraintViolated) {
+					throw new ConflictException(
+						this.i18n.t('exceptions.method.InvalidProperties', {
+							lang: I18nContext.current().lang,
+						}),
+					)
+				}
+			}
+		}
+	}
+
 	async getAll(
 		limit?: number,
 		offset?: number,
