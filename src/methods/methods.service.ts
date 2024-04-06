@@ -1,6 +1,7 @@
 import {
 	ConflictException,
 	Injectable,
+	Logger,
 	NotFoundException,
 } from '@nestjs/common'
 import type { CollectorType } from '@prisma/client'
@@ -13,6 +14,8 @@ import type { MethodParametersData } from './methods.interface'
 
 @Injectable()
 export class MethodsService {
+	private logger = new Logger(MethodsService.name)
+
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly i18n: I18nService<I18nTranslations>,
@@ -37,6 +40,7 @@ export class MethodsService {
 				},
 			})
 		} catch (e) {
+			this.logger.error(e)
 			if (e instanceof Prisma.PrismaClientKnownRequestError) {
 				if (e.code === PrismaErrors.ForeignKeyConstraintViolated) {
 					throw new ConflictException(
@@ -133,5 +137,25 @@ export class MethodsService {
 		}
 
 		return method
+	}
+
+	async delete(id: string) {
+		try {
+			await this.prisma.methods.delete({
+				where: { id },
+			})
+		} catch (e) {
+			this.logger.error(e)
+			if (
+				e instanceof Prisma.PrismaClientKnownRequestError &&
+				e.code === PrismaErrors.RecordDoesNotExist
+			) {
+				throw new NotFoundException(
+					this.i18n.t('exceptions.method.NotFound', {
+						lang: I18nContext.current().lang,
+					}),
+				)
+			}
+		}
 	}
 }

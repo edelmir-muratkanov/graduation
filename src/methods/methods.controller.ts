@@ -2,6 +2,7 @@ import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager'
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Inject,
 	Logger,
@@ -9,7 +10,12 @@ import {
 	Post,
 	Query,
 } from '@nestjs/common'
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import {
+	ApiCreatedResponse,
+	ApiNoContentResponse,
+	ApiOkResponse,
+	ApiTags,
+} from '@nestjs/swagger'
 import { ApiPaginatedResponse, Auth } from 'src/shared/decorators'
 
 import { CreateMethodRequest } from './dto/create-method.request'
@@ -103,5 +109,13 @@ export class MethodsController {
 		await this.cacheManager.set(key, method)
 
 		return method
+	}
+
+	@Delete(':id')
+	@ApiNoContentResponse()
+	async delete(@Param('id') id: string) {
+		await this.methodService.delete(id)
+		await this.clearCache()
+		await this.cacheManager.del(`${METHOD_CACHE_KEY}-${id}`)
 	}
 }
