@@ -1,3 +1,4 @@
+import { InjectQueue } from '@nestjs/bull'
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager'
 import {
 	Body,
@@ -17,6 +18,7 @@ import {
 	ApiOkResponse,
 	ApiTags,
 } from '@nestjs/swagger'
+import { Queue } from 'bull'
 import { ApiPaginatedResponse, Auth } from 'src/shared/decorators'
 
 import { MethodResponse } from './dto/method.response'
@@ -34,6 +36,7 @@ import { MethodsService } from './methods.service'
 export class MethodsController {
 	constructor(
 		private readonly methodService: MethodsService,
+		@InjectQueue('calculations') private readonly calculationsQueue: Queue,
 		@Inject(CACHE_MANAGER) private cacheManager: Cache,
 	) {}
 
@@ -134,6 +137,7 @@ export class MethodsController {
 			request.collectorTypes,
 			request.data,
 		)
+		await this.calculationsQueue.add({ methodId: id })
 		await this.clearCache()
 		await this.cacheManager.del(`${METHOD_CACHE_KEY}-${id}`)
 	}
