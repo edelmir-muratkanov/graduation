@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common'
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { Users } from '@prisma/client'
-import { Request, Response } from 'express'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { Auth, Session } from 'src/shared/decorators'
 import { UserResponse } from 'src/users/dto'
 
@@ -28,19 +28,22 @@ export class AuthController {
 	@ApiCreatedResponse({ type: AuthResponse })
 	async register(
 		@Body() request: AuthRequest,
-		@Res({ passthrough: true }) res: Response,
+		@Res({ passthrough: true }) res: FastifyReply,
 	) {
 		const { tokens, user, maxAges } = await this.authService.register(
 			request.email,
 			request.password,
 		)
 
-		res.cookie(COOKIE.RefreshToken, tokens.refreshToken, {
+		res.setCookie(COOKIE.RefreshToken, tokens.refreshToken, {
+			path: '/',
 			httpOnly: true,
 			maxAge: maxAges.refreshTokenMaxAge,
 		})
 
-		res.cookie(COOKIE.AccessToken, tokens.accessToken, {
+		res.setCookie(COOKIE.AccessToken, tokens.accessToken, {
+			path: '/',
+			httpOnly: true,
 			maxAge: maxAges.accessTokenMaxAge,
 		})
 
@@ -52,19 +55,21 @@ export class AuthController {
 	@ApiOkResponse({ type: AuthResponse })
 	async login(
 		@Body() request: AuthRequest,
-		@Res({ passthrough: true }) res: Response,
+		@Res({ passthrough: true }) res: FastifyReply,
 	) {
 		const { tokens, user, maxAges } = await this.authService.login(
 			request.email,
 			request.password,
 		)
 
-		res.cookie(COOKIE.RefreshToken, tokens.refreshToken, {
+		res.setCookie(COOKIE.RefreshToken, tokens.refreshToken, {
+			path: '/',
 			httpOnly: true,
 			maxAge: maxAges.refreshTokenMaxAge,
 		})
 
-		res.cookie(COOKIE.AccessToken, tokens.accessToken, {
+		res.setCookie(COOKIE.AccessToken, tokens.accessToken, {
+			path: '/',
 			httpOnly: true,
 			maxAge: maxAges.accessTokenMaxAge,
 		})
@@ -86,22 +91,24 @@ export class AuthController {
 	@Post('refresh')
 	@ApiOkResponse({ type: AuthResponse })
 	async refreshTokens(
-		@Req() req: Request,
-		@Res({ passthrough: true }) res: Response,
+		@Req() req: FastifyRequest,
+		@Res({ passthrough: true }) res: FastifyReply,
 	) {
 		const oldRefreshToken = req.cookies[COOKIE.RefreshToken]
 
 		const { tokens, maxAges } =
 			await this.authService.refreshTokens(oldRefreshToken)
 
-		res.cookie(COOKIE.RefreshToken, tokens.refreshToken, {
+		res.setCookie(COOKIE.RefreshToken, tokens.refreshToken, {
 			httpOnly: true,
 			maxAge: maxAges.refreshTokenMaxAge,
+			path: '/',
 		})
 
-		res.cookie(COOKIE.AccessToken, tokens.accessToken, {
+		res.setCookie(COOKIE.AccessToken, tokens.accessToken, {
 			httpOnly: true,
 			maxAge: maxAges.accessTokenMaxAge,
+			path: '/',
 		})
 
 		return { token: tokens.accessToken }
@@ -109,7 +116,7 @@ export class AuthController {
 
 	@Auth()
 	@Post('logout')
-	async logout(@Res({ passthrough: true }) res: Response) {
+	async logout(@Res({ passthrough: true }) res: FastifyReply) {
 		const maxAges = this.authService.getTokensExpiration()
 
 		res.clearCookie(COOKIE.AccessToken, {

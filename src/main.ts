@@ -1,9 +1,13 @@
+import cookie from '@fastify/cookie'
+import helmet from '@fastify/helmet'
 import type { LogLevel } from '@nestjs/common'
 import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import {
+	FastifyAdapter,
+	type NestFastifyApplication,
+} from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import cookieParser from 'cookie-parser'
-import helmet from 'helmet'
 
 import { COOKIE } from './auth/auth.constants'
 import { AppModule } from './app.module'
@@ -17,11 +21,26 @@ async function bootstrap() {
 		? ['error', 'warn', 'log']
 		: ['error', 'warn', 'log', 'debug', 'verbose']
 
-	const app = await NestFactory.create(AppModule, { logger: logLevels })
+	const app = await NestFactory.create<NestFastifyApplication>(
+		AppModule,
+		new FastifyAdapter(),
+		{
+			logger: logLevels,
+		},
+	)
 
+	app.register(cookie)
+	app.register(helmet, {
+		contentSecurityPolicy: {
+			directives: {
+				defaultSrc: [`'self'`],
+				styleSrc: [`'self'`, `'unsafe-inline'`],
+				imgSrc: [`'self'`, 'data:', 'validator.swagger.io'],
+				scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
+			},
+		},
+	})
 	app.setGlobalPrefix('api')
-	app.use(cookieParser())
-	app.use(helmet())
 
 	const config = new DocumentBuilder()
 		.setTitle('Graduation')
@@ -30,7 +49,6 @@ async function bootstrap() {
 		.addCookieAuth(COOKIE.AccessToken, {
 			type: 'http',
 			in: 'Cookie',
-			scheme: 'Bearer',
 		})
 		.addGlobalParameters({
 			in: 'query',
@@ -49,9 +67,13 @@ async function bootstrap() {
 		},
 	})
 
-	await app.listen(port, () => {
-		logger.log(`Application started at http://localhost:${port}/api`)
-		logger.log(`Swagger started at http;//localhost:${port}/api/docs`)
+	await app.listen(port, '0.0.0.0', (err, address) => {
+		if (err) {
+			logger.error(err.message, err.stack, err.name)
+			process.exit(1)
+		}
+		logger.log(`Application started at ${address}/api`)
+		logger.log(`Swagger started at ${address}/api/docs`)
 	})
 }
 

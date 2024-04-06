@@ -4,7 +4,7 @@ import type {
 	NestInterceptor,
 } from '@nestjs/common'
 import { Injectable, Logger } from '@nestjs/common'
-import type { Request, Response } from 'express'
+import type { FastifyReply, FastifyRequest } from 'fastify'
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -12,12 +12,12 @@ export class LoggingInterceptor implements NestInterceptor {
 
 	intercept(context: ExecutionContext, next: CallHandler) {
 		const httpContext = context.switchToHttp()
-		const request = httpContext.getRequest<Request>()
-		const response = httpContext.getResponse<Response>()
+		const request = httpContext.getRequest<FastifyRequest>()
+		const response = httpContext.getResponse<FastifyReply>()
 
-		response.on('finish', () => {
+		response.raw.on('finish', () => {
 			const { method, originalUrl } = request
-			const { statusCode, statusMessage } = response
+			const { statusCode, statusMessage } = response.raw
 
 			const message = `${method} ${originalUrl} ${statusCode} ${statusMessage}`
 
