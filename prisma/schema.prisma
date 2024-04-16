@@ -1,0 +1,149 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+enum Role {
+  User
+  Admin
+}
+
+enum CollectorType {
+  Terrigen
+  Carbonate
+}
+
+enum ProjectType {
+  Ground
+  Shelf
+}
+
+model Users {
+  id               String          @id @default(cuid())
+  email            String          @unique
+  passwordHash     String
+  refreshTokenHash String?
+  role             Role            @default(User)
+  projects         ProjectsUsers[]
+
+  @@map("users")
+}
+
+model Properties {
+  id               String               @id @default(cuid())
+  name             String               @unique
+  unit             String
+  methods          MethodsProperties[]
+  projects         ProjectsProperties[]
+  calculationItems CalculationItem[]
+
+  @@map("properties")
+}
+
+model MethodsProperties {
+  method     Methods    @relation(fields: [methodId], references: [id], onDelete: Cascade)
+  methodId   String
+  property   Properties @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  parameters Json
+
+  @@id([methodId, propertyId])
+  @@map("methods_properties")
+}
+
+model Methods {
+  id             String              @id @default(cuid())
+  name           String              @unique
+  collectorTypes CollectorType[]     @default([])
+  parameters     MethodsProperties[]
+  projects       ProjectsMethods[]
+  calculation    Calculation[]
+
+  @@map("methods")
+}
+
+model Projects {
+  id            String               @id @default(cuid())
+  name          String
+  country       String
+  operator      String
+  type          ProjectType
+  collectorType CollectorType?
+  parameters    ProjectsProperties[]
+  methods       ProjectsMethods[]
+  users         ProjectsUsers[]
+  calculation   Calculation[]
+
+  @@map("projects")
+}
+
+model ProjectsProperties {
+  project    Projects   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId  String
+  property   Properties @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  value      Float
+
+  @@id([projectId, propertyId])
+  @@index([propertyId, projectId])
+  @@map("projects_properties")
+}
+
+model ProjectsMethods {
+  project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  method    Methods  @relation(fields: [methodId], references: [id], onDelete: Cascade)
+  methodId  String
+
+  @@id([methodId, projectId])
+  @@map("projects_methods")
+}
+
+model ProjectsUsers {
+  project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@id([userId, projectId])
+  @@map("projects_users")
+}
+
+model Calculation {
+  id String @id @default(cuid())
+
+  project   Projects          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  method    Methods           @relation(fields: [methodId], references: [id], onDelete: Cascade)
+  methodId  String
+  ratio     Float
+  items     CalculationItem[]
+
+  @@unique([methodId, projectId])
+  @@map("calculations")
+}
+
+model CalculationItem {
+  id String @id @default(cuid())
+
+  calculation   Calculation    @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+  calculationId String
+  property      Properties?    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId    String?
+  collectorType CollectorType?
+  ratio         Float
+
+  @@unique([calculationId, propertyId, collectorType])
+  @@map("calculation_items")
+}

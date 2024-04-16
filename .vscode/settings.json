@@ -1,0 +1,9 @@
+{
+	"conventionalCommits.scopes": [
+		"auth",
+		"projects",
+		"methods",
+		"calculations",
+		"properties"
+	]
+}

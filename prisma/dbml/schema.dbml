@@ -1,0 +1,156 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table users {
+  id String [pk]
+  email String [unique, not null]
+  passwordHash String [not null]
+  refreshTokenHash String
+  role Role [not null, default: 'User']
+  projects projects_users [not null]
+}
+
+Table properties {
+  id String [pk]
+  name String [unique, not null]
+  unit String [not null]
+  methods methods_properties [not null]
+  projects projects_properties [not null]
+  calculationItems calculation_items [not null]
+}
+
+Table methods_properties {
+  method methods [not null]
+  methodId String [not null]
+  property properties [not null]
+  propertyId String [not null]
+  parameters Json [not null]
+
+  indexes {
+    (methodId, propertyId) [pk]
+  }
+}
+
+Table methods {
+  id String [pk]
+  name String [unique, not null]
+  collectorTypes CollectorType[] [not null]
+  parameters methods_properties [not null]
+  projects projects_methods [not null]
+  calculation calculations [not null]
+}
+
+Table projects {
+  id String [pk]
+  name String [not null]
+  country String [not null]
+  operator String [not null]
+  type ProjectType [not null]
+  collectorType CollectorType
+  parameters projects_properties [not null]
+  methods projects_methods [not null]
+  users projects_users [not null]
+  calculation calculations [not null]
+}
+
+Table projects_properties {
+  project projects [not null]
+  projectId String [not null]
+  property properties [not null]
+  propertyId String [not null]
+  value Float [not null]
+
+  indexes {
+    (projectId, propertyId) [pk]
+  }
+}
+
+Table projects_methods {
+  project projects [not null]
+  projectId String [not null]
+  method methods [not null]
+  methodId String [not null]
+
+  indexes {
+    (methodId, projectId) [pk]
+  }
+}
+
+Table projects_users {
+  project projects [not null]
+  projectId String [not null]
+  user users [not null]
+  userId String [not null]
+
+  indexes {
+    (userId, projectId) [pk]
+  }
+}
+
+Table calculations {
+  id String [pk]
+  project projects [not null]
+  projectId String [not null]
+  method methods [not null]
+  methodId String [not null]
+  ratio Float [not null]
+  items calculation_items [not null]
+
+  indexes {
+    (methodId, projectId) [unique]
+  }
+}
+
+Table calculation_items {
+  id String [pk]
+  calculation calculations [not null]
+  calculationId String [not null]
+  property properties
+  propertyId String
+  collectorType CollectorType
+  ratio Float [not null]
+
+  indexes {
+    (calculationId, propertyId, collectorType) [unique]
+  }
+}
+
+Enum Role {
+  User
+  Admin
+}
+
+Enum CollectorType {
+  Terrigen
+  Carbonate
+}
+
+Enum ProjectType {
+  Ground
+  Shelf
+}
+
+Ref: methods_properties.methodId > methods.id [delete: Cascade]
+
+Ref: methods_properties.propertyId > properties.id [delete: Cascade]
+
+Ref: projects_properties.projectId > projects.id [delete: Cascade]
+
+Ref: projects_properties.propertyId > properties.id [delete: Cascade]
+
+Ref: projects_methods.projectId > projects.id [delete: Cascade]
+
+Ref: projects_methods.methodId > methods.id [delete: Cascade]
+
+Ref: projects_users.projectId > projects.id [delete: Cascade]
+
+Ref: projects_users.userId > users.id [delete: Cascade]
+
+Ref: calculations.projectId > projects.id [delete: Cascade]
+
+Ref: calculations.methodId > methods.id [delete: Cascade]
+
+Ref: calculation_items.calculationId > calculations.id [delete: Cascade]
+
+Ref: calculation_items.propertyId > properties.id [delete: Cascade]

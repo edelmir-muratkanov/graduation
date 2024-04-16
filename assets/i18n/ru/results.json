@@ -1,0 +1,9 @@
+{
+	"calculations": {
+		"NotApplicable": "Не применим",
+		"NotSuitable": "Не благоприятен для применения",
+		"LowEffieciency": "Применим с низкой эффективностью",
+		"Applicable": "Применим",
+		"Favorable": "Благоприятен для применения"
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"user": {
+		"EmailExists": "Email already in use",
+		"NotFound": "User not found",
+		"InvalidCredentials": "Invalid credentials",
+		"Unauthorized": "Unauthorized",
+		"Forbidden": "Forbidden"
+	},
+	"property": {
+		"Exists": "Property already exists",
+		"NotFound": "Property not found"
+	},
+	"method": {
+		"ValuesOrGroups": "Parameter cannot contain values and fisrt or second",
+		"InvalidProperties": "One of the properties does not exist or invalid",
+		"MethodExists": "Method already exists",
+		"NotFound": "Method not found"
+	},
+	"project": {
+		"InvalidProperties": "One of the project properties does not exist or invalid",
+		"Exists": "Project already exists",
+		"NotFound": "Project not found",
+		"InvalidUser": "You cannot modify this project, please contact owners"
+	}
+}
