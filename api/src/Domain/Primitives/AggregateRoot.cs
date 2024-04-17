@@ -2,7 +2,7 @@
 
 public abstract class AggregateRoot : Entity
 {
-    private readonly List<DomainEvent> _domainEvents = [];
+    private readonly List<IDomainEvent> _domainEvents = [];
 
     protected AggregateRoot(Guid id) : base(id)
     {
@@ -12,7 +12,7 @@ public abstract class AggregateRoot : Entity
     {
     }
 
-    public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents.ToList();
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.ToList();
     public void ClearDomainEvents() => _domainEvents.Clear();
-    protected void RaiseDomainEvent(DomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+    protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 }

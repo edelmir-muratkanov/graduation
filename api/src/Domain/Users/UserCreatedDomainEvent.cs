@@ -2,4 +2,4 @@
 
 namespace Domain.Users;
 
-public record UserCreatedDomainEvent(Guid Id, Guid UserId) : DomainEvent(Id);
+public record UserCreatedDomainEvent(Guid UserId) : IDomainEvent;

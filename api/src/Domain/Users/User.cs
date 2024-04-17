@@ -23,7 +23,7 @@ public sealed class User : AggregateRoot
     public static User Create(Email email, Password password, Role role = Role.User)
     {
         var user = new User(Guid.NewGuid(), email, password, role);
-        user.RaiseDomainEvent(new UserCreatedDomainEvent(Guid.NewGuid(), user.Id));
+        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
         return user;
     }
 }
