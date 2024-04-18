@@ -1,5 +1,4 @@
 ﻿using Api.Contracts.Auth;
-using Api.Domain.Entities;
 using Api.Domain.Users;
 using Api.Infrastructure.Database;
 using Api.Shared.Interfaces;

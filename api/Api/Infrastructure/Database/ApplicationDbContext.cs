@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Api.Domain.Entities;
 using Api.Domain.Users;
 using Api.Shared;
 using Api.Shared.Interfaces;
