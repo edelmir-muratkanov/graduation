@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Api.Domain.Property;
 using Api.Domain.Users;
 using Api.Shared;
 using Api.Shared.Interfaces;
@@ -12,10 +13,8 @@ public class ApplicationDbContext(
     ICurrentUserService currentUserService)
     : DbContext(options)
 {
-    private readonly ICurrentUserService _currentUserService = currentUserService;
-    private readonly IDomainEventService _domainEventService = domainEventService;
-
     public DbSet<User> Users => Set<User>();
+    public DbSet<Property> Properties => Set<Property>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
@@ -25,11 +24,11 @@ public class ApplicationDbContext(
             {
                 case EntityState.Added:
                     entry.Entity.CreatedAt = DateTime.UtcNow;
-                    entry.Entity.CreatedBy = _currentUserService.Id;
+                    entry.Entity.CreatedBy = currentUserService.Id;
                     break;
                 case EntityState.Modified:
                     entry.Entity.UpdatedAt = DateTime.UtcNow;
-                    entry.Entity.UpdatedBy = _currentUserService.Id;
+                    entry.Entity.UpdatedBy = currentUserService.Id;
                     break;
                 case EntityState.Deleted:
                     break;
@@ -59,7 +58,7 @@ public class ApplicationDbContext(
         foreach (var @event in events)
         {
             @event.IsPublished = true;
-            await _domainEventService.Publish(@event);
+            await domainEventService.Publish(@event);
         }
     }
 

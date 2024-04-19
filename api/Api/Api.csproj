@@ -34,7 +34,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Domain\" />
       <Folder Include="Infrastructure\Database\Migrations\" />
       <Folder Include="Infrastructure\Mappings\" />
     </ItemGroup>
