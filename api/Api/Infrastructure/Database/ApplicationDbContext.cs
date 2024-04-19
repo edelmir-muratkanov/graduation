@@ -25,11 +25,11 @@ public class ApplicationDbContext(
             {
                 case EntityState.Added:
                     entry.Entity.CreatedAt = DateTime.UtcNow;
-                    entry.Entity.CreatedBy = _currentUserService.UserId;
+                    entry.Entity.CreatedBy = _currentUserService.Id;
                     break;
                 case EntityState.Modified:
                     entry.Entity.UpdatedAt = DateTime.UtcNow;
-                    entry.Entity.UpdatedBy = _currentUserService.UserId;
+                    entry.Entity.UpdatedBy = _currentUserService.Id;
                     break;
                 case EntityState.Deleted:
                     break;

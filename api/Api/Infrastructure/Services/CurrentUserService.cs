@@ -1,13 +1,16 @@
 ﻿using System.Security.Claims;
 using Api.Shared.Interfaces;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Api.Infrastructure.Services;
 
 public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
 {
-    public string? UserId => httpContextAccessor.HttpContext?.User?
+    public string? Id => httpContextAccessor.HttpContext?.User?
         .FindFirstValue(ClaimTypes.NameIdentifier);
 
-    public string? UserRole => httpContextAccessor.HttpContext?.User?
+    public string? Role => httpContextAccessor.HttpContext?.User?
         .FindFirstValue(ClaimTypes.Role);
+
+    public string? Email => httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email);
 }

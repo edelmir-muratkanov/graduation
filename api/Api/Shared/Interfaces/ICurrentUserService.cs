@@ -2,6 +2,7 @@
 
 public interface ICurrentUserService
 {
-    string? UserId { get; }
-    string? UserRole { get; }
+    string? Id { get; }
+    string? Role { get; }
+    string? Email { get; }
 }

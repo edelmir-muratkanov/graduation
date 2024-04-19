@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text;
 using Api;
 using Api.Infrastructure.Authentication;
 using Api.Infrastructure.Database;
@@ -9,7 +10,9 @@ using Api.Shared.Interfaces;
 using Carter;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,9 +58,32 @@ builder.Services.AddSingleton<IJwtTokenProvider, JwtTokenProvider>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
-builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+// builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+    JwtBearerDefaults.AuthenticationScheme,
+    options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey =
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!))
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["x-token"];
+                
+                return Task.CompletedTask;
+            }
+        };
+    });
 builder.Services.AddAuthorization();
 
 
@@ -65,6 +91,12 @@ var app = builder.Build();
 
 app.UseCors();
 app.UseHttpsRedirection();
+
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always
+});
 
 if (app.Environment.IsDevelopment())
 {

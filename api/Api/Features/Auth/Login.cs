@@ -16,20 +16,26 @@ public class LoginEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("api/auth/login", async (
-            LoginRequest request,
-            ISender sender,
-            CancellationToken cancellationToken) =>
-        {
-            var command = new Login.Command(request.Email, request.Password);
-            var result = await sender.Send(command, cancellationToken);
+                LoginRequest request,
+                ISender sender,
+                HttpContext context,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new Login.Command(request.Email, request.Password);
+                var result = await sender.Send(command, cancellationToken);
 
-            return result.Match(Results.Ok, CustomResults.Problem);
-        }).Produces<LoginResponse>()
-        .ProducesProblem(404)
-        .ProducesProblem(400)
-        .ProducesProblem(500)
-        .WithTags("Login")
-        .WithTags("auth");
+                if (result.IsSuccess)
+                {
+                    context.Response.Cookies.Append("x-token", result.Value.Token);
+                }
+
+                return result.Match(Results.Ok, CustomResults.Problem);
+            }).Produces<LoginResponse>()
+            .ProducesProblem(404)
+            .ProducesProblem(400)
+            .ProducesProblem(500)
+            .WithTags("Login")
+            .WithTags("auth");
     }
 }
 
