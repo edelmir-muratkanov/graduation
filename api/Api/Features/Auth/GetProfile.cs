@@ -1,4 +1,5 @@
 ﻿using Api.Contracts.Auth;
+using Api.Domain.Users;
 using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
