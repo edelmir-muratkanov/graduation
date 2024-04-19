@@ -32,11 +32,14 @@ public static class GetProperties
 {
     public record GetPropertiesResponse(Guid Id, string Name, string Unit);
 
-    public record GetPropertiesQuery(string? SearchTerm, int PageNumber = 1, int PageSize = 10) : IQuery<PaginatedList<GetPropertiesResponse>>;
+    public record GetPropertiesQuery(string? SearchTerm, int PageNumber = 1, int PageSize = 10)
+        : IQuery<PaginatedList<GetPropertiesResponse>>;
 
-    internal sealed class Handler(ApplicationDbContext context) : IQueryHandler<GetPropertiesQuery, PaginatedList<GetPropertiesResponse>>
+    internal sealed class Handler(ApplicationDbContext context)
+        : IQueryHandler<GetPropertiesQuery, PaginatedList<GetPropertiesResponse>>
     {
-        public async Task<Result<PaginatedList<GetPropertiesResponse>>> Handle(GetPropertiesQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PaginatedList<GetPropertiesResponse>>> Handle(GetPropertiesQuery request,
+            CancellationToken cancellationToken)
         {
             var propertiesQuery = context.Properties.AsNoTracking();
 
