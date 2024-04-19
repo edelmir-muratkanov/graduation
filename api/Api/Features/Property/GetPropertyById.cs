@@ -24,6 +24,7 @@ public class GetPropertyByIdEndpoint : ICarterModule
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
             .Produces<GetPropertyByIdResponse>()
+            .ProducesProblem(404)
             .WithName("Get property by id")
             .WithTags("properties");
     }

@@ -26,7 +26,7 @@ public class UpdatePropertyEndpoint : ICarterModule
                 var result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
-            .Produces(200)
+            .Produces(204)
             .ProducesProblem(400)
             .Produces(401)
             .Produces(403)
