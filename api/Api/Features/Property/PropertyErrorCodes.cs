@@ -10,4 +10,10 @@ public static class PropertyErrorCodes
         public const string MissingUnit = nameof(MissingUnit);
         public const string LongUnit = nameof(LongUnit);
     }
+
+    public static class GetById
+    {
+        public const string MissingId = nameof(MissingId);
+        public const string InvalidId = nameof(InvalidId);
+    }
 }
