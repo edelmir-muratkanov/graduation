@@ -1,4 +1,5 @@
-﻿using Api.Infrastructure.Database;
+﻿using Api.Contracts.Property;
+using Api.Infrastructure.Database;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
@@ -20,7 +21,7 @@ public class GetPropertiesEndpoint : ICarterModule
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
-            .Produces<PaginatedList<GetProperties.Response>>()
+            .Produces<GetPropertiesResponse>()
             .Produces(500)
             .WithName("Get properties")
             .WithTags("properties");
