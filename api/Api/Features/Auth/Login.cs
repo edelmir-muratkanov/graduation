@@ -34,8 +34,9 @@ public class LoginEndpoint : ICarterModule
             .ProducesProblem(404)
             .ProducesProblem(400)
             .ProducesProblem(500)
-            .WithTags("Login")
-            .WithTags("auth");
+            .WithName("Login")
+            .WithTags("auth")
+            .WithOpenApi();
     }
 }
 

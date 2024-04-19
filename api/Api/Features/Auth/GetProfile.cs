@@ -13,12 +13,17 @@ public class GetProfileEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGroup("api/auth").MapGet("profile", async (ISender sender, CancellationToken cancellationToken) =>
-        {
-            var query = new GetProfile.Query();
-            var result = await sender.Send(query, cancellationToken);
+            {
+                var query = new GetProfile.Query();
+                var result = await sender.Send(query, cancellationToken);
 
-            return result.Match(Results.Ok, CustomResults.Problem);
-        }).RequireAuthorization().WithTags("auth");
+                return result.Match(Results.Ok, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces<GetProfileResponse>()
+            .Produces(401)
+            .WithName("Get profile")
+            .WithTags("auth");
     }
 }
 
