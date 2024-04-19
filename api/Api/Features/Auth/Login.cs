@@ -21,7 +21,7 @@ public class LoginEndpoint : ICarterModule
                 HttpContext context,
                 CancellationToken cancellationToken) =>
             {
-                var command = new Login.Command(request.Email, request.Password);
+                var command = new Login.LoginCommand(request.Email, request.Password);
                 var result = await sender.Send(command, cancellationToken);
 
                 if (result.IsFailure) return CustomResults.Problem(result);
@@ -49,11 +49,11 @@ public class LoginEndpoint : ICarterModule
 
 public static class Login
 {
-    public record Response(Guid Id, string Email, string Role, string AccessToken, string RefreshToken);
+    public record LoginResponse(Guid Id, string Email, string Role, string AccessToken, string RefreshToken);
 
-    public sealed record Command(string Email, string Password) : ICommand<Response>;
+    public sealed record LoginCommand(string Email, string Password) : ICommand<LoginResponse>;
 
-    internal sealed class Validator : AbstractValidator<Command>
+    internal sealed class Validator : AbstractValidator<LoginCommand>
     {
         public Validator()
         {
@@ -70,22 +70,22 @@ public static class Login
     internal sealed class Handler(
         ApplicationDbContext context,
         IPasswordManager passwordManager,
-        IJwtTokenProvider jwtTokenProvider) : ICommandHandler<Command, Response>
+        IJwtTokenProvider jwtTokenProvider) : ICommandHandler<LoginCommand, LoginResponse>
     {
-        public async Task<Result<Response>> Handle(
-            Command request,
+        public async Task<Result<LoginResponse>> Handle(
+            LoginCommand request,
             CancellationToken cancellationToken)
         {
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
             if (user is null)
             {
-                return Result.Failure<Response>(UserErrors.NotFoundByEmail(request.Email));
+                return Result.Failure<LoginResponse>(UserErrors.NotFoundByEmail(request.Email));
             }
 
             if (!passwordManager.VerifyPassword(user.Password, request.Password))
             {
-                return Result.Failure<Response>(UserErrors.InvalidCredentials);
+                return Result.Failure<LoginResponse>(UserErrors.InvalidCredentials);
             }
 
             var token = jwtTokenProvider.Generate(user);
@@ -95,7 +95,7 @@ public static class Login
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return new Response(user.Id, user.Email, user.Role.ToString(), token, refresh);
+            return new LoginResponse(user.Id, user.Email, user.Role.ToString(), token, refresh);
         }
     }
 }

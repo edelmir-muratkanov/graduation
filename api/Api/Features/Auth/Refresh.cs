@@ -21,7 +21,7 @@ public class RefreshEndpoint : ICarterModule
                 var access = context.Request.Cookies[AuthConstants.AccessTokenKey];
                 var refresh = context.Request.Cookies[AuthConstants.RefreshTokenKey];
 
-                var command = new Refresh.Command(access!, refresh!);
+                var command = new Refresh.RefreshCommand(access!, refresh!);
 
                 var result = await sender.Send(command, cancellationToken);
 
@@ -47,11 +47,11 @@ public class RefreshEndpoint : ICarterModule
 
 public static class Refresh
 {
-    public record Tokens(string AccessToken, string RefreshToken);
+    public record RefreshResponse(string AccessToken, string RefreshToken);
 
-    public record Command(string AccessToken, string RefreshToken) : ICommand<Tokens>;
+    public record RefreshCommand(string AccessToken, string RefreshToken) : ICommand<RefreshResponse>;
 
-    internal sealed class Validator : AbstractValidator<Command>
+    internal sealed class Validator : AbstractValidator<RefreshCommand>
     {
         public Validator()
         {
@@ -64,9 +64,9 @@ public static class Refresh
     }
 
     internal sealed class Handler(IJwtTokenProvider jwtTokenProvider, ApplicationDbContext context)
-        : ICommandHandler<Command, Tokens>
+        : ICommandHandler<RefreshCommand, RefreshResponse>
     {
-        public async Task<Result<Tokens>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<RefreshResponse>> Handle(RefreshCommand request, CancellationToken cancellationToken)
         {
             var userId = await jwtTokenProvider.GetUserFromToken(request.AccessToken);
 
@@ -75,7 +75,7 @@ public static class Refresh
 
             if (user is null || user.Token != request.RefreshToken)
             {
-                return Result.Failure<Tokens>(Error.Problem("User.Unauthorized", "Не авторизован"));
+                return Result.Failure<RefreshResponse>(Error.Problem("User.Unauthorized", "Не авторизован"));
             }
 
             var access = jwtTokenProvider.Generate(user);
@@ -85,7 +85,7 @@ public static class Refresh
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return new Tokens(access, refresh);
+            return new RefreshResponse(access, refresh);
         }
     }
 }

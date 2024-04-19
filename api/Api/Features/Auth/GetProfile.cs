@@ -14,7 +14,7 @@ public class GetProfileEndpoint : ICarterModule
     {
         app.MapGroup("api/auth").MapGet("profile", async (ISender sender, CancellationToken cancellationToken) =>
             {
-                var query = new GetProfile.Query();
+                var query = new GetProfile.GetProfileQuery();
                 var result = await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
@@ -29,12 +29,12 @@ public class GetProfileEndpoint : ICarterModule
 
 public static class GetProfile
 {
-    public sealed record Query : IQuery<GetProfileResponse>;
+    public sealed record GetProfileQuery : IQuery<GetProfileResponse>;
 
     internal sealed class Handler(ICurrentUserService currentUserService)
-        : IQueryHandler<Query, GetProfileResponse>
+        : IQueryHandler<GetProfileQuery, GetProfileResponse>
     {
-        public Task<Result<GetProfileResponse>> Handle(Query request, CancellationToken cancellationToken)
+        public Task<Result<GetProfileResponse>> Handle(GetProfileQuery request, CancellationToken cancellationToken)
         {
             if (currentUserService.Id != null && currentUserService is { Role: not null, Email: not null })
             {

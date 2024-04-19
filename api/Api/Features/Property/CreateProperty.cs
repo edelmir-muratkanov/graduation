@@ -17,7 +17,7 @@ public class CreatePropertyEndpoint : ICarterModule
         app.MapGroup("api/properties").MapPost("",
                 async (CreatePropertyRequest request, ISender sender, CancellationToken cancellationToken) =>
                 {
-                    var command = new CreateProperty.Command(request.Name, request.Unit);
+                    var command = new CreateProperty.CreatePropertyCommand(request.Name, request.Unit);
                     var result = await sender.Send(command, cancellationToken);
 
                     return result.Match(Results.Ok, CustomResults.Problem);
@@ -33,11 +33,11 @@ public class CreatePropertyEndpoint : ICarterModule
 
 public static class CreateProperty
 {
-    public record Response(Guid Id, string Name, string Unit);
+    public record CreatePropertyResponse(Guid Id, string Name, string Unit);
 
-    public record Command(string Name, string Unit) : ICommand<Response>;
+    public record CreatePropertyCommand(string Name, string Unit) : ICommand<CreatePropertyResponse>;
 
-    internal sealed class Validator : AbstractValidator<Command>
+    internal sealed class Validator : AbstractValidator<CreatePropertyCommand>
     {
         public Validator()
         {
@@ -51,13 +51,15 @@ public static class CreateProperty
         }
     }
 
-    internal sealed class Handler(ApplicationDbContext context) : ICommandHandler<Command, Response>
+    internal sealed class Handler(ApplicationDbContext context)
+        : ICommandHandler<CreatePropertyCommand, CreatePropertyResponse>
     {
-        public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<CreatePropertyResponse>> Handle(CreatePropertyCommand request,
+            CancellationToken cancellationToken)
         {
             if (await context.Properties.AnyAsync(p => p.Name == request.Name, cancellationToken))
             {
-                return Result.Failure<Response>(PropertyErrors.NameNotUnique);
+                return Result.Failure<CreatePropertyResponse>(PropertyErrors.NameNotUnique);
             }
 
             var property = new Domain.Property.Property
@@ -69,7 +71,7 @@ public static class CreateProperty
             context.Properties.Add(property);
             await context.SaveChangesAsync(cancellationToken);
 
-            return new Response(property.Id, property.Name, property.Unit);
+            return new CreatePropertyResponse(property.Id, property.Name, property.Unit);
         }
     }
 }

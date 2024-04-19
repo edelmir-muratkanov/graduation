@@ -22,7 +22,7 @@ public class UpdatePropertyEndpoint : ICarterModule
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var command = new UpdateProperty.Command(id, request.Name, request.Unit);
+                var command = new UpdateProperty.UpdatePropertyCommand(id, request.Name, request.Unit);
                 var result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
@@ -39,9 +39,9 @@ public class UpdatePropertyEndpoint : ICarterModule
 
 public static class UpdateProperty
 {
-    public record Command(Guid Id, string? Name, string? Unit) : ICommand;
+    public record UpdatePropertyCommand(Guid Id, string? Name, string? Unit) : ICommand;
 
-    internal sealed class Validator : AbstractValidator<Command>
+    internal sealed class Validator : AbstractValidator<UpdatePropertyCommand>
     {
         public Validator()
         {
@@ -50,9 +50,9 @@ public static class UpdateProperty
         }
     }
 
-    internal class Handler(ApplicationDbContext context) : ICommandHandler<Command>
+    internal class Handler(ApplicationDbContext context) : ICommandHandler<UpdatePropertyCommand>
     {
-        public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(UpdatePropertyCommand request, CancellationToken cancellationToken)
         {
             var property = await context.Properties
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);

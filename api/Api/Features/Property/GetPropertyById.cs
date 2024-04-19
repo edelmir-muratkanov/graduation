@@ -17,7 +17,7 @@ public class GetPropertyByIdEndpoint : ICarterModule
             .MapGroup("api/properties")
             .MapGet("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
             {
-                var query = new GetPropertyById.Query(id);
+                var query = new GetPropertyById.GetPropertyByIdQuery(id);
                 var result = await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
@@ -29,11 +29,11 @@ public class GetPropertyByIdEndpoint : ICarterModule
 
 public static class GetPropertyById
 {
-    public record Response(Guid Id, string Name, string Unit);
+    public record GetPropertyByIdResponse(Guid Id, string Name, string Unit);
 
-    public record Query(Guid Id) : IQuery<Response>;
+    public record GetPropertyByIdQuery(Guid Id) : IQuery<GetPropertyByIdResponse>;
 
-    internal class Validator : AbstractValidator<Query>
+    internal class Validator : AbstractValidator<GetPropertyByIdQuery>
     {
         public Validator()
         {
@@ -42,16 +42,16 @@ public static class GetPropertyById
         }
     }
 
-    internal class Handler(ApplicationDbContext context) : IQueryHandler<Query, Response>
+    internal class Handler(ApplicationDbContext context) : IQueryHandler<GetPropertyByIdQuery, GetPropertyByIdResponse>
     {
-        public async Task<Result<Response>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<GetPropertyByIdResponse>> Handle(GetPropertyByIdQuery request, CancellationToken cancellationToken)
         {
             var property = await context.Properties.AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
             return property is null
-                ? Result.Failure<Response>(PropertyErrors.NotFound)
-                : new Response(property.Id, property.Name, property.Unit);
+                ? Result.Failure<GetPropertyByIdResponse>(PropertyErrors.NotFound)
+                : new GetPropertyByIdResponse(property.Id, property.Name, property.Unit);
         }
     }
 }

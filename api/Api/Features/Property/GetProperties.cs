@@ -16,7 +16,7 @@ public class GetPropertiesEndpoint : ICarterModule
             .MapGroup("api/properties")
             .MapGet("", async (string? searchTerm, ISender sender, CancellationToken cancellationToken) =>
             {
-                var query = new GetProperties.Query(searchTerm);
+                var query = new GetProperties.GetPropertiesQuery(searchTerm);
                 var result = await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
@@ -30,13 +30,13 @@ public class GetPropertiesEndpoint : ICarterModule
 
 public static class GetProperties
 {
-    public record Response(Guid Id, string Name, string Unit);
+    public record GetPropertiesResponse(Guid Id, string Name, string Unit);
 
-    public record Query(string? SearchTerm, int PageNumber = 1, int PageSize = 10) : IQuery<PaginatedList<Response>>;
+    public record GetPropertiesQuery(string? SearchTerm, int PageNumber = 1, int PageSize = 10) : IQuery<PaginatedList<GetPropertiesResponse>>;
 
-    internal sealed class Handler(ApplicationDbContext context) : IQueryHandler<Query, PaginatedList<Response>>
+    internal sealed class Handler(ApplicationDbContext context) : IQueryHandler<GetPropertiesQuery, PaginatedList<GetPropertiesResponse>>
     {
-        public async Task<Result<PaginatedList<Response>>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<PaginatedList<GetPropertiesResponse>>> Handle(GetPropertiesQuery request, CancellationToken cancellationToken)
         {
             var propertiesQuery = context.Properties.AsNoTracking();
 
@@ -45,9 +45,9 @@ public static class GetProperties
                 propertiesQuery = propertiesQuery.Where(p => p.Name.Contains(request.SearchTerm));
             }
 
-            var properties = propertiesQuery.Select(p => new Response(p.Id, p.Name, p.Unit));
+            var properties = propertiesQuery.Select(p => new GetPropertiesResponse(p.Id, p.Name, p.Unit));
 
-            var list = await PaginatedList<Response>.CreateAsync(
+            var list = await PaginatedList<GetPropertiesResponse>.CreateAsync(
                 properties,
                 request.PageNumber,
                 request.PageSize,
