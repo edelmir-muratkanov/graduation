@@ -2,4 +2,4 @@
 
 public record RegisterRequest(string Email, string Password);
 
-public record RegisterResponse(string Id, string Email, string Role, string Token);
+public record RegisterResponse(Guid Id, string Email, string Role, string Token);

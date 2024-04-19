@@ -24,6 +24,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasConversion<string>()
             .IsRequired();
 
+        builder.Property(u => u.Token)
+            .HasMaxLength(255);
+        
         builder.HasIndex(u => u.Email).IsUnique();
     }
 }

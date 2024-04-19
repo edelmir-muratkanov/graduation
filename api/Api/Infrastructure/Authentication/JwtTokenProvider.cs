@@ -1,8 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Api.Domain.Users;
+using Api.Infrastructure.Database;
 using Api.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -36,5 +39,33 @@ internal sealed class JwtTokenProvider(IOptions<JwtOptions> options) : IJwtToken
         var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
 
         return tokenValue;
+    }
+
+    public string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+
+        return Convert.ToBase64String(randomNumber);
+    }
+
+    public async Task<string?> GetUserFromToken(string token)
+    {
+        var tokenValidationParameter = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret))
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var result = await tokenHandler.ValidateTokenAsync(token, tokenValidationParameter);
+
+        return result.Claims.First(u => u.Key == ClaimTypes.NameIdentifier).Value.ToString();
     }
 }

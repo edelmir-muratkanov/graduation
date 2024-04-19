@@ -24,13 +24,20 @@ public class LoginEndpoint : ICarterModule
                 var command = new Login.Command(request.Email, request.Password);
                 var result = await sender.Send(command, cancellationToken);
 
-                if (result.IsSuccess)
-                {
-                    context.Response.Cookies.Append("x-token", result.Value.Token);
-                }
+                if (result.IsFailure) return CustomResults.Problem(result);
 
-                return result.Match(Results.Ok, CustomResults.Problem);
-            }).Produces<LoginResponse>()
+                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken);
+                context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken);
+
+                var response = new LoginResponse(
+                    result.Value.Id,
+                    result.Value.Email,
+                    result.Value.Role,
+                    result.Value.AccessToken);
+
+                return Results.Ok(response);
+            })
+            .Produces<LoginResponse>()
             .ProducesProblem(404)
             .ProducesProblem(400)
             .ProducesProblem(500)
@@ -42,7 +49,9 @@ public class LoginEndpoint : ICarterModule
 
 public static class Login
 {
-    public sealed record Command(string Email, string Password) : ICommand<LoginResponse>;
+    public record Response(Guid Id, string Email, string Role, string AccessToken, string RefreshToken);
+
+    public sealed record Command(string Email, string Password) : ICommand<Response>;
 
     internal sealed class Validator : AbstractValidator<Command>
     {
@@ -61,9 +70,9 @@ public static class Login
     internal sealed class Handler(
         ApplicationDbContext context,
         IPasswordManager passwordManager,
-        IJwtTokenProvider jwtTokenProvider) : ICommandHandler<Command, LoginResponse>
+        IJwtTokenProvider jwtTokenProvider) : ICommandHandler<Command, Response>
     {
-        public async Task<Result<LoginResponse>> Handle(
+        public async Task<Result<Response>> Handle(
             Command request,
             CancellationToken cancellationToken)
         {
@@ -71,17 +80,22 @@ public static class Login
 
             if (user is null)
             {
-                return Result.Failure<LoginResponse>(UserErrors.NotFoundByEmail(request.Email));
+                return Result.Failure<Response>(UserErrors.NotFoundByEmail(request.Email));
             }
 
             if (!passwordManager.VerifyPassword(user.Password, request.Password))
             {
-                return Result.Failure<LoginResponse>(UserErrors.InvalidCredentials);
+                return Result.Failure<Response>(UserErrors.InvalidCredentials);
             }
 
             var token = jwtTokenProvider.Generate(user);
+            var refresh = jwtTokenProvider.GenerateRefreshToken();
 
-            return new LoginResponse(user.Id, user.Email, user.Role.ToString(), token);
+            user.Token = refresh;
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            return new Response(user.Id, user.Email, user.Role.ToString(), token, refresh);
         }
     }
 }

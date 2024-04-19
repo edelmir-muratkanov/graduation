@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using Api;
 using Api.Domain.Users;
+using Api.Features.Auth;
 using Api.Infrastructure.Authentication;
 using Api.Infrastructure.Database;
 using Api.Infrastructure.Services;
@@ -79,7 +80,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         {
             OnMessageReceived = context =>
             {
-                context.Token = context.Request.Cookies["x-token"];
+                context.Token = context.Request.Cookies[AuthConstants.AccessTokenKey];
 
                 return Task.CompletedTask;
             }

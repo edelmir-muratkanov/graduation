@@ -13,7 +13,9 @@ namespace Api.Features.Auth;
 
 public static class Register
 {
-    public sealed record Command(string Email, string Password) : ICommand<RegisterResponse>;
+    public record Response(Guid Id, string Email, string Role, string AccessToken, string RefreshToken);
+
+    public sealed record Command(string Email, string Password) : ICommand<Response>;
 
     public class Validator : AbstractValidator<Command>
     {
@@ -33,13 +35,13 @@ public static class Register
         ApplicationDbContext context,
         IPasswordManager passwordManager,
         IJwtTokenProvider jwtTokenProvider)
-        : ICommandHandler<Command, RegisterResponse>
+        : ICommandHandler<Command, Response>
     {
-        public async Task<Result<RegisterResponse>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
         {
             if (await context.Users.AnyAsync(u => u.Email == request.Email, cancellationToken))
             {
-                return Result.Failure<RegisterResponse>(UserErrors.EmailNotUnique);
+                return Result.Failure<Response>(UserErrors.EmailNotUnique);
             }
 
             var password = passwordManager.HashPassword(request.Password);
@@ -52,13 +54,17 @@ public static class Register
             };
 
             var token = jwtTokenProvider.Generate(user);
+            var refresh = jwtTokenProvider.GenerateRefreshToken();
+
+            user.Token = refresh;
+
             user.DomainEvents.Add(new UserRegisteredDomainEvent(user));
 
             context.Users.Add(user);
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return new RegisterResponse(user.Id.ToString(), user.Email, user.Role.ToString(), token);
+            return new Response(user.Id, user.Email, user.Role.ToString(), token, refresh);
         }
     }
 }
@@ -69,13 +75,28 @@ public class RegisterEndpoint : ICarterModule
     {
         app.MapPost("api/auth/register", async (
                 RegisterRequest request,
+                HttpContext context,
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
                 var command = new Register.Command(request.Email, request.Password);
                 var result = await sender.Send(command, cancellationToken);
 
-                return result.Match(Results.Ok, CustomResults.Problem);
+                if (result.IsFailure)
+                {
+                    return CustomResults.Problem(result);
+                }
+
+                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken);
+                context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken);
+
+                var response = new RegisterResponse(
+                    result.Value.Id,
+                    result.Value.Email,
+                    result.Value.Role,
+                    result.Value.AccessToken);
+
+                return Results.Ok(response);
             })
             .Produces<RegisterResponse>(200)
             .ProducesProblem(409)
