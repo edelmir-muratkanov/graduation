@@ -1,4 +1,5 @@
-﻿using Api.Domain.Property;
+﻿using Api.Contracts.Property;
+using Api.Domain.Property;
 using Api.Infrastructure.Database;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
@@ -22,6 +23,7 @@ public class GetPropertyByIdEndpoint : ICarterModule
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
+            .Produces<GetPropertyByIdResponse>()
             .WithName("Get property by id")
             .WithTags("properties");
     }
@@ -44,7 +46,8 @@ public static class GetPropertyById
 
     internal class Handler(ApplicationDbContext context) : IQueryHandler<GetPropertyByIdQuery, GetPropertyByIdResponse>
     {
-        public async Task<Result<GetPropertyByIdResponse>> Handle(GetPropertyByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<GetPropertyByIdResponse>> Handle(GetPropertyByIdQuery request,
+            CancellationToken cancellationToken)
         {
             var property = await context.Properties.AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);

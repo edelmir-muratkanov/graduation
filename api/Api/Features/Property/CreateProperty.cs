@@ -20,9 +20,9 @@ public class CreatePropertyEndpoint : ICarterModule
                     var command = new CreateProperty.CreatePropertyCommand(request.Name, request.Unit);
                     var result = await sender.Send(command, cancellationToken);
 
-                    return result.Match(Results.Ok, CustomResults.Problem);
+                    return result.Match(Results.Created, CustomResults.Problem);
                 })
-            .Produces<CreatePropertyResponse>()
+            .Produces<CreatePropertyResponse>(201)
             .ProducesProblem(404)
             .ProducesProblem(409)
             .ProducesProblem(500)

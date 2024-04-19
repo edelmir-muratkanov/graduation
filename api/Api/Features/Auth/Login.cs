@@ -38,8 +38,8 @@ public class LoginEndpoint : ICarterModule
                 return Results.Ok(response);
             })
             .Produces<LoginResponse>()
-            .ProducesProblem(404)
             .ProducesProblem(400)
+            .ProducesProblem(404)
             .ProducesProblem(500)
             .WithName("Login")
             .WithTags("auth")

@@ -38,12 +38,12 @@ public class RegisterEndpoint : ICarterModule
                     result.Value.Role,
                     result.Value.AccessToken);
 
-                return Results.Ok(response);
+                return Results.Created<RegisterResponse>("api/auth/profile", response);
             })
-            .Produces<RegisterResponse>(200)
+            .Produces<RegisterResponse>(201)
+            .ProducesProblem(400)
             .ProducesProblem(409)
             .ProducesProblem(500)
-            .ProducesProblem(400)
             .WithName("Register")
             .WithTags("auth");
     }

@@ -26,14 +26,14 @@ public class UpdatePropertyEndpoint : ICarterModule
                 var result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
-            .WithName("Update property")
-            .WithTags("properties")
             .Produces(200)
-            .ProducesProblem(404)
             .ProducesProblem(400)
-            .ProducesProblem(500)
             .Produces(401)
-            .Produces(403);
+            .Produces(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500)
+            .WithName("Update property")
+            .WithTags("properties");
     }
 }
 
