@@ -40,6 +40,7 @@ builder.Services.AddMediatR(options =>
 {
     options.RegisterServicesFromAssembly(assembly);
 
+    options.AddOpenBehavior(typeof(RequestLoggingPipelineBehavior<,>));
     options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
     options.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
 });
@@ -60,7 +61,6 @@ builder.Services.AddSingleton<IJwtTokenProvider, JwtTokenProvider>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
-// builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     JwtBearerDefaults.AuthenticationScheme,

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Api.Shared.Models;
+using MediatR;
 
 namespace Api.Shared.Behaviours;
 

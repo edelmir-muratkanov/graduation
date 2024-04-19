@@ -14,6 +14,12 @@ public static class PropertyErrorCodes
     public static class GetById
     {
         public const string MissingId = nameof(MissingId);
-        public const string InvalidId = nameof(InvalidId);
+    }
+
+    public static class Update
+    {
+        public const string MissingId = nameof(MissingId);
+        public const string EmptyName = nameof(EmptyName);
+        public const string EmptyUnit = nameof(EmptyName);
     }
 }
