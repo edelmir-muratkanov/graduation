@@ -1,10 +1,13 @@
-﻿using Api.Contracts.Property;
+﻿using System.Linq.Expressions;
+using Api.Contracts.Property;
 using Api.Infrastructure.Database;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SortOrder = Api.Shared.Models.SortOrder;
 
 namespace Api.Features.Property;
 
@@ -14,9 +17,14 @@ public class GetPropertiesEndpoint : ICarterModule
     {
         app
             .MapGroup("api/properties")
-            .MapGet("", async (string? searchTerm, ISender sender, CancellationToken cancellationToken) =>
+            .MapGet("", async (
+                string? searchTerm,
+                string? sortColumn,
+                [FromQuery] SortOrder? sortOrder,
+                ISender sender,
+                CancellationToken cancellationToken) =>
             {
-                var query = new GetProperties.GetPropertiesQuery(searchTerm);
+                var query = new GetProperties.GetPropertiesQuery(searchTerm, sortColumn, sortOrder);
                 var result = await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
@@ -32,7 +40,12 @@ public static class GetProperties
 {
     public record GetPropertiesResponse(Guid Id, string Name, string Unit);
 
-    public record GetPropertiesQuery(string? SearchTerm, int PageNumber = 1, int PageSize = 10)
+    public record GetPropertiesQuery(
+        string? SearchTerm,
+        string? SortColumn = "createdAt",
+        SortOrder? SortOrder = SortOrder.Asc,
+        int PageNumber = 1,
+        int PageSize = 10)
         : IQuery<PaginatedList<GetPropertiesResponse>>;
 
     internal sealed class Handler(ApplicationDbContext context)
@@ -47,6 +60,17 @@ public static class GetProperties
             {
                 propertiesQuery = propertiesQuery.Where(p => p.Name.Contains(request.SearchTerm));
             }
+
+            Expression<Func<Domain.Property.Property, object>> keySelector = request.SortColumn?.ToLower() switch
+            {
+                "name" => property => property.Name,
+                "unit" => property => property.Unit,
+                _ => property => property.CreatedAt
+            };
+
+            propertiesQuery = request.SortOrder == SortOrder.Desc
+                ? propertiesQuery.OrderByDescending(keySelector)
+                : propertiesQuery.OrderBy(keySelector);
 
             var properties = propertiesQuery.Select(p => new GetPropertiesResponse(p.Id, p.Name, p.Unit));
 
