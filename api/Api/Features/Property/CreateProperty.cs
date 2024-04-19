@@ -1,5 +1,6 @@
 ﻿using Api.Contracts.Property;
 using Api.Domain.Property;
+using Api.Domain.Users;
 using Api.Infrastructure.Database;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
@@ -22,6 +23,7 @@ public class CreatePropertyEndpoint : ICarterModule
 
                     return result.Match(Results.Created, CustomResults.Problem);
                 })
+            .RequireAuthorization(Role.Admin.ToString())
             .Produces(201)
             .ProducesProblem(404)
             .ProducesProblem(409)

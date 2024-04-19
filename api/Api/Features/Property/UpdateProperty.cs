@@ -1,5 +1,6 @@
 ﻿using Api.Contracts.Property;
 using Api.Domain.Property;
+using Api.Domain.Users;
 using Api.Infrastructure.Database;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
@@ -26,6 +27,7 @@ public class UpdatePropertyEndpoint : ICarterModule
                 var result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
+            .RequireAuthorization(Role.Admin.ToString())
             .Produces(204)
             .ProducesProblem(400)
             .Produces(401)
