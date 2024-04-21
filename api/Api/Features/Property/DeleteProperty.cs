@@ -1,6 +1,7 @@
 ﻿using Api.Domain.Properties;
 using Api.Domain.Users;
 using Api.Infrastructure.Database;
+using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
@@ -45,19 +46,21 @@ public static class DeleteProperty
         }
     }
 
-    internal sealed class Handler(ApplicationDbContext context) : ICommandHandler<DeletePropertyCommand>
+    internal sealed class Handler(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork)
+        : ICommandHandler<DeletePropertyCommand>
     {
         public async Task<Result> Handle(DeletePropertyCommand request, CancellationToken cancellationToken)
         {
-            var property = await context.Properties.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+            var property = await propertyRepository.GetByIdAsync(request.Id, cancellationToken);
 
             if (property is null)
             {
                 return Result.Failure(PropertyErrors.NotFound);
             }
 
-            context.Properties.Remove(property);
-            await context.SaveChangesAsync(cancellationToken);
+            propertyRepository.Remove(property);
+
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Result.Success();
         }

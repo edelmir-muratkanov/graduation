@@ -2,6 +2,7 @@
 using Api.Domain.Properties;
 using Api.Domain.Users;
 using Api.Infrastructure.Database;
+using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
@@ -52,12 +53,12 @@ public static class UpdateProperty
         }
     }
 
-    internal class Handler(ApplicationDbContext context) : ICommandHandler<UpdatePropertyCommand>
+    internal class Handler(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork)
+        : ICommandHandler<UpdatePropertyCommand>
     {
         public async Task<Result> Handle(UpdatePropertyCommand request, CancellationToken cancellationToken)
         {
-            var property = await context.Properties
-                .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+            var property = await propertyRepository.GetByIdAsync(request.Id, cancellationToken);
 
             if (property is null)
             {
@@ -74,9 +75,9 @@ public static class UpdateProperty
                 property.Unit = request.Unit;
             }
 
-            context.Properties.Update(property);
+            propertyRepository.Update(property);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Result.Success();
         }

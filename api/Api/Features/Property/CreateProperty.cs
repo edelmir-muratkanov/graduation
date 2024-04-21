@@ -2,6 +2,7 @@
 using Api.Domain.Properties;
 using Api.Domain.Users;
 using Api.Infrastructure.Database;
+using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
@@ -53,13 +54,13 @@ public static class CreateProperty
         }
     }
 
-    internal sealed class Handler(ApplicationDbContext context)
+    internal sealed class Handler(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork)
         : ICommandHandler<CreatePropertyCommand, CreatePropertyResponse>
     {
         public async Task<Result<CreatePropertyResponse>> Handle(CreatePropertyCommand request,
             CancellationToken cancellationToken)
         {
-            if (await context.Properties.AnyAsync(p => p.Name == request.Name, cancellationToken))
+            if (!await propertyRepository.IsNameUniqueAsync(request.Name))
             {
                 return Result.Failure<CreatePropertyResponse>(PropertyErrors.NameNotUnique);
             }
@@ -70,8 +71,9 @@ public static class CreateProperty
                 Unit = request.Unit
             };
 
-            context.Properties.Add(property);
-            await context.SaveChangesAsync(cancellationToken);
+            propertyRepository.Insert(property);
+
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new CreatePropertyResponse(property.Id, property.Name, property.Unit);
         }

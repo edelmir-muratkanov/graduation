@@ -15,4 +15,6 @@ internal class PropertyRepository(ApplicationDbContext context) : IPropertyRepos
         await context.Properties.AnyAsync(p => p.Id == id);
 
     public void Insert(Property property) => context.Properties.Add(property);
+    public void Remove(Property property) => context.Properties.Remove(property);
+    public void Update(Property property) => context.Properties.Update(property);
 }
