@@ -1,5 +1,5 @@
 ﻿using Api.Contracts.Property;
-using Api.Domain.Property;
+using Api.Domain.Properties;
 using Api.Domain.Users;
 using Api.Infrastructure.Database;
 using Api.Shared.Messaging;
@@ -64,7 +64,7 @@ public static class CreateProperty
                 return Result.Failure<CreatePropertyResponse>(PropertyErrors.NameNotUnique);
             }
 
-            var property = new Domain.Property.Property
+            var property = new Domain.Properties.Property
             {
                 Name = request.Name,
                 Unit = request.Unit

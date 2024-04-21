@@ -1,6 +1,6 @@
 ﻿using Api.Shared.Models;
 
-namespace Api.Domain.Property;
+namespace Api.Domain.Properties;
 
 public static class PropertyErrors
 {

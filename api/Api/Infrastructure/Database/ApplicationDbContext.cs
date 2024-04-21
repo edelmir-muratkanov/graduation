@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Api.Domain.Property;
+using Api.Domain.Properties;
 using Api.Domain.Users;
 using Api.Shared;
 using Api.Shared.Interfaces;

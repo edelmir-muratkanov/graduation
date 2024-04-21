@@ -1,6 +1,6 @@
 ﻿using Api.Shared;
 
-namespace Api.Domain.Property;
+namespace Api.Domain.Properties;
 
 public class Property : AuditableEntity
 {

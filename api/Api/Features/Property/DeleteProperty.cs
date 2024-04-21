@@ -1,4 +1,4 @@
-﻿using Api.Domain.Property;
+﻿using Api.Domain.Properties;
 using Api.Domain.Users;
 using Api.Infrastructure.Database;
 using Api.Shared.Messaging;

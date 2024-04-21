@@ -1,4 +1,4 @@
-﻿using Api.Domain.Property;
+﻿using Api.Domain.Properties;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

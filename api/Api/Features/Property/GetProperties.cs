@@ -61,7 +61,7 @@ public static class GetProperties
                 propertiesQuery = propertiesQuery.Where(p => p.Name.Contains(request.SearchTerm));
             }
 
-            Expression<Func<Domain.Property.Property, object>> keySelector = request.SortColumn?.ToLower() switch
+            Expression<Func<Domain.Properties.Property, object>> keySelector = request.SortColumn?.ToLower() switch
             {
                 "name" => property => property.Name,
                 "unit" => property => property.Unit,
