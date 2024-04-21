@@ -15,4 +15,6 @@ public static class UserErrors
     public static readonly Error InvalidCredentials = Error.Problem(
         "User.InvalidCredentials",
         "Неверные данные");
+
+    public static readonly Error Unauthorized = Error.Problem("User.Unauthorized", "Не авторизован");
 }

@@ -1,12 +1,11 @@
 ﻿using Api.Contracts.Auth;
-using Api.Infrastructure.Database;
+using Api.Domain.Users;
 using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Features.Auth;
 
@@ -63,19 +62,31 @@ public static class Refresh
         }
     }
 
-    internal sealed class Handler(IJwtTokenProvider jwtTokenProvider, ApplicationDbContext context)
+    internal sealed class Handler(
+        IJwtTokenProvider jwtTokenProvider,
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork)
         : ICommandHandler<RefreshCommand, RefreshResponse>
     {
         public async Task<Result<RefreshResponse>> Handle(RefreshCommand request, CancellationToken cancellationToken)
         {
             var userId = await jwtTokenProvider.GetUserFromToken(request.AccessToken);
 
-            var user = await context.Users
-                .FirstOrDefaultAsync(u => u.Id.ToString() == userId, cancellationToken);
+            if (userId is null)
+            {
+                return Result.Failure<RefreshResponse>(UserErrors.Unauthorized);
+            }
+
+            if (!Guid.TryParse(userId, out var id))
+            {
+                return Result.Failure<RefreshResponse>(UserErrors.Unauthorized);
+            }
+
+            var user = await userRepository.GetByIdAsync(id, cancellationToken);
 
             if (user is null || user.Token != request.RefreshToken)
             {
-                return Result.Failure<RefreshResponse>(Error.Problem("User.Unauthorized", "Не авторизован"));
+                return Result.Failure<RefreshResponse>(UserErrors.Unauthorized);
             }
 
             var access = jwtTokenProvider.Generate(user);
@@ -83,7 +94,7 @@ public static class Refresh
 
             user.Token = refresh;
 
-            await context.SaveChangesAsync(cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new RefreshResponse(access, refresh);
         }

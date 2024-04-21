@@ -1,13 +1,11 @@
 ﻿using Api.Contracts.Auth;
 using Api.Domain.Users;
-using Api.Infrastructure.Database;
 using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Features.Auth;
 
@@ -70,14 +68,15 @@ public static class Register
     }
 
     internal sealed class Handler(
-        ApplicationDbContext context,
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork,
         IPasswordManager passwordManager,
         IJwtTokenProvider jwtTokenProvider)
         : ICommandHandler<RegisterCommand, RegisterResponse>
     {
         public async Task<Result<RegisterResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            if (await context.Users.AnyAsync(u => u.Email == request.Email, cancellationToken))
+            if (!await userRepository.IsEmailUniqueAsync(request.Email))
             {
                 return Result.Failure<RegisterResponse>(UserErrors.EmailNotUnique);
             }
@@ -98,9 +97,9 @@ public static class Register
 
             user.DomainEvents.Add(new UserRegisteredDomainEvent(user));
 
-            context.Users.Add(user);
+            userRepository.Insert(user);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new RegisterResponse(user.Id, user.Email, user.Role.ToString(), token, refresh);
         }

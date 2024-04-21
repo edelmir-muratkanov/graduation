@@ -63,6 +63,7 @@ builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationD
 builder.Services.AddScoped<IMethodRepository, MethodRepository>();
 builder.Services.AddScoped<IMethodParameterRepository, MethodParameterRepository>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<IDomainEventService, DomainEventService>();
 builder.Services.AddScoped<IPasswordManager, PasswordManager>();

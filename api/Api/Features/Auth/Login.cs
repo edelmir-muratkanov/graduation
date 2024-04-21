@@ -1,13 +1,11 @@
 ﻿using Api.Contracts.Auth;
 using Api.Domain.Users;
-using Api.Infrastructure.Database;
 using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Features.Auth;
 
@@ -68,7 +66,8 @@ public static class Login
     }
 
     internal sealed class Handler(
-        ApplicationDbContext context,
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork,
         IPasswordManager passwordManager,
         IJwtTokenProvider jwtTokenProvider) : ICommandHandler<LoginCommand, LoginResponse>
     {
@@ -76,7 +75,7 @@ public static class Login
             LoginCommand request,
             CancellationToken cancellationToken)
         {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
+            var user = await userRepository.GetByEmailAsync(request.Email, cancellationToken);
 
             if (user is null)
             {
@@ -93,7 +92,7 @@ public static class Login
 
             user.Token = refresh;
 
-            await context.SaveChangesAsync(cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new LoginResponse(user.Id, user.Email, user.Role.ToString(), token, refresh);
         }
