@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Api.Domain.Methods;
 using Api.Domain.Properties;
 using Api.Domain.Users;
 using Api.Shared;
@@ -11,10 +12,12 @@ public class ApplicationDbContext(
     DbContextOptions<ApplicationDbContext> options,
     IDomainEventService domainEventService,
     ICurrentUserService currentUserService)
-    : DbContext(options)
+    : DbContext(options), IUnitOfWork
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Property> Properties => Set<Property>();
+    public DbSet<Method> Methods => Set<Method>();
+    public DbSet<MethodParameter> MethodParameters => Set<MethodParameter>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

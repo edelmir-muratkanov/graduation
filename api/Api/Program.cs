@@ -1,16 +1,20 @@
 using System.Reflection;
 using System.Text;
 using Api;
+using Api.Domain.Methods;
+using Api.Domain.Properties;
 using Api.Domain.Users;
 using Api.Features.Auth;
 using Api.Infrastructure.Authentication;
 using Api.Infrastructure.Database;
+using Api.Infrastructure.Database.Repositories;
 using Api.Infrastructure.Services;
 using Api.OptionsSetup;
 using Api.Shared.Behaviours;
 using Api.Shared.Interfaces;
 using Carter;
 using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +36,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-builder.Services.AddAutoMapper(assembly);
+// builder.Services.AddAutoMapper(assembly);
+builder.Services.AddMapster();
 builder.Services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
 builder.Services.AddCarter();
@@ -52,6 +57,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             b => { b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName); })
         .UseSnakeCaseNamingConvention();
 });
+
+builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
+
+builder.Services.AddScoped<IMethodRepository, MethodRepository>();
+builder.Services.AddScoped<IMethodParameterRepository, MethodParameterRepository>();
+builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 
 builder.Services.AddScoped<IDomainEventService, DomainEventService>();
 builder.Services.AddScoped<IPasswordManager, PasswordManager>();
