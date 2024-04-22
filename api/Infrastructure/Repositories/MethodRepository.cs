@@ -26,4 +26,9 @@ internal class MethodRepository(ApplicationWriteDbContext context) : IMethodRepo
     {
         context.Methods.Update(method);
     }
+
+    public void Remove(Method method)
+    {
+        context.Methods.Remove(method);
+    }
 }

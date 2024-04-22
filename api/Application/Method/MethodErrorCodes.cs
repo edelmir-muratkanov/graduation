@@ -31,4 +31,9 @@ public static class MethodErrorCodes
     {
         public const string MissingId = nameof(MissingId);
     }
+
+    public static class Delete
+    {
+        public const string MissingId = nameof(MissingId);
+    }
 }

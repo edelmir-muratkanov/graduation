@@ -2,6 +2,7 @@
 using Api.Infrastructure;
 using Application.Method.AddParameters;
 using Application.Method.Create;
+using Application.Method.Delete;
 using Application.Method.GetMethodById;
 using Application.Method.GetMethods;
 using Application.Method.Update;
@@ -120,5 +121,22 @@ public class MethodEndpoints : ICarterModule
             .ProducesProblem(404)
             .ProducesProblem(500)
             .WithName("Update method");
+
+        group.MapDelete("{id:guid}", async (
+                Guid id,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new DeleteMethodCommand { Id = id };
+                var result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization(Role.Admin.ToString())
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500);
     }
 }
