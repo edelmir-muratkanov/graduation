@@ -3,7 +3,6 @@ using Api.Domain;
 using Api.Domain.Methods;
 using Api.Domain.Properties;
 using Api.Domain.Users;
-using Api.Infrastructure.Database;
 using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
@@ -12,7 +11,6 @@ using FluentValidation;
 using Mapster;
 using MapsterMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Features.Method;
 
@@ -20,29 +18,34 @@ public class CreateMethodEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGroup("api/methods").MapPost("", async (CreateMethodRequest request, ISender sender, IMapper mapper) =>
-            {
-                var parameters = request.Parameters.Select(p =>
+        app.MapGroup("api/methods").MapPost("",
+                async (CreateMethodRequest request, ISender sender, IMapper mapper) =>
                 {
-                    var first = p.First is not null
-                        ? new CreateMethod.CreateMethodParameterValueGroupRequest(p.First.Min, p.First.Avg, p.First.Max)
-                        : default;
+                    var parameters = request.Parameters.Select(p =>
+                    {
+                        var first = p.First is not null
+                            ? new CreateMethod.CreateMethodParameterValueGroupRequest(p.First.Min, p.First.Avg,
+                                p.First.Max)
+                            : default;
 
-                    var second = p.Second is not null
-                        ? new CreateMethod.CreateMethodParameterValueGroupRequest(
-                            p.Second.Min,
-                            p.Second.Avg,
-                            p.Second.Max)
-                        : default;
+                        var second = p.Second is not null
+                            ? new CreateMethod.CreateMethodParameterValueGroupRequest(
+                                p.Second.Min,
+                                p.Second.Avg,
+                                p.Second.Max)
+                            : default;
 
-                    return new CreateMethod.CreateMethodParameterRequest(p.PropertyId, first, second);
-                }).ToList();
-                var command =
-                    new CreateMethod.CreateMethodCommand(request.Name, request.CollectorTypes, parameters);
+                        return new CreateMethod.CreateMethodParameterRequest(p.PropertyId, first, second);
+                    }).ToList();
 
-                var result = await sender.Send(command);
-                return result.Match(Results.Created, CustomResults.Problem);
-            })
+                    var command = new CreateMethod.CreateMethodCommand(
+                        request.Name,
+                        request.CollectorTypes,
+                        parameters);
+
+                    var result = await sender.Send(command);
+                    return result.Match(Results.Created, CustomResults.Problem);
+                })
             .RequireAuthorization(Role.Admin.ToString())
             .Produces(201)
             .ProducesProblem(400)
@@ -57,8 +60,6 @@ public class CreateMethodEndpoint : ICarterModule
 
 public static class CreateMethod
 {
-    public record CreateMethodResponse(Guid Id, string Name);
-
     public record CreateMethodParameterValueGroupRequest(double Min, double Avg, double Max);
 
     public record CreateMethodParameterRequest(
@@ -68,9 +69,9 @@ public static class CreateMethod
 
     public record CreateMethodCommand(
         string Name,
-        HashSet<CollectorType> CollectorTypes,
+        List<CollectorType> CollectorTypes,
         List<CreateMethodParameterRequest> Parameters)
-        : ICommand<CreateMethodResponse>;
+        : ICommand;
 
     internal sealed class CreateMethodCommandValidator : AbstractValidator<CreateMethodCommand>
     {
@@ -107,79 +108,46 @@ public static class CreateMethod
         }
     }
 
-    // internal sealed class CreateMethodParameterValidator : AbstractValidator<CreateMethodParameterRequest>
-    // {
-    //     public CreateMethodParameterValidator()
-    //     {
-    //         RuleFor(c => c.PropertyId)
-    //             .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingProperty);
-    //
-    //         RuleFor(c => c.FirstParameters)
-    //             .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingFirstOrSecondParameters)
-    //             .When(c => c.SecondParameters == null);
-    //
-    //         RuleFor(c => c.SecondParameters)
-    //             .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingFirstOrSecondParameters)
-    //             .When(c => c.FirstParameters == default);
-    //     }
-    // }
-
     internal class Handler(
         IMethodRepository methodRepository,
         IMethodParameterRepository methodParameterRepository,
         IPropertyRepository propertyRepository,
         IUnitOfWork unitOfWork)
-        : ICommandHandler<CreateMethodCommand, CreateMethodResponse>
+        : ICommandHandler<CreateMethodCommand>
     {
-        public async Task<Result<CreateMethodResponse>> Handle(
+        public async Task<Result> Handle(
             CreateMethodCommand request,
             CancellationToken cancellationToken)
         {
             if (!await methodRepository.IsNameUniqueAsync(request.Name))
-            {
                 return Result.Failure<CreateMethodResponse>(MethodErrors.NameNotUnique);
-            }
-
-            var method = new Domain.Methods.Method
-            {
-                Name = request.Name,
-                CollectorTypes = request.CollectorTypes.ToList()
-            };
-
-
-            List<MethodParameter> parameters = [];
 
             foreach (var parameter in request.Parameters)
-            {
                 if (!await propertyRepository.Exists(parameter.PropertyId))
+                    return Result.Failure(MethodParameterErrors.InvalidProperty);
+
+            var methodResult = Domain.Methods.Method.Create(request.Name, request.CollectorTypes);
+
+            if (methodResult.IsFailure) return methodResult;
+
+            var results = request
+                .Parameters
+                .Select(parameterRequest =>
                 {
-                    return Result.Failure<CreateMethodResponse>(MethodErrors.InvalidProperty);
-                }
+                    var first = parameterRequest.FirstParameters.Adapt<ParameterValueGroup>();
+                    var second = parameterRequest.SecondParameters.Adapt<ParameterValueGroup>();
+                    return methodResult.Value.AddParameter(parameterRequest.PropertyId, first, second);
+                }).ToList();
+
+            if (results.Any(r => r.IsFailure)) return Result.Failure(ValidationError.FromResults(results));
 
 
-                var p = new MethodParameter
-                {
-                    MethodId = method.Id,
-                    PropertyId = parameter.PropertyId,
-                    FirstParameters = parameter.FirstParameters is not null
-                        ? new ParameterValueGroup(parameter.FirstParameters.Min,
-                            parameter.FirstParameters.Avg, parameter.FirstParameters.Max)
-                        : default,
-                    SecondParameters = parameter.SecondParameters is not null
-                        ? new ParameterValueGroup(parameter.SecondParameters.Min,
-                            parameter.SecondParameters.Avg, parameter.SecondParameters.Max)
-                        : default
-                };
-
-                parameters.Add(p);
-            }
-
-            methodRepository.Insert(method);
-            methodParameterRepository.InsertRange(parameters);
+            methodRepository.Insert(methodResult.Value);
+            methodParameterRepository.InsertRange(methodResult.Value.Parameters);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new CreateMethodResponse(method.Id, method.Name);
+            return Result.Success();
         }
     }
 }

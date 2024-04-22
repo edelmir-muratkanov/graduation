@@ -21,13 +21,9 @@ public sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>(
         var result = await next();
 
         if (result.IsSuccess)
-        {
             logger.LogInformation("Completed request {RequestName}", requestName);
-        }
         else
-        {
             logger.LogError("Completed request {RequestName} with error", requestName);
-        }
 
         return result;
     }

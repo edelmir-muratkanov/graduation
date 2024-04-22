@@ -1,14 +1,12 @@
 ﻿using Api.Contracts.Property;
 using Api.Domain.Properties;
 using Api.Domain.Users;
-using Api.Infrastructure.Database;
 using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Features.Property;
 
@@ -60,20 +58,11 @@ public static class UpdateProperty
         {
             var property = await propertyRepository.GetByIdAsync(request.Id, cancellationToken);
 
-            if (property is null)
-            {
-                return Result.Failure(PropertyErrors.NotFound);
-            }
+            if (property is null) return Result.Failure(PropertyErrors.NotFound);
 
-            if (!string.IsNullOrWhiteSpace(request.Name))
-            {
-                property.Name = request.Name;
-            }
+            if (!string.IsNullOrWhiteSpace(request.Name)) property.Name = request.Name;
 
-            if (!string.IsNullOrWhiteSpace(request.Unit))
-            {
-                property.Unit = request.Unit;
-            }
+            if (!string.IsNullOrWhiteSpace(request.Unit)) property.Unit = request.Unit;
 
             propertyRepository.Update(property);
 

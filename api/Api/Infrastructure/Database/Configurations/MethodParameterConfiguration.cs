@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Api.Domain.Methods;
+﻿using Api.Domain.Methods;
 using Api.Domain.Properties;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,7 +9,7 @@ public class MethodParameterConfiguration : IEntityTypeConfiguration<MethodParam
 {
     public void Configure(EntityTypeBuilder<MethodParameter> builder)
     {
-        builder.HasKey(mp => new { mp.MethodId, mp.PropertyId });
+        builder.HasKey(mp => mp.Id);
         builder.OwnsOne(mp => mp.FirstParameters).ToJson();
         builder.OwnsOne(mp => mp.SecondParameters).ToJson();
 

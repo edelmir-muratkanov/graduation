@@ -1,6 +1,4 @@
-﻿using System.Security.Principal;
-using Api.Domain.Users;
-using Microsoft.IdentityModel.Tokens;
+﻿using Api.Domain.Users;
 
 namespace Api.Shared.Interfaces;
 

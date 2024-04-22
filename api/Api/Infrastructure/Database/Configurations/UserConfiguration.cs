@@ -26,7 +26,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Token)
             .HasMaxLength(255);
-        
+
         builder.HasIndex(u => u.Email).IsUnique();
     }
 }

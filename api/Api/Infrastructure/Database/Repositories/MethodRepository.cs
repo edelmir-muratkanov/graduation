@@ -5,11 +5,18 @@ namespace Api.Infrastructure.Database.Repositories;
 
 internal class MethodRepository(ApplicationDbContext context) : IMethodRepository
 {
-    public async Task<Method?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
-        await context.Methods.FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
+    public async Task<Method?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await context.Methods.FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
+    }
 
-    public async Task<bool> IsNameUniqueAsync(string name) =>
-        !await context.Methods.AnyAsync(m => m.Name == name);
+    public async Task<bool> IsNameUniqueAsync(string name)
+    {
+        return !await context.Methods.AnyAsync(m => m.Name == name);
+    }
 
-    public void Insert(Method method) => context.Methods.Add(method);
+    public void Insert(Method method)
+    {
+        context.Methods.Add(method);
+    }
 }

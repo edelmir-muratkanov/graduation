@@ -19,10 +19,9 @@ public class ApplicationDbContext(
     public DbSet<Method> Methods => Set<Method>();
     public DbSet<MethodParameter> MethodParameters => Set<MethodParameter>();
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
-        {
             switch (entry.State)
             {
                 case EntityState.Added:
@@ -42,7 +41,6 @@ public class ApplicationDbContext(
                 default:
                     break;
             }
-        }
 
         var events = ChangeTracker.Entries<IHasDomainEvent>()
             .Select(x => x.Entity.DomainEvents)

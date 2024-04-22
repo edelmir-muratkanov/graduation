@@ -9,6 +9,7 @@ public static class MethodErrors
 
     public static readonly Error NotFound = Error.NotFound("Method.NotFound", "Метод не найден");
 
-    public static readonly Error InvalidProperty =
-        Error.NotFound("MethodParameter.InvalidProperty", "Свойство параметра не найдено");
+    public static readonly Error DuplicateParameters = Error.Conflict(
+        "Method.DuplicateParameters",
+        "Метод уже содержит предоставленный параметр");
 }

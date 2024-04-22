@@ -24,10 +24,7 @@ public class RefreshEndpoint : ICarterModule
 
                 var result = await sender.Send(command, cancellationToken);
 
-                if (result.IsFailure)
-                {
-                    return Results.Unauthorized();
-                }
+                if (result.IsFailure) return Results.Unauthorized();
 
                 var response = new RefreshResponse(result.Value.AccessToken);
 
@@ -72,22 +69,14 @@ public static class Refresh
         {
             var userId = await jwtTokenProvider.GetUserFromToken(request.AccessToken);
 
-            if (userId is null)
-            {
-                return Result.Failure<RefreshResponse>(UserErrors.Unauthorized);
-            }
+            if (userId is null) return Result.Failure<RefreshResponse>(UserErrors.Unauthorized);
 
-            if (!Guid.TryParse(userId, out var id))
-            {
-                return Result.Failure<RefreshResponse>(UserErrors.Unauthorized);
-            }
+            if (!Guid.TryParse(userId, out var id)) return Result.Failure<RefreshResponse>(UserErrors.Unauthorized);
 
             var user = await userRepository.GetByIdAsync(id, cancellationToken);
 
             if (user is null || user.Token != request.RefreshToken)
-            {
                 return Result.Failure<RefreshResponse>(UserErrors.Unauthorized);
-            }
 
             var access = jwtTokenProvider.Generate(user);
             var refresh = jwtTokenProvider.GenerateRefreshToken();

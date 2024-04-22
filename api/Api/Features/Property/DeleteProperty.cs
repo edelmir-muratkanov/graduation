@@ -1,13 +1,11 @@
 ﻿using Api.Domain.Properties;
 using Api.Domain.Users;
-using Api.Infrastructure.Database;
 using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Features.Property;
 
@@ -53,10 +51,7 @@ public static class DeleteProperty
         {
             var property = await propertyRepository.GetByIdAsync(request.Id, cancellationToken);
 
-            if (property is null)
-            {
-                return Result.Failure(PropertyErrors.NotFound);
-            }
+            if (property is null) return Result.Failure(PropertyErrors.NotFound);
 
             propertyRepository.Remove(property);
 

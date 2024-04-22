@@ -57,9 +57,7 @@ public static class GetProperties
             var propertiesQuery = context.Properties.AsNoTracking();
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
-            {
                 propertiesQuery = propertiesQuery.Where(p => p.Name.Contains(request.SearchTerm));
-            }
 
             Expression<Func<Domain.Properties.Property, object>> keySelector = request.SortColumn?.ToLower() switch
             {

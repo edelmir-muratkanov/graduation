@@ -8,9 +8,12 @@ public static class UserErrors
         "User.EmailNotUnique",
         "Пользовать с таким email уже существует");
 
-    public static Error NotFoundByEmail(string email) => Error.NotFound(
-        "User.NotFoundByEmail",
-        $"Пользователь с email = '{email}' не был найден");
+    public static Error NotFoundByEmail(string email)
+    {
+        return Error.NotFound(
+            "User.NotFoundByEmail",
+            $"Пользователь с email = '{email}' не был найден");
+    }
 
     public static readonly Error InvalidCredentials = Error.Problem(
         "User.InvalidCredentials",

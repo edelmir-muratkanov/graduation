@@ -22,10 +22,7 @@ public class RegisterEndpoint : ICarterModule
                 var command = new Register.RegisterCommand(request.Email, request.Password);
                 var result = await sender.Send(command, cancellationToken);
 
-                if (result.IsFailure)
-                {
-                    return CustomResults.Problem(result);
-                }
+                if (result.IsFailure) return CustomResults.Problem(result);
 
                 context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken);
                 context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken);
@@ -77,9 +74,7 @@ public static class Register
         public async Task<Result<RegisterResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             if (!await userRepository.IsEmailUniqueAsync(request.Email))
-            {
                 return Result.Failure<RegisterResponse>(UserErrors.EmailNotUnique);
-            }
 
             var password = passwordManager.HashPassword(request.Password);
             var user = new User

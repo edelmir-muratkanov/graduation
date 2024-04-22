@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Api.Shared.Models;
+﻿namespace Api.Shared.Models;
 
 public static class ResultExtensions
 {

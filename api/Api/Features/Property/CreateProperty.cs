@@ -1,14 +1,12 @@
 ﻿using Api.Contracts.Property;
 using Api.Domain.Properties;
 using Api.Domain.Users;
-using Api.Infrastructure.Database;
 using Api.Shared.Interfaces;
 using Api.Shared.Messaging;
 using Api.Shared.Models;
 using Carter;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Features.Property;
 
@@ -61,9 +59,7 @@ public static class CreateProperty
             CancellationToken cancellationToken)
         {
             if (!await propertyRepository.IsNameUniqueAsync(request.Name))
-            {
                 return Result.Failure<CreatePropertyResponse>(PropertyErrors.NameNotUnique);
-            }
 
             var property = new Domain.Properties.Property
             {

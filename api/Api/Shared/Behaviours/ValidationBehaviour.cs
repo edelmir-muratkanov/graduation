@@ -16,10 +16,7 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
     {
         ValidationFailure[] validationFailures = await ValidateAsync(request);
 
-        if (validationFailures.Length == 0)
-        {
-            return await next();
-        }
+        if (validationFailures.Length == 0) return await next();
 
         if (typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
         {
@@ -30,11 +27,9 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
                 .GetMethod(nameof(Result<object>.ValidationFailure));
 
             if (failureMethod is not null)
-            {
                 return ((TResponse)failureMethod.Invoke(
                     null,
                     new object[] { CreateValidationError(validationFailures) })!)!;
-            }
         }
         else if (typeof(TResponse) == typeof(Result))
         {
@@ -46,10 +41,7 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
 
     private async Task<ValidationFailure[]> ValidateAsync(TRequest request)
     {
-        if (!validators.Any())
-        {
-            return [];
-        }
+        if (!validators.Any()) return [];
 
         var context = new ValidationContext<TRequest>(request);
 
@@ -64,6 +56,9 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
         return validationFailures;
     }
 
-    private static ValidationError CreateValidationError(IEnumerable<ValidationFailure> validationFailures) =>
-        new(validationFailures.Select(f => Error.Problem(f.ErrorCode, f.ErrorMessage)).ToArray());
+    private static ValidationError CreateValidationError(IEnumerable<ValidationFailure> validationFailures)
+    {
+        return new ValidationError(validationFailures.Select(f => Error.Problem(f.ErrorCode, f.ErrorMessage))
+            .ToArray());
+    }
 }
