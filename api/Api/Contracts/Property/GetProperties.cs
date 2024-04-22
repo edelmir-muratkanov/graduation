@@ -1,4 +1,4 @@
-﻿using Api.Shared.Models;
+﻿using Shared;
 
 namespace Api.Contracts.Property;
 

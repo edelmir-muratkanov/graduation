@@ -1,12 +1,12 @@
-﻿using Api.Domain;
+﻿using Domain;
 
 namespace Api.Contracts.Method;
 
 public record CreateMethodParameterValueGroup
 {
-    public required double Max { get; init; }
-    public required double Min { get; init; }
-    public required double Avg { get; init; }
+    public required double Max { get; set; }
+    public required double Min { get; set; }
+    public required double Avg { get; set; }
 }
 
 public record CreateMethodParameter
@@ -18,7 +18,7 @@ public record CreateMethodParameter
 
 public record CreateMethodRequest
 {
-    public required string Name { get; init; }
-    public required List<CollectorType> CollectorTypes { get; init; }
-    public required List<CreateMethodParameter> Parameters { get; init; }
+    public required string Name { get; set; }
+    public required List<CollectorType> CollectorTypes { get; set; }
+    public required List<CreateMethodParameter> Parameters { get; set; }
 }

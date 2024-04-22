@@ -1,4 +1,4 @@
-﻿using Api.Infrastructure.Authentication;
+﻿using Infrastructure.Authentication;
 using Microsoft.Extensions.Options;
 
 namespace Api.OptionsSetup;

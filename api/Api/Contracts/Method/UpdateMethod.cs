@@ -1,4 +1,4 @@
-﻿using Api.Domain;
+﻿using Domain;
 
 namespace Api.Contracts.Method;
 
