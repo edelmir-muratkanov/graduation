@@ -8,10 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Infrastructure.Database;
 
-public class ApplicationDbContext(
-    DbContextOptions<ApplicationDbContext> options,
-    IDomainEventService domainEventService,
-    ICurrentUserService currentUserService)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : DbContext(options), IUnitOfWork
 {
     public DbSet<User> Users => Set<User>();
@@ -19,49 +16,6 @@ public class ApplicationDbContext(
     public DbSet<Method> Methods => Set<Method>();
     public DbSet<MethodParameter> MethodParameters => Set<MethodParameter>();
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-    {
-        foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                    entry.Entity.CreatedAt = DateTime.UtcNow;
-                    entry.Entity.CreatedBy = currentUserService.Id;
-                    break;
-                case EntityState.Modified:
-                    entry.Entity.UpdatedAt = DateTime.UtcNow;
-                    entry.Entity.UpdatedBy = currentUserService.Id;
-                    break;
-                case EntityState.Deleted:
-                    break;
-                case EntityState.Detached:
-                    break;
-                case EntityState.Unchanged:
-                    break;
-                default:
-                    break;
-            }
-
-        var events = ChangeTracker.Entries<IHasDomainEvent>()
-            .Select(x => x.Entity.DomainEvents)
-            .SelectMany(x => x)
-            .Where(domainEvent => !domainEvent.IsPublished)
-            .ToArray();
-
-        var result = await base.SaveChangesAsync(cancellationToken);
-
-        await DispatchEvents(events);
-        return result;
-    }
-
-    private async Task DispatchEvents(DomainEvent[] events)
-    {
-        foreach (var @event in events)
-        {
-            @event.IsPublished = true;
-            await domainEventService.Publish(@event);
-        }
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

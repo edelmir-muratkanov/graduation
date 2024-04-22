@@ -49,12 +49,16 @@ builder.Services.AddMediatR(options =>
     options.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddSingleton<PublishDomainEventsInterceptor>();
+builder.Services.AddSingleton<TrackAuditableEntityInterceptor>();
+
+builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
 {
     options.UseNpgsql(
             builder.Configuration.GetConnectionString("Database"),
             b => { b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName); })
-        .UseSnakeCaseNamingConvention();
+        .UseSnakeCaseNamingConvention()
+        .AddInterceptors(sp.GetRequiredService<TrackAuditableEntityInterceptor>());
 });
 
 builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
@@ -64,7 +68,6 @@ builder.Services.AddScoped<IMethodParameterRepository, MethodParameterRepository
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-builder.Services.AddScoped<IDomainEventService, DomainEventService>();
 builder.Services.AddScoped<IPasswordManager, PasswordManager>();
 builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
 builder.Services.AddSingleton<IJwtTokenProvider, JwtTokenProvider>();

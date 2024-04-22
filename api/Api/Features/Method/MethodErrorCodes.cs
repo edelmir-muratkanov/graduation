@@ -17,4 +17,13 @@ public static class MethodErrorCodes
         public const string MissingProperty = nameof(MissingProperty);
         public const string MissingFirstOrSecondParameters = nameof(MissingFirstOrSecondParameters);
     }
+
+    public static class Update
+    {
+        public const string MissingId = nameof(MissingId);
+
+        public const string LongName = nameof(LongName);
+
+        public const string InvalidCollectorType = nameof(InvalidCollectorType);
+    }
 }

@@ -1,11 +1,11 @@
 ﻿namespace Api.Shared;
 
-public abstract class Entity : IHasDomainEvent
+public abstract class Entity
 {
-    private readonly List<DomainEvent> _domainEvents = [];
+    private readonly List<IDomainEvent> _domainEvents = [];
 
     public Guid Id { get; protected init; }
-    public List<DomainEvent> DomainEvents => _domainEvents.ToList();
+    public List<IDomainEvent> DomainEvents => _domainEvents.ToList();
 
     protected Entity(Guid id)
     {
@@ -21,7 +21,7 @@ public abstract class Entity : IHasDomainEvent
         _domainEvents.Clear();
     }
 
-    public void Raise(DomainEvent domainEvent)
+    protected void Raise(IDomainEvent domainEvent)
     {
         _domainEvents.Add(domainEvent);
     }

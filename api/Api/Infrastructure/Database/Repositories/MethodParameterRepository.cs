@@ -8,4 +8,14 @@ internal class MethodParameterRepository(ApplicationDbContext context) : IMethod
     {
         context.MethodParameters.AddRange(parameters);
     }
+
+    public void RemoveRange(IEnumerable<MethodParameter> parameters)
+    {
+        context.MethodParameters.RemoveRange(parameters);
+    }
+
+    public void UpdateRange(IEnumerable<MethodParameter> parameters)
+    {
+        context.MethodParameters.UpdateRange(parameters);
+    }
 }

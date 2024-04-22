@@ -10,14 +10,14 @@ public enum Role
     Admin
 }
 
-public class User : IHasDomainEvent
+public class User
 {
     public Guid Id { get; private set; }
     public string Email { get; private set; }
     public string Password { get; private set; }
     public Role Role { get; private set; }
     public string? Token { get; private set; }
-    public List<DomainEvent> DomainEvents { get; } = [];
+    public List<IDomainEvent> DomainEvents { get; } = [];
 
     private User(Guid id, string email, string password, Role role)
     {
@@ -47,7 +47,7 @@ public class User : IHasDomainEvent
     }
 }
 
-public class UserRegisteredDomainEvent(User user) : DomainEvent
+public class UserRegisteredDomainEvent(User user) : IDomainEvent
 {
     public User User { get; } = user;
 }

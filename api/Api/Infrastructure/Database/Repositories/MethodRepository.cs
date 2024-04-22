@@ -7,7 +7,9 @@ internal class MethodRepository(ApplicationDbContext context) : IMethodRepositor
 {
     public async Task<Method?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Methods.FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
+        return await context.Methods
+            .Include(m => m.Parameters)
+            .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
     }
 
     public async Task<bool> IsNameUniqueAsync(string name)
@@ -18,5 +20,10 @@ internal class MethodRepository(ApplicationDbContext context) : IMethodRepositor
     public void Insert(Method method)
     {
         context.Methods.Add(method);
+    }
+
+    public void Update(Method method)
+    {
+        context.Methods.Update(method);
     }
 }

@@ -34,14 +34,16 @@ public class Method : AuditableEntity
         return method;
     }
 
-    public Result Update(string? name, List<CollectorType>? collectorTypes)
+    public Result ChangeNameAndCollectorTypes(string? name, List<CollectorType>? collectorTypes)
     {
         if (!string.IsNullOrWhiteSpace(name)) Name = name;
 
-        collectorTypes?.ForEach(c =>
+        if (collectorTypes is not null)
         {
-            if (!_collectorTypes.Remove(c)) _collectorTypes.Add(c);
-        });
+            _collectorTypes.Clear();
+
+            collectorTypes.ForEach(c => _collectorTypes.Add(c));
+        }
 
         return Result.Success();
     }
@@ -62,15 +64,15 @@ public class Method : AuditableEntity
         return Result.Success();
     }
 
-    public Result RemoveParameter(Guid propertyId)
+    public Result<MethodParameter> RemoveParameter(Guid propertyId)
     {
         var parameter = _parameters.FirstOrDefault(p => p.PropertyId == propertyId);
-        if (parameter is null) return Result.Failure(MethodErrors.NotFoundParameter);
+        if (parameter is null) return Result.Failure<MethodParameter>(MethodErrors.NotFoundParameter);
 
         _parameters.Remove(parameter);
 
         Raise(new MethodParameterRemovedDomainEvent(parameter.Id));
 
-        return Result.Success();
+        return parameter;
     }
 }
