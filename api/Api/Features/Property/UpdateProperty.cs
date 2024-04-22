@@ -60,9 +60,12 @@ public static class UpdateProperty
 
             if (property is null) return Result.Failure(PropertyErrors.NotFound);
 
-            if (!string.IsNullOrWhiteSpace(request.Name)) property.Name = request.Name;
+            var propertyResult = property.Update(request.Name, request.Unit);
 
-            if (!string.IsNullOrWhiteSpace(request.Unit)) property.Unit = request.Unit;
+            if (propertyResult.IsFailure)
+            {
+                return propertyResult;
+            }
 
             propertyRepository.Update(property);
 

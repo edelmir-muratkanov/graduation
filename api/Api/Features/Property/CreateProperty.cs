@@ -61,17 +61,21 @@ public static class CreateProperty
             if (!await propertyRepository.IsNameUniqueAsync(request.Name))
                 return Result.Failure<CreatePropertyResponse>(PropertyErrors.NameNotUnique);
 
-            var property = new Domain.Properties.Property
-            {
-                Name = request.Name,
-                Unit = request.Unit
-            };
+            var propertyResult = Domain.Properties.Property.Create(request.Name, request.Unit);
 
-            propertyRepository.Insert(property);
+            if (propertyResult.IsFailure)
+            {
+                return Result.Failure<CreatePropertyResponse>(propertyResult.Error);
+            }
+
+            propertyRepository.Insert(propertyResult.Value);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new CreatePropertyResponse(property.Id, property.Name, property.Unit);
+            return new CreatePropertyResponse(
+                propertyResult.Value.Id,
+                propertyResult.Value.Name,
+                propertyResult.Value.Unit);
         }
     }
 }
