@@ -3,19 +3,11 @@ using Shared;
 
 namespace Application.Method.GetMethods;
 
-public record GetMethodsParameterResponse
-{
-    public required string PropertyName { get; set; }
-    public ParameterValueGroup? First { get; set; }
-    public ParameterValueGroup? Second { get; set; }
-}
-
 public record GetMethodsResponse
 {
     public required Guid Id { get; init; }
     public required string Name { get; set; }
     public required IEnumerable<string> CollectorTypes { get; set; }
-    public required List<GetMethodsParameterResponse> Parameters { get; set; }
 }
 
 public record GetMethodsQuery : IQuery<PaginatedList<GetMethodsResponse>>

@@ -40,12 +40,6 @@ internal class GetMethodsQueryHandler(ApplicationReadDbContext dbContext)
                     Name = m.Name,
                     CollectorTypes = m.CollectorTypes
                         .Select(e => e.ToString()),
-                    Parameters = m.Parameters.Select(p => new GetMethodsParameterResponse
-                    {
-                        PropertyName = p.Property.Name,
-                        First = p.FirstParameters,
-                        Second = p.SecondParameters
-                    }).ToList()
                 }
             ).PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 
