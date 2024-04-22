@@ -2,6 +2,7 @@
 using Api.Infrastructure;
 using Application.Method.AddParameters;
 using Application.Method.Create;
+using Application.Method.GetMethodById;
 using Application.Method.GetMethods;
 using Application.Method.Update;
 using Carter;
@@ -23,8 +24,7 @@ public class MethodEndpoints : ICarterModule
 
         group.MapPost("", async (
                 CreateMethodCommand request,
-                ISender sender,
-                IMapper mapper) =>
+                ISender sender) =>
             {
                 var result = await sender.Send(request);
                 return result.Match(Results.Created, CustomResults.Problem);
@@ -85,6 +85,22 @@ public class MethodEndpoints : ICarterModule
             .Produces(200)
             .Produces(500)
             .WithName("Get methods");
+
+        group.MapGet("{id:guid}", async (
+                Guid id,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var query = new GetMethodByIdQuery { Id = id };
+                var result = await sender.Send(query, cancellationToken);
+
+                return result.Match(Results.Ok, CustomResults.Problem);
+            })
+            .Produces<GetMethodByIdResponse>(200)
+            .ProducesProblem(400)
+            .ProducesProblem(404)
+            .ProducesProblem(500)
+            .WithName("Get method");
 
         group.MapPatch("{id:guid}", async (
                 Guid id,

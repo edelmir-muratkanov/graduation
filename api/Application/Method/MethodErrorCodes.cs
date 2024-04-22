@@ -26,4 +26,9 @@ public static class MethodErrorCodes
 
         public const string InvalidCollectorType = nameof(InvalidCollectorType);
     }
+
+    public static class GetById
+    {
+        public const string MissingId = nameof(MissingId);
+    }
 }
