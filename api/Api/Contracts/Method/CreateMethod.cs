@@ -2,16 +2,29 @@
 
 namespace Api.Contracts.Method;
 
-public record CreateMethodParameterValueGroup(double Min, double Avg, double Max);
+public record CreateMethodParameterValueGroup
+{
+    public required double Max { get; init; }
+    public required double Min { get; init; }
+    public required double Avg { get; init; }
+}
 
-public record CreateMethodParameter(
-    Guid PropertyId,
-    CreateMethodParameterValueGroup? First,
-    CreateMethodParameterValueGroup? Second);
+public record CreateMethodParameter
+{
+    public Guid PropertyId { get; set; }
+    public CreateMethodParameterValueGroup? First { get; set; }
+    public CreateMethodParameterValueGroup? Second { get; set; }
+}
 
-public record CreateMethodRequest(
-    string Name,
-    HashSet<CollectorType> CollectorTypes,
-    List<CreateMethodParameter> Parameters);
+public record CreateMethodRequest
+{
+    public required string Name { get; init; }
+    public required List<CollectorType> CollectorTypes { get; init; }
+    public required List<CreateMethodParameter> Parameters { get; init; }
+}
 
-public record CreateMethodResponse(Guid Id, string Name);
+public record CreateMethodResponse
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
+}
