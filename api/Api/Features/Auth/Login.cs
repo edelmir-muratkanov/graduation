@@ -85,7 +85,7 @@ public static class Login
             var token = jwtTokenProvider.Generate(user);
             var refresh = jwtTokenProvider.GenerateRefreshToken();
 
-            user.Token = refresh;
+            user.UpdateToken(refresh);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 

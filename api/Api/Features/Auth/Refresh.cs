@@ -81,7 +81,7 @@ public static class Refresh
             var access = jwtTokenProvider.Generate(user);
             var refresh = jwtTokenProvider.GenerateRefreshToken();
 
-            user.Token = refresh;
+            user.UpdateToken(refresh);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 

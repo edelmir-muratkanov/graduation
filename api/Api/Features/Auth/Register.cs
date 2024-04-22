@@ -77,26 +77,29 @@ public static class Register
                 return Result.Failure<RegisterResponse>(UserErrors.EmailNotUnique);
 
             var password = passwordManager.HashPassword(request.Password);
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                Email = request.Email,
-                Password = password,
-                Role = Role.User
-            };
+            var userResult = User.Create(request.Email, password);
 
-            var token = jwtTokenProvider.Generate(user);
+            if (userResult.IsFailure)
+            {
+                return Result.Failure<RegisterResponse>(userResult.Error);
+            }
+
+
+            var token = jwtTokenProvider.Generate(userResult.Value);
             var refresh = jwtTokenProvider.GenerateRefreshToken();
 
-            user.Token = refresh;
+            userResult.Value.UpdateToken(refresh);
 
-            user.DomainEvents.Add(new UserRegisteredDomainEvent(user));
-
-            userRepository.Insert(user);
+            userRepository.Insert(userResult.Value);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new RegisterResponse(user.Id, user.Email, user.Role.ToString(), token, refresh);
+            return new RegisterResponse(
+                userResult.Value.Id,
+                userResult.Value.Email,
+                userResult.Value.Role.ToString(),
+                token,
+                refresh);
         }
     }
 }

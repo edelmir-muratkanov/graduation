@@ -1,5 +1,6 @@
 ﻿using Api.Shared;
 using Api.Shared.Mappings;
+using Api.Shared.Models;
 
 namespace Api.Domain.Users;
 
@@ -11,12 +12,39 @@ public enum Role
 
 public class User : IHasDomainEvent
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-    public Role Role { get; set; } = Role.User;
-    public string? Token { get; set; }
+    public Guid Id { get; private set; }
+    public string Email { get; private set; }
+    public string Password { get; private set; }
+    public Role Role { get; private set; }
+    public string? Token { get; private set; }
     public List<DomainEvent> DomainEvents { get; } = [];
+
+    private User(Guid id, string email, string password, Role role)
+    {
+        Id = id;
+        Email = email;
+        Password = password;
+        Role = role;
+    }
+
+    private User()
+    {
+    }
+
+    public static Result<User> Create(string email, string password, Role role = Role.User)
+    {
+        var user = new User(Guid.NewGuid(), email, password, role);
+
+        user.DomainEvents.Add(new UserRegisteredDomainEvent(user));
+        return user;
+    }
+
+    public Result UpdateToken(string token)
+    {
+        Token = token;
+
+        return Result.Success();
+    }
 }
 
 public class UserRegisteredDomainEvent(User user) : DomainEvent
