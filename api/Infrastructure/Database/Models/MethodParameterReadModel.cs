@@ -8,6 +8,6 @@ internal sealed class MethodParameterReadModel
     public Guid MethodId { get; set; }
     public Guid PropertyId { get; set; }
     public PropertyReadModel Property { get; set; }
-    public ParameterValueGroup? First { get; set; }
-    public ParameterValueGroup? Second { get; set; }
+    public ParameterValueGroup? FirstParameters { get; set; }
+    public ParameterValueGroup? SecondParameters { get; set; }
 }

@@ -14,12 +14,9 @@ internal sealed class InsertOutboxMessagesInterceptor : SaveChangesInterceptor
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
-        CancellationToken cancellationToken = new CancellationToken())
+        CancellationToken cancellationToken = new())
     {
-        if (eventData.Context is not null)
-        {
-            InsertOutboxMessage(eventData.Context);
-        }
+        if (eventData.Context is not null) InsertOutboxMessage(eventData.Context);
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }

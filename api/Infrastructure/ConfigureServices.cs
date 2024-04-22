@@ -25,10 +25,7 @@ public static class ConfigureServices
 
         var connectionString = configuration.GetConnectionString("Database");
 
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            throw new ArgumentNullException(nameof(connectionString));
-        }
+        if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
 
         services.AddSingleton(_ =>
             new DbConnectionFactory(

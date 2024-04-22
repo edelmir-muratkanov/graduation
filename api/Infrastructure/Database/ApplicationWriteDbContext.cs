@@ -21,6 +21,8 @@ internal sealed class ApplicationWriteDbContext(DbContextOptions<ApplicationWrit
             WriteConfigurationsFilter);
     }
 
-    public static bool WriteConfigurationsFilter(Type type) =>
-        type.FullName?.Contains("Configurations.Write") ?? false;
+    public static bool WriteConfigurationsFilter(Type type)
+    {
+        return type.FullName?.Contains("Configurations.Write") ?? false;
+    }
 }

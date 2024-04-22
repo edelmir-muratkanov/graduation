@@ -17,6 +17,8 @@ internal sealed class ApplicationReadDbContext(DbContextOptions<ApplicationReadD
             ReadConfigurationsFilter);
     }
 
-    private static bool ReadConfigurationsFilter(Type type) =>
-        type.FullName?.Contains("Configurations.Read") ?? false;
+    private static bool ReadConfigurationsFilter(Type type)
+    {
+        return type.FullName?.Contains("Configurations.Read") ?? false;
+    }
 }

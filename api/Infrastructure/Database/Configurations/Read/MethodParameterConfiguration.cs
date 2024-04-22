@@ -9,8 +9,8 @@ internal sealed class MethodParameterConfiguration : IEntityTypeConfiguration<Me
         builder.HasKey(p => p.Id);
         builder.HasIndex(p => new { p.MethodId, p.PropertyId }).IsUnique();
 
-        builder.OwnsOne(p => p.First).ToJson();
-        builder.OwnsOne(p => p.Second).ToJson();
+        builder.OwnsOne(p => p.FirstParameters).ToJson();
+        builder.OwnsOne(p => p.SecondParameters).ToJson();
 
         builder.HasOne(p => p.Property)
             .WithMany()

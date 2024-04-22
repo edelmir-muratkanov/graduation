@@ -9,12 +9,9 @@ internal sealed class PublishDomainEventsInterceptor(IPublisher publisher) : Sav
     public override async ValueTask<int> SavedChangesAsync(
         SaveChangesCompletedEventData eventData,
         int result,
-        CancellationToken cancellationToken = new CancellationToken())
+        CancellationToken cancellationToken = new())
     {
-        if (eventData.Context is not null)
-        {
-            await PublishDomainEventsAsync(eventData.Context);
-        }
+        if (eventData.Context is not null) await PublishDomainEventsAsync(eventData.Context);
 
         return result;
     }
@@ -32,9 +29,6 @@ internal sealed class PublishDomainEventsInterceptor(IPublisher publisher) : Sav
                 return domainEvents;
             }).ToList();
 
-        foreach (var domainEvent in domainEvents)
-        {
-            await publisher.Publish(domainEvent);
-        }
+        foreach (var domainEvent in domainEvents) await publisher.Publish(domainEvent);
     }
 }

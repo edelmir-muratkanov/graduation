@@ -11,10 +11,7 @@ internal sealed class TrackAuditableEntityInterceptor(ICurrentUserService curren
         InterceptionResult<int> result,
         CancellationToken cancellationToken = new())
     {
-        if (eventData.Context is not null)
-        {
-            TrackEntityAsync(eventData.Context);
-        }
+        if (eventData.Context is not null) TrackEntityAsync(eventData.Context);
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }

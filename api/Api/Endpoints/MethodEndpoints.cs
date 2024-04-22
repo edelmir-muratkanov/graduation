@@ -73,8 +73,8 @@ public class MethodEndpoints : ICarterModule
                 var query = new GetMethodsQuery
                 {
                     SortOrder = sortOrder,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
+                    PageNumber = pageNumber ?? 1,
+                    PageSize = pageSize ?? 10,
                     SearchTerm = searchTerm,
                     SortColumn = sortColumn
                 };
