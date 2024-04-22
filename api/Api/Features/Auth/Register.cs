@@ -79,10 +79,7 @@ public static class Register
             var password = passwordManager.HashPassword(request.Password);
             var userResult = User.Create(request.Email, password);
 
-            if (userResult.IsFailure)
-            {
-                return Result.Failure<RegisterResponse>(userResult.Error);
-            }
+            if (userResult.IsFailure) return Result.Failure<RegisterResponse>(userResult.Error);
 
 
             var token = jwtTokenProvider.Generate(userResult.Value);

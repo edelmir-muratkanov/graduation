@@ -62,10 +62,7 @@ public static class UpdateProperty
 
             var propertyResult = property.Update(request.Name, request.Unit);
 
-            if (propertyResult.IsFailure)
-            {
-                return propertyResult;
-            }
+            if (propertyResult.IsFailure) return propertyResult;
 
             propertyRepository.Update(property);
 

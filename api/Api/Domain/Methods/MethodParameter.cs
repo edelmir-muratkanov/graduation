@@ -1,10 +1,10 @@
-﻿using Api.Shared.Models;
+﻿using Api.Shared;
+using Api.Shared.Models;
 
 namespace Api.Domain.Methods;
 
-public class MethodParameter
+public class MethodParameter : Entity
 {
-    public Guid Id { get; private set; }
     public Guid MethodId { get; private set; }
     public Guid PropertyId { get; private set; }
     public ParameterValueGroup? FirstParameters { get; private set; }
@@ -15,7 +15,7 @@ public class MethodParameter
         Guid methodId,
         Guid propertyId,
         ParameterValueGroup? first,
-        ParameterValueGroup? second)
+        ParameterValueGroup? second) : base(id)
     {
         Id = id;
         MethodId = methodId;

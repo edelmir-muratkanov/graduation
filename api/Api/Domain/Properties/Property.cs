@@ -5,12 +5,11 @@ namespace Api.Domain.Properties;
 
 public class Property : AuditableEntity
 {
-    public Guid Id { get; private set; }
     public string Name { get; private set; }
     public string Unit { get; private set; }
 
 
-    private Property(Guid id, string name, string unit)
+    private Property(Guid id, string name, string unit) : base(id)
     {
         Id = id;
         Name = name;
@@ -28,15 +27,9 @@ public class Property : AuditableEntity
 
     public Result Update(string? name, string? unit)
     {
-        if (!string.IsNullOrWhiteSpace(name))
-        {
-            Name = name;
-        }
+        if (!string.IsNullOrWhiteSpace(name)) Name = name;
 
-        if (!string.IsNullOrWhiteSpace(unit))
-        {
-            Unit = unit;
-        }
+        if (!string.IsNullOrWhiteSpace(unit)) Unit = unit;
 
         return Result.Success();
     }

@@ -12,4 +12,7 @@ public static class MethodErrors
     public static readonly Error DuplicateParameters = Error.Conflict(
         "Method.DuplicateParameters",
         "Метод уже содержит предоставленный параметр");
+
+    public static readonly Error NotFoundParameter = Error.NotFound(
+        "Method.NotFoundParameter", "Метод не содержит указанный параметр");
 }
