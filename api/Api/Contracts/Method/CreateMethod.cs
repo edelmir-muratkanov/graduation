@@ -22,9 +22,3 @@ public record CreateMethodRequest
     public required List<CollectorType> CollectorTypes { get; init; }
     public required List<CreateMethodParameter> Parameters { get; init; }
 }
-
-public record CreateMethodResponse
-{
-    public required Guid Id { get; init; }
-    public required string Name { get; init; }
-}

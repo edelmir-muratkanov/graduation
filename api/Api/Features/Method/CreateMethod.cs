@@ -120,7 +120,7 @@ public static class CreateMethod
             CancellationToken cancellationToken)
         {
             if (!await methodRepository.IsNameUniqueAsync(request.Name))
-                return Result.Failure<CreateMethodResponse>(MethodErrors.NameNotUnique);
+                return Result.Failure(MethodErrors.NameNotUnique);
 
             foreach (var parameter in request.Parameters)
                 if (!await propertyRepository.Exists(parameter.PropertyId))
