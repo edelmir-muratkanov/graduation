@@ -1,4 +1,5 @@
 ﻿using Api.Infrastructure;
+using Application.Project.GetProjectById;
 using Application.Project.GetProjects;
 using Carter;
 using MediatR;
@@ -39,5 +40,15 @@ public class ProjectEndpoints : ICarterModule
             .Produces(200)
             .ProducesProblem(500)
             .WithName("Get projects");
+
+        group.MapGet("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
+            {
+                var query = new GetProjectByIdQuery { Id = id };
+                var result = await sender.Send(query, cancellationToken);
+                return result.Match(Results.Ok, CustomResults.Problem);
+            })
+            .Produces(200)
+            .ProducesProblem(404)
+            .ProducesProblem(500);
     }
 }
