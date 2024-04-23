@@ -58,11 +58,20 @@ public class PropertyEndpoints : ICarterModule
         group.MapGet("", async (
                 string? searchTerm,
                 string? sortColumn,
-                [FromQuery] SortOrder? sortOrder,
+                [FromQuery] SortOrder sortOrder,
+                int? pageNumber,
+                int? pageSize,
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var query = new GetPropertiesQuery(searchTerm, sortColumn, sortOrder);
+                var query = new GetPropertiesQuery
+                {
+                    SortOrder = sortOrder,
+                    PageSize = pageSize ?? 10,
+                    PageNumber = pageNumber ?? 1,
+                    SearchTerm = searchTerm,
+                    SortColumn = sortColumn
+                };
                 var result = await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
