@@ -13,8 +13,9 @@ public class Project : AuditableEntity
     public string Operator { get; private set; }
     public ProjectType ProjectType { get; private set; }
     public CollectorType CollectorType { get; private set; }
-    public List<ProjectParameter> Parameters => _parameters.ToList();
-    public List<ProjectMember> Members => _members.ToList();
+    public IReadOnlyCollection<ProjectParameter> Parameters => _parameters.AsReadOnly();
+    public IReadOnlyCollection<ProjectMember> Members => _members.AsReadOnly();
+    public IReadOnlyCollection<ProjectMethod> Methods => _methods.AsReadOnly();
 
     private Project(
         Guid id,
