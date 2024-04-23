@@ -44,6 +44,8 @@ public static class ConfigureServices
             options.UseNpgsql(connectionString)
                 .UseSnakeCaseNamingConvention()
                 .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
+                .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>(),
+                    sp.GetRequiredService<TrackAuditableEntityInterceptor>()));
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationWriteDbContext>());
 
