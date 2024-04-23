@@ -15,6 +15,7 @@ public class Project : AuditableEntity
     public CollectorType CollectorType { get; private set; }
     public List<ProjectParameter> Parameters => _parameters.ToList();
     public List<ProjectMember> Members => _members.ToList();
+    public List<ProjectMethod> Methods => _methods.ToList();
 
     private Project(
         Guid id,

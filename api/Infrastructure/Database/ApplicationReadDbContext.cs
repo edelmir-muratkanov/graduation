@@ -9,6 +9,10 @@ internal sealed class ApplicationReadDbContext(DbContextOptions<ApplicationReadD
     public DbSet<MethodReadModel> Methods => Set<MethodReadModel>();
     public DbSet<MethodParameterReadModel> MethodParameters => Set<MethodParameterReadModel>();
     public DbSet<PropertyReadModel> Properties => Set<PropertyReadModel>();
+    public DbSet<ProjectReadModel> Projects => Set<ProjectReadModel>();
+    public DbSet<ProjectMemberReadModel> ProjectMembers => Set<ProjectMemberReadModel>();
+    public DbSet<ProjectMethodReadModel> ProjectMethods => Set<ProjectMethodReadModel>();
+    public DbSet<ProjectParameterReadModel> ProjectParameters => Set<ProjectParameterReadModel>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

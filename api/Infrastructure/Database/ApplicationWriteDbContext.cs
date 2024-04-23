@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Application.Abstractions.Data;
 using Domain.Methods;
+using Domain.Projects;
 using Domain.Properties;
 using Domain.Users;
 
@@ -13,6 +14,10 @@ internal sealed class ApplicationWriteDbContext(DbContextOptions<ApplicationWrit
     public DbSet<Property> Properties => Set<Property>();
     public DbSet<Method> Methods => Set<Method>();
     public DbSet<MethodParameter> MethodParameters => Set<MethodParameter>();
+    public DbSet<Project> Projects => Set<Project>();
+    public DbSet<ProjectParameter> ProjectParameters => Set<ProjectParameter>();
+    public DbSet<ProjectMember> ProjectMembers => Set<ProjectMember>();
+    public DbSet<ProjectMethod> ProjectMethods => Set<ProjectMethod>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -21,7 +26,7 @@ internal sealed class ApplicationWriteDbContext(DbContextOptions<ApplicationWrit
             WriteConfigurationsFilter);
     }
 
-    public static bool WriteConfigurationsFilter(Type type)
+    private static bool WriteConfigurationsFilter(Type type)
     {
         return type.FullName?.Contains("Configurations.Write") ?? false;
     }
