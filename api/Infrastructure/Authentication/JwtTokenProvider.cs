@@ -31,7 +31,7 @@ internal sealed class JwtTokenProvider(IOptions<JwtOptions> options) : IJwtToken
             _jwtOptions.Issuer,
             _jwtOptions.Audience,
             claims,
-            expires: DateTime.UtcNow.AddMinutes(_jwtOptions.ExpiryInMinutes),
+            expires: DateTime.UtcNow.AddMinutes(_jwtOptions.AccessExpiryInMinutes),
             signingCredentials: signingCredentials);
 
         var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
@@ -55,7 +55,7 @@ internal sealed class JwtTokenProvider(IOptions<JwtOptions> options) : IJwtToken
         {
             ValidateIssuer = false,
             ValidateAudience = false,
-            ValidateLifetime = true,
+            ValidateLifetime = false,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret))
         };

@@ -5,7 +5,9 @@ using Application.Auth.Login;
 using Application.Auth.Refresh;
 using Application.Auth.Register;
 using Carter;
+using Infrastructure.Authentication;
 using MediatR;
+using Microsoft.Extensions.Options;
 using Shared.Results;
 
 namespace Api.Endpoints;
@@ -33,14 +35,23 @@ public class AuthEndpoints : ICarterModule
                 LoginCommand request,
                 ISender sender,
                 HttpContext context,
+                IOptions<JwtOptions> jwtOptions,
                 CancellationToken cancellationToken) =>
             {
                 var result = await sender.Send(request, cancellationToken);
 
                 if (result.IsFailure) return CustomResults.Problem(result);
 
-                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken);
-                context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken);
+                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken,
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.Now.AddMinutes(jwtOptions.Value.AccessExpiryInMinutes)
+                    });
+                context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken,
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.Now.AddDays(jwtOptions.Value.RefreshExpiryInDays)
+                    });
 
                 var response = new Contracts.Auth.LoginResponse(
                     result.Value.Id,
@@ -59,6 +70,7 @@ public class AuthEndpoints : ICarterModule
         group.MapPost("refresh", async (
                 ISender sender,
                 HttpContext context,
+                IOptions<JwtOptions> jwtOptions,
                 CancellationToken cancellationToken) =>
             {
                 var access = context.Request.Cookies[AuthConstants.AccessTokenKey];
@@ -72,8 +84,16 @@ public class AuthEndpoints : ICarterModule
 
                 var response = new Contracts.Auth.RefreshResponse(result.Value.AccessToken);
 
-                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken);
-                context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken);
+                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken,
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.Now.AddMinutes(jwtOptions.Value.AccessExpiryInMinutes)
+                    });
+                context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken,
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.Now.AddDays(jwtOptions.Value.RefreshExpiryInDays)
+                    });
 
                 return Results.Ok(response);
             })
@@ -86,19 +106,23 @@ public class AuthEndpoints : ICarterModule
                 RegisterCommand request,
                 HttpContext context,
                 ISender sender,
+                IOptions<JwtOptions> jwtOptions,
                 CancellationToken cancellationToken) =>
             {
                 var result = await sender.Send(request, cancellationToken);
 
                 if (result.IsFailure) return CustomResults.Problem(result);
 
-                context.Response.Cookies.Append(
-                    AuthConstants.AccessTokenKey,
-                    result.Value.AccessToken);
-
-                context.Response.Cookies.Append(
-                    AuthConstants.RefreshTokenKey,
-                    result.Value.RefreshToken);
+                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken,
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.Now.AddMinutes(jwtOptions.Value.AccessExpiryInMinutes)
+                    });
+                context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken,
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.Now.AddDays(jwtOptions.Value.RefreshExpiryInDays)
+                    });
 
                 var response = new Contracts.Auth.RegisterResponse(
                     result.Value.Id,
