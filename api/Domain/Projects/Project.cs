@@ -162,4 +162,15 @@ public class Project : AuditableEntity
 
         return Result.Success();
     }
+
+    public Result IsOwner(string userId)
+    {
+        return CreatedBy != userId ? Result.Failure(ProjectErrors.OnlyForOwner) : Result.Success();
+    }
+
+    public Result IsMember(string userId)
+    {
+        var member = Members.FirstOrDefault(m => m.MemberId.ToString() == userId);
+        return member is null ? Result.Failure(ProjectErrors.OnlyForMembers) : Result.Success();
+    }
 }

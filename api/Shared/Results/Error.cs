@@ -24,4 +24,9 @@ public record Error(string Code, string Description, ErrorType Type)
     {
         return new Error(code, description, ErrorType.Conflict);
     }
+
+    public static Error Forbidden(string code, string description)
+    {
+        return new Error(code, description, ErrorType.Forbidden);
+    }
 }

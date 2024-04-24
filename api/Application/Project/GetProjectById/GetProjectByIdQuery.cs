@@ -28,6 +28,7 @@ public record GetProjectByIdResponse
     public string Country { get; set; }
     public string Operator { get; set; }
     public ProjectType Type { get; set; }
+    public Guid OwnerId { get; set; }
     public CollectorType CollectorType { get; set; }
     public List<GetProjectByIdMember> Members { get; set; }
     public List<GetProjectByIdMethod> Methods { get; set; }

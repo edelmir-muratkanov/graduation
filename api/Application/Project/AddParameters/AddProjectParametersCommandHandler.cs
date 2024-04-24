@@ -1,9 +1,11 @@
-﻿using Domain.Projects;
+﻿using Application.Abstractions.Authentication;
+using Domain.Projects;
 using Domain.Properties;
 
 namespace Application.Project.AddParameters;
 
 internal class AddProjectParametersCommandHandler(
+    ICurrentUserService currentUserService,
     IProjectRepository projectRepository,
     IPropertyRepository propertyRepository,
     IProjectParameterRepository projectParameterRepository,
@@ -15,9 +17,20 @@ internal class AddProjectParametersCommandHandler(
 
         if (project is null) return Result.Failure(ProjectErrors.NotFound);
 
+        var userId = currentUserService.Id ?? string.Empty;
+
+        var isOwnerResult = project.IsOwner(userId);
+        var isMemberResult = project.IsMember(userId);
+
+        if (isOwnerResult.IsFailure && isMemberResult.IsFailure)
+        {
+            return isMemberResult;
+        }
+
         foreach (var parameter in request.Parameters)
             if (!await propertyRepository.Exists(parameter.PropertyId))
                 return Result.Failure(PropertyErrors.NotFound);
+
 
         var results = request.Parameters.Select(p =>
                 project.AddParameter(p.PropertyId, p.Value))

@@ -29,4 +29,12 @@ public static class ProjectErrors
     public static readonly Error MethodNotFound = Error.NotFound(
         "Project.MethodNotFound",
         "Проект не содержит указанный метод");
+
+    public static readonly Error OnlyForOwner = Error.Forbidden(
+        "Project.OnlyForOwner",
+        "Может изменить только владелец проекта");
+
+    public static readonly Error OnlyForMembers = Error.Forbidden(
+        "Project.OnlyForMembers",
+        "Могут изменять только владелец или участники проекта");
 }

@@ -22,6 +22,7 @@ internal class GetProjectByIdQueryHandler(ApplicationReadDbContext dbContext)
                 Operator = p.Operator,
                 Type = p.ProjectType,
                 CollectorType = p.CollectorType,
+                OwnerId = Guid.Parse(p.CreatedBy!),
                 Methods = p.Methods.Select(m => new GetProjectByIdMethod
                 {
                     Id = m.Method.Id,
