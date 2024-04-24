@@ -6,6 +6,8 @@ using Application.Project.AddParameters;
 using Application.Project.Create;
 using Application.Project.GetProjectById;
 using Application.Project.GetProjects;
+using Application.Project.Remove;
+using Application.Project.RemoveMember;
 using Application.Project.RemoveMethod;
 using Application.Project.RemoveParameter;
 using Carter;
@@ -52,117 +54,6 @@ public class ProjectEndpoints : ICarterModule
             .ProducesProblem(500)
             .WithName("Create project");
 
-        group.MapPost("{id:guid}/parameters", async (
-                Guid id,
-                List<AddProjectParametersRequest> parametersRequests,
-                ISender sender,
-                CancellationToken cancellationToken) =>
-            {
-                List<AddProjectParameter> parameters = parametersRequests.Adapt<List<AddProjectParameter>>();
-                var command = new AddProjectParametersCommand
-                {
-                    ProjectId = id,
-                    Parameters = parameters
-                };
-                Result result = await sender.Send(command, cancellationToken);
-                return result.Match(Results.Created, CustomResults.Problem);
-            })
-            .RequireAuthorization()
-            .Produces(201)
-            .ProducesProblem(400)
-            .ProducesProblem(401)
-            .ProducesProblem(403)
-            .ProducesProblem(404)
-            .ProducesProblem(500);
-
-        group.MapDelete("{projectId:guid}/parameters/{parameterId:guid}", async (
-                Guid projectId,
-                Guid parameterId,
-                ISender sender,
-                CancellationToken cancellationToken) =>
-            {
-                var command = new RemoveProjectParameterCommand
-                {
-                    ProjectId = projectId,
-                    ParameterId = parameterId
-                };
-                Result result = await sender.Send(command, cancellationToken);
-                return result.Match(Results.NoContent, CustomResults.Problem);
-            })
-            .RequireAuthorization()
-            .Produces(204)
-            .ProducesProblem(400)
-            .ProducesProblem(401)
-            .ProducesProblem(403)
-            .ProducesProblem(404)
-            .ProducesProblem(500);
-
-        group.MapPost("{projectId:guid}/methods", async (
-                Guid projectId,
-                List<Guid> methodIds,
-                ISender sender,
-                CancellationToken cancellationToken) =>
-            {
-                var command = new AddProjectMethodsCommand
-                {
-                    ProjectId = projectId,
-                    MethodIds = methodIds
-                };
-                Result result = await sender.Send(command, cancellationToken);
-                return result.Match(Results.Created, CustomResults.Problem);
-            })
-            .RequireAuthorization()
-            .Produces(201)
-            .ProducesProblem(400)
-            .ProducesProblem(401)
-            .ProducesProblem(403)
-            .ProducesProblem(404)
-            .ProducesProblem(500);
-
-        group.MapDelete("{projectId:guid}/methods/{methodId:guid}", async (
-                Guid projectId,
-                Guid methodId,
-                ISender sender,
-                CancellationToken cancellationToken) =>
-            {
-                var command = new RemoveProjectMethodCommand
-                {
-                    ProjectId = projectId,
-                    MethodId = methodId
-                };
-                Result result = await sender.Send(command, cancellationToken);
-                return result.Match(Results.NoContent, CustomResults.Problem);
-            })
-            .RequireAuthorization()
-            .Produces(204)
-            .ProducesProblem(400)
-            .ProducesProblem(401)
-            .ProducesProblem(403)
-            .ProducesProblem(404)
-            .ProducesProblem(500);
-
-        group.MapPost("{projectId:guid}/members", async (
-                Guid projectId,
-                List<Guid> memberIds,
-                ISender sender,
-                CancellationToken cancellationToken) =>
-            {
-                var command = new AddProjectMembersCommand
-                {
-                    MemberIds = memberIds,
-                    ProjectId = projectId
-                };
-                Result result = await sender.Send(command, cancellationToken);
-                return result.Match(Results.Created, CustomResults.Problem);
-            })
-            .RequireAuthorization()
-            .Produces(201)
-            .ProducesProblem(400)
-            .ProducesProblem(401)
-            .ProducesProblem(403)
-            .ProducesProblem(404)
-            .ProducesProblem(500);
-
         group.MapGet("", async (
                 string? searchTerm,
                 string? sortColumn,
@@ -197,6 +88,160 @@ public class ProjectEndpoints : ICarterModule
             })
             .Produces(200)
             .ProducesProblem(404)
-            .ProducesProblem(500);
+            .ProducesProblem(500)
+            .WithDescription("Get project");
+
+        group.MapDelete("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
+            {
+                var command = new RemoveProjectCommand { ProjectId = id };
+                Result result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500)
+            .WithName("Delete project");
+
+        group.MapPost("{id:guid}/parameters", async (
+                Guid id,
+                List<AddProjectParametersRequest> parametersRequests,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                List<AddProjectParameter> parameters = parametersRequests.Adapt<List<AddProjectParameter>>();
+                var command = new AddProjectParametersCommand
+                {
+                    ProjectId = id,
+                    Parameters = parameters
+                };
+                Result result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.Created, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(201)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500)
+            .WithName("Add project parameters");
+
+        group.MapDelete("{projectId:guid}/parameters/{parameterId:guid}", async (
+                Guid projectId,
+                Guid parameterId,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new RemoveProjectParameterCommand
+                {
+                    ProjectId = projectId,
+                    ParameterId = parameterId
+                };
+                Result result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500)
+            .WithName("Remove project parameter");
+
+        group.MapPost("{projectId:guid}/methods", async (
+                Guid projectId,
+                List<Guid> methodIds,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new AddProjectMethodsCommand
+                {
+                    ProjectId = projectId,
+                    MethodIds = methodIds
+                };
+                Result result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.Created, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(201)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500)
+            .WithName("Add project methods");
+
+        group.MapDelete("{projectId:guid}/methods/{methodId:guid}", async (
+                Guid projectId,
+                Guid methodId,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new RemoveProjectMethodCommand
+                {
+                    ProjectId = projectId,
+                    MethodId = methodId
+                };
+                Result result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500)
+            .WithName("Remove project method");
+
+        group.MapPost("{projectId:guid}/members", async (
+                Guid projectId,
+                List<Guid> memberIds,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new AddProjectMembersCommand
+                {
+                    MemberIds = memberIds,
+                    ProjectId = projectId
+                };
+                Result result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.Created, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(201)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500)
+            .WithName("Add project members");
+
+        group.MapDelete("{projectId:guid}/members/{memberId:guid}", async (
+                Guid projectId,
+                Guid memberId,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new RemoveProjectMemberCommand
+                {
+                    MemberId = memberId,
+                    ProjectId = projectId
+                };
+                Result result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(500)
+            .WithName("Remove project member");
     }
 }
