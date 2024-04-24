@@ -4,6 +4,7 @@ using Application.Project.AddParameters;
 using Application.Project.Create;
 using Application.Project.GetProjectById;
 using Application.Project.GetProjects;
+using Application.Project.RemoveParameter;
 using Carter;
 using Mapster;
 using MediatR;
@@ -66,6 +67,30 @@ public class ProjectEndpoints : ICarterModule
             .RequireAuthorization()
             .Produces(201)
             .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500);
+
+        group.MapDelete("{projectId:guid}/parameters/{parameterId:guid}", async (
+                Guid projectId,
+                Guid parameterId,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new RemoveProjectParameterCommand
+                {
+                    ProjectId = projectId,
+                    ParameterId = parameterId
+                };
+                var result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
             .ProducesProblem(404)
             .ProducesProblem(500);
 
