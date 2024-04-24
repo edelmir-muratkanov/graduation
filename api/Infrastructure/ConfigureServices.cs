@@ -2,10 +2,12 @@
 using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Domain.Methods;
+using Domain.Projects;
 using Domain.Properties;
 using Domain.Users;
 using Infrastructure.Authentication;
 using Infrastructure.Database;
+using Infrastructure.Database.Models;
 using Infrastructure.Outbox;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -43,7 +45,6 @@ public static class ConfigureServices
         services.AddDbContext<ApplicationWriteDbContext>((sp, options) =>
             options.UseNpgsql(connectionString)
                 .UseSnakeCaseNamingConvention()
-                .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
                 .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>(),
                     sp.GetRequiredService<TrackAuditableEntityInterceptor>()));
 
@@ -54,6 +55,10 @@ public static class ConfigureServices
         services.AddScoped<IPropertyRepository, PropertyRepository>();
         services.AddScoped<IMethodRepository, MethodRepository>();
         services.AddScoped<IMethodParameterRepository, MethodParameterRepository>();
+        services.AddScoped<IProjectRepository, ProjectRepository>();
+        services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
+        services.AddScoped<IProjectMethodRepository, ProjectMethodRepository>();
+        services.AddScoped<IProjectParameterRepository, ProjectParameterRepository>();
 
 
         services.AddScoped<IPasswordManager, PasswordManager>();

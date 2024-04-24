@@ -14,7 +14,6 @@ internal class ProjectReadModel
     public List<ProjectMemberReadModel> Members { get; set; }
     public List<ProjectMethodReadModel> Methods { get; set; }
     public List<ProjectParameterReadModel> Parameters { get; set; }
-    
     public DateTime CreatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }
