@@ -2,11 +2,11 @@
 
 public sealed record Belonging
 {
-    private const string NotApplicable = "Не пременим";
-    private const string NotSuitable = "Не благоприятен для применения";
-    private const string LowEfficiency = "Применим с низкой эффективностью";
-    private const string Applicable = "Применим";
-    private const string Favorable = "Благоприятен для применения";
+    public const string NotApplicable = "Не пременим";
+    public const string NotSuitable = "Не благоприятен для применения";
+    public const string LowEfficiency = "Применим с низкой эффективностью";
+    public const string Applicable = "Применим";
+    public const string Favorable = "Благоприятен для применения";
 
     private Belonging() { }
 
