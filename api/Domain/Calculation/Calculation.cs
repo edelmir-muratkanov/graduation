@@ -15,7 +15,11 @@ public class Calculation : Entity
     public Guid ProjectId { get; private set; }
     public Guid MethodId { get; private set; }
 
-    public Belonging Belonging => new(_items.Sum(i => i.Belonging.Degree) * ((double)1 / _items.Count));
+    public Belonging? Belonging =>
+        _items.Count != 0
+            ? new Belonging((double)1 / _items.Count * _items
+                .Sum(i => i.Belonging.Degree))
+            : null;
 
     public IEnumerable<CalculationItem> Items => _items.ToList();
 
