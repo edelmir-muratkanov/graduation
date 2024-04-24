@@ -1,9 +1,11 @@
 ﻿using Api.Contracts.Project;
 using Api.Infrastructure;
+using Application.Project.AddParameters;
 using Application.Project.Create;
 using Application.Project.GetProjectById;
 using Application.Project.GetProjects;
 using Carter;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
@@ -45,6 +47,27 @@ public class ProjectEndpoints : ICarterModule
             .ProducesProblem(409)
             .ProducesProblem(500)
             .WithName("Create project");
+
+        group.MapPost("{id:guid}/parameters", async (
+                Guid id,
+                List<AddProjectParametersRequest> parametersRequests,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var parameters = parametersRequests.Adapt<List<AddProjectParameter>>();
+                var command = new AddProjectParametersCommand
+                {
+                    ProjectId = id,
+                    Parameters = parameters
+                };
+                var result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.Created, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(201)
+            .ProducesProblem(400)
+            .ProducesProblem(404)
+            .ProducesProblem(500);
 
         group.MapGet("", async (
                 string? searchTerm,
