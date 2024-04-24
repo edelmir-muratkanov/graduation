@@ -34,14 +34,14 @@ internal sealed class JwtTokenProvider(IOptions<JwtOptions> options) : IJwtToken
             expires: DateTime.UtcNow.AddMinutes(_jwtOptions.AccessExpiryInMinutes),
             signingCredentials: signingCredentials);
 
-        var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+        string? tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
 
         return tokenValue;
     }
 
     public string GenerateRefreshToken()
     {
-        var randomNumber = new byte[32];
+        byte[]? randomNumber = new byte[32];
 
         using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(randomNumber);
@@ -62,7 +62,7 @@ internal sealed class JwtTokenProvider(IOptions<JwtOptions> options) : IJwtToken
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        var result = await tokenHandler.ValidateTokenAsync(token, tokenValidationParameter);
+        TokenValidationResult? result = await tokenHandler.ValidateTokenAsync(token, tokenValidationParameter);
 
         return result.Claims.First(u => u.Key == ClaimTypes.NameIdentifier).Value.ToString();
     }

@@ -9,13 +9,19 @@ internal class UpdatePropertyCommandHandler(
 {
     public async Task<Result> Handle(UpdatePropertyCommand request, CancellationToken cancellationToken)
     {
-        var property = await propertyRepository.GetByIdAsync(request.Id, cancellationToken);
+        Domain.Properties.Property? property = await propertyRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if (property is null) return Result.Failure(PropertyErrors.NotFound);
+        if (property is null)
+        {
+            return Result.Failure(PropertyErrors.NotFound);
+        }
 
-        var propertyResult = property.Update(request.Name, request.Unit);
+        Result? propertyResult = property.Update(request.Name, request.Unit);
 
-        if (propertyResult.IsFailure) return propertyResult;
+        if (propertyResult.IsFailure)
+        {
+            return propertyResult;
+        }
 
         propertyRepository.Update(property);
 

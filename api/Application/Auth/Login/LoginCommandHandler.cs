@@ -13,15 +13,20 @@ internal sealed class LoginCommandHandler(
         LoginCommand request,
         CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetByEmailAsync(request.Email, cancellationToken);
+        User? user = await userRepository.GetByEmailAsync(request.Email, cancellationToken);
 
-        if (user is null) return Result.Failure<LoginResponse>(UserErrors.NotFoundByEmail(request.Email));
+        if (user is null)
+        {
+            return Result.Failure<LoginResponse>(UserErrors.NotFoundByEmail(request.Email));
+        }
 
         if (!passwordManager.VerifyPassword(user.Password, request.Password))
+        {
             return Result.Failure<LoginResponse>(UserErrors.InvalidCredentials);
+        }
 
-        var token = jwtTokenProvider.Generate(user);
-        var refresh = jwtTokenProvider.GenerateRefreshToken();
+        string? token = jwtTokenProvider.Generate(user);
+        string? refresh = jwtTokenProvider.GenerateRefreshToken();
 
         user.UpdateToken(refresh);
 

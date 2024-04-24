@@ -10,15 +10,24 @@ internal sealed class AddProjectMembersCommandHandler(
 {
     public async Task<Result> Handle(AddProjectMembersCommand request, CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
+        Domain.Projects.Project? project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
 
-        if (project is null) return Result.Failure(ProjectErrors.NotFound);
+        if (project is null)
+        {
+            return Result.Failure(ProjectErrors.NotFound);
+        }
 
-        var isOwnerResult = project.IsOwner(currentUserService.Id!);
-        if (isOwnerResult.IsFailure) return isOwnerResult;
+        Result isOwnerResult = project.IsOwner(currentUserService.Id!);
+        if (isOwnerResult.IsFailure)
+        {
+            return isOwnerResult;
+        }
 
         var results = request.MemberIds.Select(memberId => project.AddMember(memberId)).ToList();
-        if (results.Any(r => r.IsFailure)) return Result.Failure(ValidationError.FromResults(results));
+        if (results.Any(r => r.IsFailure))
+        {
+            return Result.Failure(ValidationError.FromResults(results));
+        }
 
         projectRepository.Update(project);
         await unitOfWork.SaveChangesAsync(cancellationToken);

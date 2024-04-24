@@ -10,12 +10,26 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{38424CEE-471B-41F7-A0F1-E43C2394BDFB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2AC309B8-8F42-46B1-954D-4FCDC6F16EB3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F3D0EE6E-5914-4DA9-B18E-CA43922C8B16}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.dockerignore = .dockerignore
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{B93A8241-7CC1-4DF1-8185-01C125395AEF} = {2AC309B8-8F42-46B1-954D-4FCDC6F16EB3}
+		{38424CEE-471B-41F7-A0F1-E43C2394BDFB} = {2AC309B8-8F42-46B1-954D-4FCDC6F16EB3}
+		{96A3B7AE-F1BA-4B30-AE41-0933C49CD48D} = {2AC309B8-8F42-46B1-954D-4FCDC6F16EB3}
+		{3E803282-8289-47A6-8C33-337DAC447791} = {2AC309B8-8F42-46B1-954D-4FCDC6F16EB3}
+		{3F20784A-6FB8-4823-BE51-B64FC47CDA73} = {2AC309B8-8F42-46B1-954D-4FCDC6F16EB3}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B93A8241-7CC1-4DF1-8185-01C125395AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

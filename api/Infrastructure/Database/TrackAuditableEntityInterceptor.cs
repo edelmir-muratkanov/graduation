@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Authentication;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Shared;
 
@@ -11,14 +12,18 @@ internal sealed class TrackAuditableEntityInterceptor(ICurrentUserService curren
         InterceptionResult<int> result,
         CancellationToken cancellationToken = new())
     {
-        if (eventData.Context is not null) TrackEntityAsync(eventData.Context);
+        if (eventData.Context is not null)
+        {
+            TrackEntityAsync(eventData.Context);
+        }
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
     private void TrackEntityAsync(DbContext context)
     {
-        foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
+        foreach (EntityEntry<AuditableEntity>? entry in context.ChangeTracker.Entries<AuditableEntity>())
+        {
             switch (entry.State)
             {
                 case EntityState.Added:
@@ -38,5 +43,6 @@ internal sealed class TrackAuditableEntityInterceptor(ICurrentUserService curren
                 default:
                     break;
             }
+        }
     }
 }

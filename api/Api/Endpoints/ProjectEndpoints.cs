@@ -22,7 +22,7 @@ public class ProjectEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/projects").WithTags("projects");
+        RouteGroupBuilder group = app.MapGroup("api/projects").WithTags("projects");
 
         group.MapPost("", async (CreateProjectRequest request, ISender sender, CancellationToken cancellationToken) =>
             {
@@ -41,7 +41,7 @@ public class ProjectEndpoints : ICarterModule
                     }).ToList()
                 };
 
-                var result = await sender.Send(command, cancellationToken);
+                Result result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.Created, CustomResults.Problem);
             })
             .RequireAuthorization()
@@ -58,13 +58,13 @@ public class ProjectEndpoints : ICarterModule
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var parameters = parametersRequests.Adapt<List<AddProjectParameter>>();
+                List<AddProjectParameter> parameters = parametersRequests.Adapt<List<AddProjectParameter>>();
                 var command = new AddProjectParametersCommand
                 {
                     ProjectId = id,
                     Parameters = parameters
                 };
-                var result = await sender.Send(command, cancellationToken);
+                Result result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.Created, CustomResults.Problem);
             })
             .RequireAuthorization()
@@ -86,7 +86,7 @@ public class ProjectEndpoints : ICarterModule
                     ProjectId = projectId,
                     ParameterId = parameterId
                 };
-                var result = await sender.Send(command, cancellationToken);
+                Result result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
             .RequireAuthorization()
@@ -108,7 +108,7 @@ public class ProjectEndpoints : ICarterModule
                     ProjectId = projectId,
                     MethodIds = methodIds
                 };
-                var result = await sender.Send(command, cancellationToken);
+                Result result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.Created, CustomResults.Problem);
             })
             .RequireAuthorization()
@@ -130,7 +130,7 @@ public class ProjectEndpoints : ICarterModule
                     ProjectId = projectId,
                     MethodId = methodId
                 };
-                var result = await sender.Send(command, cancellationToken);
+                Result result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
             .RequireAuthorization()
@@ -152,7 +152,7 @@ public class ProjectEndpoints : ICarterModule
                     MemberIds = memberIds,
                     ProjectId = projectId
                 };
-                var result = await sender.Send(command, cancellationToken);
+                Result result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.Created, CustomResults.Problem);
             })
             .RequireAuthorization()
@@ -181,7 +181,7 @@ public class ProjectEndpoints : ICarterModule
                     SearchTerm = searchTerm
                 };
 
-                var result = await sender.Send(query, cancellationToken);
+                Result<PaginatedList<GetProjectsResponse>> result = await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
@@ -192,7 +192,7 @@ public class ProjectEndpoints : ICarterModule
         group.MapGet("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
             {
                 var query = new GetProjectByIdQuery { Id = id };
-                var result = await sender.Send(query, cancellationToken);
+                Result<GetProjectByIdResponse> result = await sender.Send(query, cancellationToken);
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
             .Produces(200)

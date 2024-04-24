@@ -9,7 +9,7 @@ internal class RemoveMethodParameterCommandHandler(
 {
     public async Task<Result> Handle(RemoveMethodParameterCommand request, CancellationToken cancellationToken)
     {
-        var method = await methodRepository.GetByIdAsync(request.MethodId, cancellationToken);
+        Domain.Methods.Method? method = await methodRepository.GetByIdAsync(request.MethodId, cancellationToken);
 
         if (method is null)
         {

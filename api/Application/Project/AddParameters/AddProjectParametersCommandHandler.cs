@@ -13,23 +13,30 @@ internal class AddProjectParametersCommandHandler(
 {
     public async Task<Result> Handle(AddProjectParametersCommand request, CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
+        Domain.Projects.Project? project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
 
-        if (project is null) return Result.Failure(ProjectErrors.NotFound);
+        if (project is null)
+        {
+            return Result.Failure(ProjectErrors.NotFound);
+        }
 
-        var userId = currentUserService.Id ?? string.Empty;
+        string? userId = currentUserService.Id ?? string.Empty;
 
-        var isOwnerResult = project.IsOwner(userId);
-        var isMemberResult = project.IsMember(userId);
+        Result? isOwnerResult = project.IsOwner(userId);
+        Result? isMemberResult = project.IsMember(userId);
 
         if (isOwnerResult.IsFailure && isMemberResult.IsFailure)
         {
             return isMemberResult;
         }
 
-        foreach (var parameter in request.Parameters)
+        foreach (AddProjectParameter? parameter in request.Parameters)
+        {
             if (!await propertyRepository.Exists(parameter.PropertyId))
+            {
                 return Result.Failure(PropertyErrors.NotFound);
+            }
+        }
 
 
         var results = request.Parameters.Select(p =>
@@ -37,7 +44,9 @@ internal class AddProjectParametersCommandHandler(
             .ToList();
 
         if (results.Any(r => r.IsFailure))
+        {
             return Result.Failure(ValidationError.FromResults(results));
+        }
 
         projectParameterRepository.InsertRange(project.Parameters);
         await unitOfWork.SaveChangesAsync(cancellationToken);

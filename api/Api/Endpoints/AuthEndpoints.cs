@@ -1,5 +1,4 @@
 ﻿using Api.Infrastructure;
-using Application.Auth;
 using Application.Auth.GetProfile;
 using Application.Auth.Login;
 using Application.Auth.Refresh;
@@ -16,13 +15,13 @@ public class AuthEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/auth").WithTags("auth");
+        RouteGroupBuilder? group = app.MapGroup("api/auth").WithTags("auth");
 
         group.MapGet("profile", async (
                 ISender sender, CancellationToken cancellationToken) =>
             {
                 var query = new GetProfileQuery();
-                var result = await sender.Send(query, cancellationToken);
+                Result<GetProfileResponse>? result = await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
@@ -38,9 +37,12 @@ public class AuthEndpoints : ICarterModule
                 IOptions<JwtOptions> jwtOptions,
                 CancellationToken cancellationToken) =>
             {
-                var result = await sender.Send(request, cancellationToken);
+                Result<LoginResponse>? result = await sender.Send(request, cancellationToken);
 
-                if (result.IsFailure) return CustomResults.Problem(result);
+                if (result.IsFailure)
+                {
+                    return CustomResults.Problem(result);
+                }
 
                 context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken,
                     new CookieOptions
@@ -73,14 +75,17 @@ public class AuthEndpoints : ICarterModule
                 IOptions<JwtOptions> jwtOptions,
                 CancellationToken cancellationToken) =>
             {
-                var access = context.Request.Cookies[AuthConstants.AccessTokenKey];
-                var refresh = context.Request.Cookies[AuthConstants.RefreshTokenKey];
+                string? access = context.Request.Cookies[AuthConstants.AccessTokenKey];
+                string? refresh = context.Request.Cookies[AuthConstants.RefreshTokenKey];
 
                 var command = new RefreshCommand(access!, refresh!);
 
-                var result = await sender.Send(command, cancellationToken);
+                Result<RefreshResponse>? result = await sender.Send(command, cancellationToken);
 
-                if (result.IsFailure) return Results.Unauthorized();
+                if (result.IsFailure)
+                {
+                    return Results.Unauthorized();
+                }
 
                 var response = new Contracts.Auth.RefreshResponse(result.Value.AccessToken);
 
@@ -109,9 +114,12 @@ public class AuthEndpoints : ICarterModule
                 IOptions<JwtOptions> jwtOptions,
                 CancellationToken cancellationToken) =>
             {
-                var result = await sender.Send(request, cancellationToken);
+                Result<RegisterResponse>? result = await sender.Send(request, cancellationToken);
 
-                if (result.IsFailure) return CustomResults.Problem(result);
+                if (result.IsFailure)
+                {
+                    return CustomResults.Problem(result);
+                }
 
                 context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken,
                     new CookieOptions

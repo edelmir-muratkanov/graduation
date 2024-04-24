@@ -8,9 +8,12 @@ internal sealed class UpdateMethodCommandHandler(
 {
     public async Task<Result> Handle(UpdateMethodCommand request, CancellationToken cancellationToken)
     {
-        var method = await methodRepository.GetByIdAsync(request.Id, cancellationToken);
+        Domain.Methods.Method? method = await methodRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if (method is null) return Result.Failure(MethodErrors.NotFound);
+        if (method is null)
+        {
+            return Result.Failure(MethodErrors.NotFound);
+        }
 
         method.ChangeNameAndCollectorTypes(request.Name, request.CollectorTypes);
 

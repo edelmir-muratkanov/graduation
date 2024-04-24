@@ -14,10 +14,12 @@ internal sealed class GetPropertiesQueryHandler(ApplicationReadDbContext context
     public async Task<Result<PaginatedList<GetPropertiesResponse>>> Handle(GetPropertiesQuery request,
         CancellationToken cancellationToken)
     {
-        var propertiesQuery = context.Properties.AsQueryable();
+        IQueryable<PropertyReadModel>? propertiesQuery = context.Properties.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
             propertiesQuery = propertiesQuery.Where(p => p.Name.Contains(request.SearchTerm));
+        }
 
         Expression<Func<PropertyReadModel, object>> keySelector = request.SortColumn?.ToLower() switch
         {
@@ -30,7 +32,7 @@ internal sealed class GetPropertiesQueryHandler(ApplicationReadDbContext context
             ? propertiesQuery.OrderByDescending(keySelector)
             : propertiesQuery.OrderBy(keySelector);
 
-        var properties = propertiesQuery.Select(p =>
+        IQueryable<GetPropertiesResponse>? properties = propertiesQuery.Select(p =>
             new GetPropertiesResponse(p.Id, p.Name, p.Unit));
 
         var list = await PaginatedList<GetPropertiesResponse>.CreateAsync(

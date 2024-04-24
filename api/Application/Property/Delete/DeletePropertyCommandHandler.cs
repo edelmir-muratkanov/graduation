@@ -7,9 +7,12 @@ internal sealed class DeletePropertyCommandHandler(IPropertyRepository propertyR
 {
     public async Task<Result> Handle(DeletePropertyCommand request, CancellationToken cancellationToken)
     {
-        var property = await propertyRepository.GetByIdAsync(request.Id, cancellationToken);
+        Domain.Properties.Property? property = await propertyRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if (property is null) return Result.Failure(PropertyErrors.NotFound);
+        if (property is null)
+        {
+            return Result.Failure(PropertyErrors.NotFound);
+        }
 
         propertyRepository.Remove(property);
 

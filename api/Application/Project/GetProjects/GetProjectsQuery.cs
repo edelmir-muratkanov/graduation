@@ -1,6 +1,4 @@
-﻿using Domain;
-using Domain.Projects;
-using Shared;
+﻿using Shared;
 
 namespace Application.Project.GetProjects;
 

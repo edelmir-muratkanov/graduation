@@ -17,7 +17,7 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse>(ILogger<TRequest> 
         }
         catch (Exception e)
         {
-            var requestName = typeof(TRequest).Name;
+            string? requestName = typeof(TRequest).Name;
             logger.LogError(
                 e,
                 "Request: Unhandled Exception for Request {Name} {@Request}",

@@ -32,7 +32,9 @@ public class MethodParameter : Entity
         ParameterValueGroup? second)
     {
         if (first is null && second is null)
+        {
             return Result.Failure<MethodParameter>(MethodParameterErrors.MissingFirstAndSecond);
+        }
 
         return new MethodParameter(Guid.NewGuid(), methodId, propertyId, first, second);
     }

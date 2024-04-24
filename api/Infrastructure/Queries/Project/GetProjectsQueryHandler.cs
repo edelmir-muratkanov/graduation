@@ -16,13 +16,15 @@ internal class GetProjectsQueryHandler(ApplicationReadDbContext dbContext)
         GetProjectsQuery request,
         CancellationToken cancellationToken)
     {
-        var projectsQuery = dbContext.Projects.AsQueryable();
+        IQueryable<ProjectReadModel>? projectsQuery = dbContext.Projects.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
             projectsQuery = projectsQuery.Where(m =>
                 m.Name.Contains(request.SearchTerm)
                 || m.Country.Contains(request.SearchTerm)
                 || m.Operator.Contains(request.SearchTerm));
+        }
 
 
         Expression<Func<ProjectReadModel, object>> keySelector = request.SortColumn?.ToLower() switch
@@ -37,7 +39,7 @@ internal class GetProjectsQueryHandler(ApplicationReadDbContext dbContext)
             ? projectsQuery.OrderBy(keySelector)
             : projectsQuery.OrderByDescending(keySelector);
 
-        var projects = await projectsQuery.AsSplitQuery()
+        PaginatedList<GetProjectsResponse>? projects = await projectsQuery.AsSplitQuery()
             .Select(p =>
                 new GetProjectsResponse()
                 {

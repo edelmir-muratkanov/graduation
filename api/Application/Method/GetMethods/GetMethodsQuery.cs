@@ -1,4 +1,3 @@
-using Domain.Methods;
 using Shared;
 
 namespace Application.Method.GetMethods;

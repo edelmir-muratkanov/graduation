@@ -13,7 +13,7 @@ internal sealed class GetMethodByIdQueryHandler(ApplicationReadDbContext dbConte
         GetMethodByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var method = await dbContext.Methods.Select(m => new GetMethodByIdResponse
+        GetMethodByIdResponse? method = await dbContext.Methods.Select(m => new GetMethodByIdResponse
         {
             Id = m.Id,
             Name = m.Name,

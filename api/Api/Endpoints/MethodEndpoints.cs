@@ -1,5 +1,4 @@
-﻿using System.Data;
-using Api.Contracts.Method;
+﻿using Api.Contracts.Method;
 using Api.Infrastructure;
 using Application.Method.AddParameters;
 using Application.Method.Create;
@@ -11,7 +10,6 @@ using Application.Method.Update;
 using Carter;
 using Domain.Users;
 using Mapster;
-using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
@@ -23,13 +21,13 @@ public class MethodEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/methods").WithTags("methods");
+        RouteGroupBuilder group = app.MapGroup("api/methods").WithTags("methods");
 
         group.MapPost("", async (
                 CreateMethodCommand request,
                 ISender sender) =>
             {
-                var result = await sender.Send(request);
+                Result result = await sender.Send(request);
                 return result.Match(Results.Created, CustomResults.Problem);
             })
             .RequireAuthorization(Role.Admin.ToString())
@@ -47,11 +45,11 @@ public class MethodEndpoints : ICarterModule
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var parameters = parametersRequests.Adapt<List<MethodParameter>>();
+                List<MethodParameter> parameters = parametersRequests.Adapt<List<MethodParameter>>();
 
                 var command = new AddMethodParametersCommand(id, parameters);
 
-                var result = await sender.Send(command, cancellationToken);
+                Result result = await sender.Send(command, cancellationToken);
 
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
@@ -75,7 +73,7 @@ public class MethodEndpoints : ICarterModule
                     ParameterId = parameterId
                 };
 
-                var result = await sender.Send(command, cancellationToken);
+                Result result = await sender.Send(command, cancellationToken);
 
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
@@ -106,7 +104,7 @@ public class MethodEndpoints : ICarterModule
                     SortColumn = sortColumn
                 };
 
-                var result = await sender.Send(query, cancellationToken);
+                Result<PaginatedList<GetMethodsResponse>> result = await sender.Send(query, cancellationToken);
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
             .Produces(200)
@@ -119,7 +117,7 @@ public class MethodEndpoints : ICarterModule
                 CancellationToken cancellationToken) =>
             {
                 var query = new GetMethodByIdQuery { Id = id };
-                var result = await sender.Send(query, cancellationToken);
+                Result<GetMethodByIdResponse> result = await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
@@ -135,7 +133,7 @@ public class MethodEndpoints : ICarterModule
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var result = await sender.Send(request, cancellationToken);
+                Result result = await sender.Send(request, cancellationToken);
 
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
@@ -154,7 +152,7 @@ public class MethodEndpoints : ICarterModule
                 CancellationToken cancellationToken) =>
             {
                 var command = new DeleteMethodCommand { Id = id };
-                var result = await sender.Send(command, cancellationToken);
+                Result result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
             .RequireAuthorization(Role.Admin.ToString())

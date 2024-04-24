@@ -8,8 +8,10 @@ internal sealed class GetProfileQueryHandler(ICurrentUserService currentUserServ
     public Task<Result<GetProfileResponse>> Handle(GetProfileQuery request, CancellationToken cancellationToken)
     {
         if (currentUserService.Id != null && currentUserService is { Role: not null, Email: not null })
+        {
             return Task.FromResult<Result<GetProfileResponse>>(new GetProfileResponse(currentUserService.Id,
                 currentUserService.Email, currentUserService.Role));
+        }
 
         return null!;
     }

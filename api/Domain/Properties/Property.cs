@@ -24,9 +24,15 @@ public class Property : AuditableEntity
 
     public Result Update(string? name, string? unit)
     {
-        if (!string.IsNullOrWhiteSpace(name)) Name = name;
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            Name = name;
+        }
 
-        if (!string.IsNullOrWhiteSpace(unit)) Unit = unit;
+        if (!string.IsNullOrWhiteSpace(unit))
+        {
+            Unit = unit;
+        }
 
         return Result.Success();
     }

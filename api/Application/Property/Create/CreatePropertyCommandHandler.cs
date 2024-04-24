@@ -10,11 +10,17 @@ internal sealed class CreatePropertyCommandHandler(
         CancellationToken cancellationToken)
     {
         if (!await propertyRepository.IsNameUniqueAsync(request.Name))
+        {
             return Result.Failure<CreatePropertyResponse>(PropertyErrors.NameNotUnique);
+        }
 
-        var propertyResult = Domain.Properties.Property.Create(request.Name, request.Unit);
+        Result<Domain.Properties.Property>? propertyResult =
+            Domain.Properties.Property.Create(request.Name, request.Unit);
 
-        if (propertyResult.IsFailure) return Result.Failure<CreatePropertyResponse>(propertyResult.Error);
+        if (propertyResult.IsFailure)
+        {
+            return Result.Failure<CreatePropertyResponse>(propertyResult.Error);
+        }
 
         propertyRepository.Insert(propertyResult.Value);
 

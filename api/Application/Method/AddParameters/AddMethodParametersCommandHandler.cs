@@ -11,13 +11,20 @@ internal class AddMethodParametersCommandHandler(
 {
     public async Task<Result> Handle(AddMethodParametersCommand request, CancellationToken cancellationToken)
     {
-        var method = await methodRepository.GetByIdAsync(request.MethodId, cancellationToken);
+        Domain.Methods.Method? method = await methodRepository.GetByIdAsync(request.MethodId, cancellationToken);
 
-        if (method is null) return Result.Failure(MethodErrors.NotFound);
+        if (method is null)
+        {
+            return Result.Failure(MethodErrors.NotFound);
+        }
 
-        foreach (var parameter in request.Parameters)
+        foreach (MethodParameter? parameter in request.Parameters)
+        {
             if (!await propertyRepository.Exists(parameter.PropertyId))
+            {
                 return Result.Failure(MethodErrors.NotFoundParameter);
+            }
+        }
 
         var results = request.Parameters.Select(parameterRequest =>
                 method.AddParameter(
@@ -26,7 +33,10 @@ internal class AddMethodParametersCommandHandler(
                     parameterRequest.Second))
             .ToList();
 
-        if (results.Any(r => r.IsFailure)) return Result.Failure(ValidationError.FromResults(results));
+        if (results.Any(r => r.IsFailure))
+        {
+            return Result.Failure(ValidationError.FromResults(results));
+        }
 
         methodParameterRepository.InsertRange(method.Parameters);
         await unitOfWork.SaveChangesAsync(cancellationToken);

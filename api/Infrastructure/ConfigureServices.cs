@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Application.Abstractions.Authentication;
+﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Domain.Methods;
 using Domain.Projects;
@@ -7,7 +6,6 @@ using Domain.Properties;
 using Domain.Users;
 using Infrastructure.Authentication;
 using Infrastructure.Database;
-using Infrastructure.Database.Models;
 using Infrastructure.Outbox;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -25,9 +23,12 @@ public static class ConfigureServices
         services.AddMediatR(config =>
             config.RegisterServicesFromAssembly(typeof(ConfigureServices).Assembly));
 
-        var connectionString = configuration.GetConnectionString("Database");
+        string? connectionString = configuration.GetConnectionString("Database");
 
-        if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            throw new ArgumentNullException(nameof(connectionString));
+        }
 
         services.AddSingleton(_ =>
             new DbConnectionFactory(

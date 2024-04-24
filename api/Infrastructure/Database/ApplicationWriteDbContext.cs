@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Application.Abstractions.Data;
+﻿using Application.Abstractions.Data;
 using Domain.Methods;
 using Domain.Projects;
 using Domain.Properties;

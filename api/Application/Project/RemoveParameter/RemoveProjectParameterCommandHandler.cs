@@ -6,21 +6,22 @@ namespace Application.Project.RemoveParameter;
 internal class RemoveProjectParameterCommandHandler(
     ICurrentUserService currentUserService,
     IProjectRepository projectRepository,
-    IProjectParameterRepository projectParameterRepository,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RemoveProjectParameterCommand>
 {
     public async Task<Result> Handle(RemoveProjectParameterCommand request, CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
+        Domain.Projects.Project? project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
 
         if (project is null)
+        {
             return Result.Failure(ProjectErrors.NotFound);
+        }
 
-        var userId = currentUserService.Id ?? string.Empty;
+        string userId = currentUserService.Id ?? string.Empty;
 
-        var isOwnerResult = project.IsOwner(userId);
-        var isMemberResult = project.IsMember(userId);
+        Result isOwnerResult = project.IsOwner(userId);
+        Result isMemberResult = project.IsMember(userId);
 
         if (isOwnerResult.IsFailure && isMemberResult.IsFailure)
         {

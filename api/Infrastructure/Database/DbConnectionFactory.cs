@@ -7,7 +7,7 @@ internal sealed class DbConnectionFactory(NpgsqlDataSource dataSource)
 {
     public IDbConnection OpenConnection()
     {
-        var connection = dataSource.OpenConnection();
+        NpgsqlConnection? connection = dataSource.OpenConnection();
         return connection;
     }
 }

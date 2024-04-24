@@ -11,7 +11,10 @@ internal sealed class PublishDomainEventsInterceptor(IPublisher publisher) : Sav
         int result,
         CancellationToken cancellationToken = new())
     {
-        if (eventData.Context is not null) await PublishDomainEventsAsync(eventData.Context);
+        if (eventData.Context is not null)
+        {
+            await PublishDomainEventsAsync(eventData.Context);
+        }
 
         return result;
     }
@@ -24,11 +27,14 @@ internal sealed class PublishDomainEventsInterceptor(IPublisher publisher) : Sav
             .Select(entry => entry.Entity)
             .SelectMany(entity =>
             {
-                var domainEvents = entity.DomainEvents;
+                List<IDomainEvent>? domainEvents = entity.DomainEvents;
                 entity.ClearDomainEvents();
                 return domainEvents;
             }).ToList();
 
-        foreach (var domainEvent in domainEvents) await publisher.Publish(domainEvent);
+        foreach (IDomainEvent? domainEvent in domainEvents)
+        {
+            await publisher.Publish(domainEvent);
+        }
     }
 }

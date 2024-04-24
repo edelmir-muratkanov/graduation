@@ -12,7 +12,7 @@ internal class GetPropertyByIdQueryHandler(ApplicationReadDbContext context)
     public async Task<Result<GetPropertyByIdResponse>> Handle(GetPropertyByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var property = await context.Properties
+        GetPropertyByIdResponse? property = await context.Properties
             .Select(p => new GetPropertyByIdResponse
             {
                 Id = p.Id,

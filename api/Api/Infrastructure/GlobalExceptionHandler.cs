@@ -13,7 +13,9 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
         logger.LogError(exception, "Unhandled exception occured");
 
         if (exception is BadHttpRequestException)
+        {
             return await HandleBadRequest(httpContext, cancellationToken);
+        }
 
         var problemDetails = new ProblemDetails
         {

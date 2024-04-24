@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using System.Reflection;
+using FluentValidation.Results;
 
 namespace Application.Abstractions.Behaviours;
 
@@ -13,20 +14,25 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
     {
         ValidationFailure[] validationFailures = await ValidateAsync(request);
 
-        if (validationFailures.Length == 0) return await next();
+        if (validationFailures.Length == 0)
+        {
+            return await next();
+        }
 
         if (typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
         {
-            var resultType = typeof(TResponse).GetGenericArguments()[0];
+            Type? resultType = typeof(TResponse).GetGenericArguments()[0];
 
-            var failureMethod = typeof(Result<>)
+            MethodInfo? failureMethod = typeof(Result<>)
                 .MakeGenericType(resultType)
                 .GetMethod(nameof(Result<object>.ValidationFailure));
 
             if (failureMethod is not null)
+            {
                 return ((TResponse)failureMethod.Invoke(
                     null,
                     new object[] { CreateValidationError(validationFailures) })!)!;
+            }
         }
         else if (typeof(TResponse) == typeof(Result))
         {
@@ -38,7 +44,10 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
 
     private async Task<ValidationFailure[]> ValidateAsync(TRequest request)
     {
-        if (!validators.Any()) return [];
+        if (!validators.Any())
+        {
+            return [];
+        }
 
         var context = new ValidationContext<TRequest>(request);
 

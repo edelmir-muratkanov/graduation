@@ -11,11 +11,14 @@ internal sealed class RemoveProjectMethodCommandHandler(
 {
     public async Task<Result> Handle(RemoveProjectMethodCommand request, CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
-        if (project is null) return Result.Failure(ProjectErrors.NotFound);
+        Domain.Projects.Project? project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
+        if (project is null)
+        {
+            return Result.Failure(ProjectErrors.NotFound);
+        }
 
-        var isOwnerResult = project.IsOwner(currentUserService.Id!);
-        var isMemberResult = project.IsMember(currentUserService.Id!);
+        Result? isOwnerResult = project.IsOwner(currentUserService.Id!);
+        Result? isMemberResult = project.IsMember(currentUserService.Id!);
 
         if (isOwnerResult.IsFailure && isMemberResult.IsFailure)
         {

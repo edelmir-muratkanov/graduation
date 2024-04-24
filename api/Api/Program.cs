@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.IdentityModel.Tokens;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -65,7 +65,7 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy(Role.Admin.ToString(), policy => { policy.RequireRole(Role.Admin.ToString()); });
 
 
-var app = builder.Build();
+WebApplication? app = builder.Build();
 
 app.UseCors();
 app.UseHttpsRedirection();

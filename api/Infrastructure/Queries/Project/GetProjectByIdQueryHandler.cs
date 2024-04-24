@@ -12,7 +12,7 @@ internal class GetProjectByIdQueryHandler(ApplicationReadDbContext dbContext)
     public async Task<Result<GetProjectByIdResponse>> Handle(GetProjectByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var project = await dbContext.Projects
+        GetProjectByIdResponse? project = await dbContext.Projects
             .Where(p => p.Id == request.Id)
             .Select(p => new GetProjectByIdResponse
             {

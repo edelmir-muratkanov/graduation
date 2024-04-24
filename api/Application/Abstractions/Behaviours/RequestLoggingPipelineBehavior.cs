@@ -13,16 +13,20 @@ public sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>(
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var requestName = typeof(TRequest).Name;
+        string? requestName = typeof(TRequest).Name;
 
         logger.LogInformation("Processing request {RequestName}", requestName);
 
-        var result = await next();
+        TResponse? result = await next();
 
         if (result.IsSuccess)
+        {
             logger.LogInformation("Completed request {RequestName}", requestName);
+        }
         else
+        {
             logger.LogError("Completed request {RequestName} with error", requestName);
+        }
 
         return result;
     }

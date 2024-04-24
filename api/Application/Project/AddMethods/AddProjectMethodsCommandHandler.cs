@@ -12,24 +12,34 @@ internal sealed class AddProjectMethodsCommandHandler(
 {
     public async Task<Result> Handle(AddProjectMethodsCommand request, CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
-        if (project is null) return Result.Failure(ProjectErrors.NotFound);
+        Domain.Projects.Project? project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
+        if (project is null)
+        {
+            return Result.Failure(ProjectErrors.NotFound);
+        }
 
-        var isOwnerResult = project.IsOwner(currentUserService.Id!);
-        var isMemberResult = project.IsMember(currentUserService.Id!);
+        Result? isOwnerResult = project.IsOwner(currentUserService.Id!);
+        Result? isMemberResult = project.IsMember(currentUserService.Id!);
 
         if (isOwnerResult.IsFailure && isMemberResult.IsFailure)
         {
             return isMemberResult;
         }
 
-        foreach (var methodId in request.MethodIds)
+        foreach (Guid methodId in request.MethodIds)
+        {
             if (!await methodRepository.Exists(methodId))
+            {
                 return Result.Failure(MethodErrors.NotFound);
+            }
+        }
 
         var results = request.MethodIds.Select(methodId => project.AddMethod(methodId)).ToList();
 
-        if (results.Any(r => r.IsFailure)) return Result.Failure(ValidationError.FromResults(results));
+        if (results.Any(r => r.IsFailure))
+        {
+            return Result.Failure(ValidationError.FromResults(results));
+        }
 
         projectRepository.Update(project);
         await unitOfWork.SaveChangesAsync(cancellationToken);

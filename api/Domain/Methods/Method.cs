@@ -34,7 +34,10 @@ public class Method : AuditableEntity
 
     public Result ChangeNameAndCollectorTypes(string? name, List<CollectorType>? collectorTypes)
     {
-        if (!string.IsNullOrWhiteSpace(name)) Name = name;
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            Name = name;
+        }
 
         if (collectorTypes is not null)
         {
@@ -49,11 +52,16 @@ public class Method : AuditableEntity
     public Result AddParameter(Guid propertyId, ParameterValueGroup? first, ParameterValueGroup? second)
     {
         if (_parameters.Any(p => p.MethodId == Id && p.PropertyId == propertyId))
+        {
             return Result.Failure(MethodErrors.DuplicateParameters);
+        }
 
-        var result = MethodParameter.Create(Id, propertyId, first, second);
+        Result<MethodParameter>? result = MethodParameter.Create(Id, propertyId, first, second);
 
-        if (result.IsFailure) return result;
+        if (result.IsFailure)
+        {
+            return result;
+        }
 
         _parameters.Add(result.Value);
 
@@ -64,8 +72,11 @@ public class Method : AuditableEntity
 
     public Result<MethodParameter> RemoveParameter(Guid parameterId)
     {
-        var parameter = _parameters.FirstOrDefault(p => p.Id == parameterId);
-        if (parameter is null) return Result.Failure<MethodParameter>(MethodErrors.NotFoundParameter);
+        MethodParameter? parameter = _parameters.FirstOrDefault(p => p.Id == parameterId);
+        if (parameter is null)
+        {
+            return Result.Failure<MethodParameter>(MethodErrors.NotFoundParameter);
+        }
 
         _parameters.Remove(parameter);
 

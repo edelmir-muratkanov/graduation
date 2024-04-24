@@ -1,4 +1,5 @@
-﻿using Application.Abstractions.Behaviours;
+﻿using System.Reflection;
+using Application.Abstractions.Behaviours;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -7,7 +8,7 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        var assembly = typeof(ConfigureServices).Assembly;
+        Assembly? assembly = typeof(ConfigureServices).Assembly;
 
         services.AddMediatR(config =>
         {

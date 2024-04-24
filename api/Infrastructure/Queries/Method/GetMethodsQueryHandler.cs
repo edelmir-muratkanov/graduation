@@ -16,10 +16,12 @@ internal class GetMethodsQueryHandler(ApplicationReadDbContext dbContext)
         GetMethodsQuery request,
         CancellationToken cancellationToken)
     {
-        var methodsQuery = dbContext.Methods.AsQueryable();
+        IQueryable<MethodReadModel>? methodsQuery = dbContext.Methods.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
             methodsQuery = methodsQuery.Where(m => m.Name.Contains(request.SearchTerm));
+        }
 
 
         Expression<Func<MethodReadModel, object>> keySelector = request.SortColumn?.ToLower() switch
@@ -32,7 +34,7 @@ internal class GetMethodsQueryHandler(ApplicationReadDbContext dbContext)
             ? methodsQuery.OrderBy(keySelector)
             : methodsQuery.OrderByDescending(keySelector);
 
-        var methods = await methodsQuery.AsSplitQuery()
+        PaginatedList<GetMethodsResponse>? methods = await methodsQuery.AsSplitQuery()
             .Select(m =>
                 new GetMethodsResponse
                 {

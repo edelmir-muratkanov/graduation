@@ -1,6 +1,4 @@
-﻿using Domain.Users;
-
-namespace Infrastructure.Database.Models;
+﻿namespace Infrastructure.Database.Models;
 
 internal class ProjectMemberReadModel
 {

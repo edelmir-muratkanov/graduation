@@ -16,14 +16,17 @@ internal sealed class InsertOutboxMessagesInterceptor : SaveChangesInterceptor
         InterceptionResult<int> result,
         CancellationToken cancellationToken = new())
     {
-        if (eventData.Context is not null) InsertOutboxMessage(eventData.Context);
+        if (eventData.Context is not null)
+        {
+            InsertOutboxMessage(eventData.Context);
+        }
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
     private void InsertOutboxMessage(DbContext context)
     {
-        var utcNow = DateTime.UtcNow;
+        DateTime utcNow = DateTime.UtcNow;
 
         var outboxMessages = context
             .ChangeTracker
@@ -31,7 +34,7 @@ internal sealed class InsertOutboxMessagesInterceptor : SaveChangesInterceptor
             .Select(entry => entry.Entity)
             .SelectMany(entity =>
             {
-                var domainEvents = entity.DomainEvents;
+                List<IDomainEvent>? domainEvents = entity.DomainEvents;
                 entity.ClearDomainEvents();
                 return domainEvents;
             }).Select(domainEvent => new OutboxMessage(

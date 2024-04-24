@@ -64,19 +64,29 @@ public class Project : AuditableEntity
         CollectorType? collectorType)
     {
         if (!string.IsNullOrWhiteSpace(name))
+        {
             Name = name;
+        }
 
         if (!string.IsNullOrWhiteSpace(country))
+        {
             Country = country;
+        }
 
         if (!string.IsNullOrWhiteSpace(@operator))
+        {
             Operator = @operator;
+        }
 
         if (projectType is not null)
+        {
             ProjectType = (ProjectType)projectType;
+        }
 
         if (collectorType is not null)
+        {
             CollectorType = (CollectorType)collectorType;
+        }
 
         Raise(new ProjectBaseInfoUpdatedDomainEvent(Id));
 
@@ -85,7 +95,10 @@ public class Project : AuditableEntity
 
     public Result AddMember(Guid memberId)
     {
-        if (_members.Any(m => m.MemberId == memberId)) return Result.Failure(ProjectErrors.AlreadyMember);
+        if (_members.Any(m => m.MemberId == memberId))
+        {
+            return Result.Failure(ProjectErrors.AlreadyMember);
+        }
 
         _members.Add(new ProjectMember(Id, memberId));
 
@@ -96,10 +109,12 @@ public class Project : AuditableEntity
 
     public Result RemoveMember(Guid memberId)
     {
-        var member = _members.FirstOrDefault(m => m.MemberId == memberId);
+        ProjectMember? member = _members.FirstOrDefault(m => m.MemberId == memberId);
 
         if (member is null)
+        {
             return Result.Failure(ProjectErrors.NotMember);
+        }
 
         _members.Remove(member);
 
@@ -111,12 +126,16 @@ public class Project : AuditableEntity
     public Result AddParameter(Guid propertyId, double value)
     {
         if (_parameters.Any(p => p.PropertyId == propertyId))
+        {
             return Result.Failure(ProjectErrors.DuplicateParameter);
+        }
 
-        var parameterResult = ProjectParameter.Create(Id, propertyId, value);
+        Result<ProjectParameter>? parameterResult = ProjectParameter.Create(Id, propertyId, value);
 
         if (parameterResult.IsFailure)
+        {
             return parameterResult;
+        }
 
         _parameters.Add(parameterResult.Value);
 
@@ -127,10 +146,12 @@ public class Project : AuditableEntity
 
     public Result RemoveParameter(Guid parameterId)
     {
-        var parameter = _parameters.FirstOrDefault(p => p.Id == parameterId);
+        ProjectParameter? parameter = _parameters.FirstOrDefault(p => p.Id == parameterId);
 
         if (parameter is null)
+        {
             return Result.Failure(ProjectErrors.ParameterNotFound);
+        }
 
         _parameters.Remove(parameter);
         Raise(new ProjectParameterRemovedDomainEvent(Id, parameter.Id));
@@ -141,7 +162,9 @@ public class Project : AuditableEntity
     public Result AddMethod(Guid methodId)
     {
         if (_methods.Any(m => m.MethodId == methodId))
+        {
             return Result.Failure(ProjectErrors.DuplicateMethod);
+        }
 
         _methods.Add(new ProjectMethod(Id, methodId));
 
@@ -152,10 +175,12 @@ public class Project : AuditableEntity
 
     public Result RemoveMethod(Guid methodId)
     {
-        var method = _methods.FirstOrDefault(m => m.MethodId == methodId);
+        ProjectMethod? method = _methods.FirstOrDefault(m => m.MethodId == methodId);
 
         if (method is null)
+        {
             return Result.Failure(ProjectErrors.MethodNotFound);
+        }
 
         _methods.Remove(method);
         Raise(new ProjectMethodRemovedDomainEvent(Id, method.MethodId));
@@ -170,7 +195,7 @@ public class Project : AuditableEntity
 
     public Result IsMember(string userId)
     {
-        var member = Members.FirstOrDefault(m => m.MemberId.ToString() == userId);
+        ProjectMember? member = Members.FirstOrDefault(m => m.MemberId.ToString() == userId);
         return member is null ? Result.Failure(ProjectErrors.OnlyForMembers) : Result.Success();
     }
 }

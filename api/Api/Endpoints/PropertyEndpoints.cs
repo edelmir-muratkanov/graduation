@@ -11,6 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
 using Shared.Results;
+using CreatePropertyResponse = Application.Property.Create.CreatePropertyResponse;
 using GetPropertiesResponse = Api.Contracts.Property.GetPropertiesResponse;
 using GetPropertyByIdResponse = Api.Contracts.Property.GetPropertyByIdResponse;
 
@@ -20,7 +21,7 @@ public class PropertyEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/properties").WithTags("properties");
+        RouteGroupBuilder? group = app.MapGroup("api/properties").WithTags("properties");
 
         group.MapPost("", async (
                 CreatePropertyRequest request,
@@ -28,7 +29,7 @@ public class PropertyEndpoints : ICarterModule
                 CancellationToken cancellationToken) =>
             {
                 var command = new CreatePropertyCommand(request.Name, request.Unit);
-                var result = await sender.Send(command, cancellationToken);
+                Result<CreatePropertyResponse>? result = await sender.Send(command, cancellationToken);
 
                 return result.Match(Results.Created, CustomResults.Problem);
             })
@@ -45,7 +46,7 @@ public class PropertyEndpoints : ICarterModule
                 CancellationToken cancellationToken) =>
             {
                 var command = new DeletePropertyCommand(id);
-                var result = await sender.Send(command, cancellationToken);
+                Result? result = await sender.Send(command, cancellationToken);
 
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
@@ -72,7 +73,8 @@ public class PropertyEndpoints : ICarterModule
                     SearchTerm = searchTerm,
                     SortColumn = sortColumn
                 };
-                var result = await sender.Send(query, cancellationToken);
+                Result<PaginatedList<Application.Property.Get.GetPropertiesResponse>>? result =
+                    await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
@@ -86,7 +88,8 @@ public class PropertyEndpoints : ICarterModule
                 CancellationToken cancellationToken) =>
             {
                 var query = new GetPropertyByIdQuery(id);
-                var result = await sender.Send(query, cancellationToken);
+                Result<Application.Property.GetById.GetPropertyByIdResponse>? result =
+                    await sender.Send(query, cancellationToken);
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
@@ -101,7 +104,7 @@ public class PropertyEndpoints : ICarterModule
                 CancellationToken cancellationToken) =>
             {
                 var command = new UpdatePropertyCommand(id, request.Name, request.Unit);
-                var result = await sender.Send(command, cancellationToken);
+                Result? result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.NoContent, CustomResults.Problem);
             })
             .RequireAuthorization(Role.Admin.ToString())
