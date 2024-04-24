@@ -1,12 +1,9 @@
-﻿using Application.Abstractions.Messaging;
-using Application.Project.GetProjectById;
+﻿using Application.Project.GetProjectById;
 using Domain.Projects;
-using Infrastructure.Database;
-using Shared.Results;
 
 namespace Infrastructure.Queries.Project;
 
-internal class GetProjectByIdQueryHandler(ApplicationReadDbContext dbContext)
+internal sealed class GetProjectByIdQueryHandler(ApplicationReadDbContext dbContext)
     : IQueryHandler<GetProjectByIdQuery, GetProjectByIdResponse>
 {
     public async Task<Result<GetProjectByIdResponse>> Handle(GetProjectByIdQuery request,

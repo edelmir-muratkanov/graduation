@@ -1,9 +1,8 @@
 ﻿using Domain.Users;
-using Infrastructure.Database;
 
 namespace Infrastructure.Repositories;
 
-internal class UserRepository(ApplicationWriteDbContext context) : IUserRepository
+internal sealed class UserRepository(ApplicationWriteDbContext context) : IUserRepository
 {
     public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {

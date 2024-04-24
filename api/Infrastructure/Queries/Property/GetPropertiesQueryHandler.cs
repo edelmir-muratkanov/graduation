@@ -1,10 +1,5 @@
 ﻿using System.Linq.Expressions;
-using Application.Abstractions.Messaging;
 using Application.Property.Get;
-using Infrastructure.Database;
-using Infrastructure.Database.Models;
-using Shared;
-using Shared.Results;
 
 namespace Infrastructure.Queries.Property;
 

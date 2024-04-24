@@ -1,6 +1,4 @@
-﻿using Infrastructure.Database.Models;
-
-namespace Infrastructure.Database;
+﻿namespace Infrastructure.Database;
 
 internal sealed class ApplicationReadDbContext(DbContextOptions<ApplicationReadDbContext> options)
     : DbContext(options)

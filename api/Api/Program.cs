@@ -95,5 +95,5 @@ app.Run();
 
 namespace Api
 {
-    public partial class Program;
+    public class Program;
 }

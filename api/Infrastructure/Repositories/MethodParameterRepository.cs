@@ -1,9 +1,8 @@
 ﻿using Domain.Methods;
-using Infrastructure.Database;
 
 namespace Infrastructure.Repositories;
 
-internal class MethodParameterRepository(ApplicationWriteDbContext context)
+internal sealed class MethodParameterRepository(ApplicationWriteDbContext context)
     : IMethodParameterRepository
 {
     public void InsertRange(IEnumerable<MethodParameter> parameters)

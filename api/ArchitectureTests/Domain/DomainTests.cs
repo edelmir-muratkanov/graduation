@@ -19,7 +19,7 @@ public class DomainTests : BaseTest
 
         result.IsSuccessful.Should().BeTrue();
     }
-    
+
     [Fact]
     public void DomainEvents_Should_HaveDomainEventsPostfix()
     {
@@ -32,7 +32,7 @@ public class DomainTests : BaseTest
 
         result.IsSuccessful.Should().BeTrue();
     }
-    
+
     [Fact]
     public void Entities_Should_HavePrivateParameterlessConstructor()
     {

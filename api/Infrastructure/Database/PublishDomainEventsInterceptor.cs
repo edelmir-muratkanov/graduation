@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Shared;
 
 namespace Infrastructure.Database;
 

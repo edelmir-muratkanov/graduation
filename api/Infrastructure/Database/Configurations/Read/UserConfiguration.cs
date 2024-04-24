@@ -1,6 +1,4 @@
-﻿using Infrastructure.Database.Models;
-
-namespace Infrastructure.Database.Configurations.Read;
+﻿namespace Infrastructure.Database.Configurations.Read;
 
 internal sealed class UserConfiguration : IEntityTypeConfiguration<UserReadModel>
 {

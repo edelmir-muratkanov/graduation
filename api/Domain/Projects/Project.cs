@@ -4,18 +4,9 @@ namespace Domain.Projects;
 
 public class Project : AuditableEntity
 {
-    private readonly List<ProjectParameter> _parameters = [];
     private readonly List<ProjectMember> _members = [];
     private readonly List<ProjectMethod> _methods = [];
-
-    public string Name { get; private set; }
-    public string Country { get; private set; }
-    public string Operator { get; private set; }
-    public ProjectType ProjectType { get; private set; }
-    public CollectorType CollectorType { get; private set; }
-    public List<ProjectParameter> Parameters => _parameters.ToList();
-    public List<ProjectMember> Members => _members.ToList();
-    public List<ProjectMethod> Methods => _methods.ToList();
+    private readonly List<ProjectParameter> _parameters = [];
 
     private Project(
         Guid id,
@@ -35,6 +26,15 @@ public class Project : AuditableEntity
     private Project()
     {
     }
+
+    public string Name { get; private set; }
+    public string Country { get; private set; }
+    public string Operator { get; private set; }
+    public ProjectType ProjectType { get; private set; }
+    public CollectorType CollectorType { get; private set; }
+    public List<ProjectParameter> Parameters => _parameters.ToList();
+    public List<ProjectMember> Members => _members.ToList();
+    public List<ProjectMethod> Methods => _methods.ToList();
 
     public static Result<Project> Create(
         string name,

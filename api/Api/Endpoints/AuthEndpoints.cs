@@ -8,6 +8,9 @@ using Infrastructure.Authentication;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Shared.Results;
+using LoginResponse = Api.Contracts.Auth.LoginResponse;
+using RefreshResponse = Api.Contracts.Auth.RefreshResponse;
+using RegisterResponse = Api.Contracts.Auth.RegisterResponse;
 
 namespace Api.Endpoints;
 
@@ -37,7 +40,7 @@ public class AuthEndpoints : ICarterModule
                 IOptions<JwtOptions> jwtOptions,
                 CancellationToken cancellationToken) =>
             {
-                Result<LoginResponse>? result = await sender.Send(request, cancellationToken);
+                Result<Application.Auth.Login.LoginResponse>? result = await sender.Send(request, cancellationToken);
 
                 if (result.IsFailure)
                 {
@@ -55,7 +58,7 @@ public class AuthEndpoints : ICarterModule
                         Expires = DateTimeOffset.Now.AddDays(jwtOptions.Value.RefreshExpiryInDays)
                     });
 
-                var response = new Contracts.Auth.LoginResponse(
+                var response = new LoginResponse(
                     result.Value.Id,
                     result.Value.Email,
                     result.Value.Role,
@@ -63,7 +66,7 @@ public class AuthEndpoints : ICarterModule
 
                 return Results.Ok(response);
             })
-            .Produces<Contracts.Auth.LoginResponse>()
+            .Produces<LoginResponse>()
             .ProducesProblem(400)
             .ProducesProblem(404)
             .ProducesProblem(500)
@@ -80,14 +83,15 @@ public class AuthEndpoints : ICarterModule
 
                 var command = new RefreshCommand(access!, refresh!);
 
-                Result<RefreshResponse>? result = await sender.Send(command, cancellationToken);
+                Result<Application.Auth.Refresh.RefreshResponse>? result =
+                    await sender.Send(command, cancellationToken);
 
                 if (result.IsFailure)
                 {
                     return Results.Unauthorized();
                 }
 
-                var response = new Contracts.Auth.RefreshResponse(result.Value.AccessToken);
+                var response = new RefreshResponse(result.Value.AccessToken);
 
                 context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken,
                     new CookieOptions
@@ -102,7 +106,7 @@ public class AuthEndpoints : ICarterModule
 
                 return Results.Ok(response);
             })
-            .Produces<Contracts.Auth.RefreshResponse>()
+            .Produces<RefreshResponse>()
             .Produces(401)
             .ProducesProblem(500)
             .WithName("Refresh");
@@ -114,7 +118,8 @@ public class AuthEndpoints : ICarterModule
                 IOptions<JwtOptions> jwtOptions,
                 CancellationToken cancellationToken) =>
             {
-                Result<RegisterResponse>? result = await sender.Send(request, cancellationToken);
+                Result<Application.Auth.Register.RegisterResponse>? result =
+                    await sender.Send(request, cancellationToken);
 
                 if (result.IsFailure)
                 {
@@ -132,7 +137,7 @@ public class AuthEndpoints : ICarterModule
                         Expires = DateTimeOffset.Now.AddDays(jwtOptions.Value.RefreshExpiryInDays)
                     });
 
-                var response = new Contracts.Auth.RegisterResponse(
+                var response = new RegisterResponse(
                     result.Value.Id,
                     result.Value.Email,
                     result.Value.Role,
@@ -140,7 +145,7 @@ public class AuthEndpoints : ICarterModule
 
                 return Results.Created("api/auth/profile", response);
             })
-            .Produces<Contracts.Auth.RegisterResponse>(201)
+            .Produces<RegisterResponse>(201)
             .ProducesProblem(400)
             .ProducesProblem(409)
             .ProducesProblem(500)

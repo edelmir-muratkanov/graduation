@@ -1,9 +1,8 @@
 ﻿using Domain.Methods;
-using Infrastructure.Database;
 
 namespace Infrastructure.Repositories;
 
-internal class MethodRepository(ApplicationWriteDbContext context) : IMethodRepository
+internal sealed class MethodRepository(ApplicationWriteDbContext context) : IMethodRepository
 {
     public async Task<Method?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {

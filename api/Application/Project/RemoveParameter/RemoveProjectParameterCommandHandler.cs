@@ -1,5 +1,4 @@
-﻿using Application.Abstractions.Authentication;
-using Domain.Projects;
+﻿using Domain.Projects;
 
 namespace Application.Project.RemoveParameter;
 

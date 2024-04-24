@@ -121,7 +121,7 @@ public class MethodEndpoints : ICarterModule
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
-            .Produces<GetMethodByIdResponse>(200)
+            .Produces<GetMethodByIdResponse>()
             .ProducesProblem(400)
             .ProducesProblem(404)
             .ProducesProblem(500)

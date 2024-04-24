@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Shared;
 
 namespace Infrastructure.Database;
 
@@ -39,8 +38,6 @@ internal sealed class TrackAuditableEntityInterceptor(ICurrentUserService curren
                 case EntityState.Detached:
                     break;
                 case EntityState.Unchanged:
-                    break;
-                default:
                     break;
             }
         }

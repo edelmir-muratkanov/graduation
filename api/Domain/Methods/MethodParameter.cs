@@ -2,11 +2,6 @@
 
 public class MethodParameter : Entity
 {
-    public Guid MethodId { get; private set; }
-    public Guid PropertyId { get; private set; }
-    public ParameterValueGroup? FirstParameters { get; private set; }
-    public ParameterValueGroup? SecondParameters { get; private set; }
-
     private MethodParameter(
         Guid id,
         Guid methodId,
@@ -24,6 +19,11 @@ public class MethodParameter : Entity
     private MethodParameter()
     {
     }
+
+    public Guid MethodId { get; private set; }
+    public Guid PropertyId { get; private set; }
+    public ParameterValueGroup? FirstParameters { get; private set; }
+    public ParameterValueGroup? SecondParameters { get; private set; }
 
     public static Result<MethodParameter> Create(
         Guid methodId,

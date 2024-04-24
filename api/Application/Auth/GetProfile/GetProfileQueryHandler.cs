@@ -1,6 +1,4 @@
-﻿using Application.Abstractions.Authentication;
-
-namespace Application.Auth.GetProfile;
+﻿namespace Application.Auth.GetProfile;
 
 internal sealed class GetProfileQueryHandler(ICurrentUserService currentUserService)
     : IQueryHandler<GetProfileQuery, GetProfileResponse>

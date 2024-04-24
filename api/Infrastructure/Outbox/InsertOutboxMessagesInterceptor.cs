@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
-using Shared;
 
 namespace Infrastructure.Outbox;
 

@@ -1,9 +1,8 @@
 ﻿using Domain.Properties;
-using Infrastructure.Database;
 
 namespace Infrastructure.Repositories;
 
-internal class PropertyRepository(ApplicationWriteDbContext context) : IPropertyRepository
+internal sealed class PropertyRepository(ApplicationWriteDbContext context) : IPropertyRepository
 {
     public async Task<Property?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {

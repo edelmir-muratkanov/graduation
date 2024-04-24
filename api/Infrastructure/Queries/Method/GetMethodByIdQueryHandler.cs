@@ -1,8 +1,5 @@
-﻿using Application.Abstractions.Messaging;
-using Application.Method.GetMethodById;
+﻿using Application.Method.GetMethodById;
 using Domain.Methods;
-using Infrastructure.Database;
-using Shared.Results;
 
 namespace Infrastructure.Queries.Method;
 

@@ -1,15 +1,10 @@
 ﻿using System.Linq.Expressions;
-using Application.Abstractions.Messaging;
 using Application.Project.GetProjects;
-using Infrastructure.Database;
-using Infrastructure.Database.Models;
-using Shared;
 using Shared.Mappings;
-using Shared.Results;
 
 namespace Infrastructure.Queries.Project;
 
-internal class GetProjectsQueryHandler(ApplicationReadDbContext dbContext)
+internal sealed class GetProjectsQueryHandler(ApplicationReadDbContext dbContext)
     : IQueryHandler<GetProjectsQuery, PaginatedList<GetProjectsResponse>>
 {
     public async Task<Result<PaginatedList<GetProjectsResponse>>> Handle(
@@ -41,7 +36,7 @@ internal class GetProjectsQueryHandler(ApplicationReadDbContext dbContext)
 
         PaginatedList<GetProjectsResponse>? projects = await projectsQuery.AsSplitQuery()
             .Select(p =>
-                new GetProjectsResponse()
+                new GetProjectsResponse
                 {
                     Id = p.Id,
                     Name = p.Name,

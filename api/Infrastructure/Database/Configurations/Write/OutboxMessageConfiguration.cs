@@ -1,6 +1,4 @@
-﻿using Infrastructure.Outbox;
-
-namespace Infrastructure.Database.Configurations.Write;
+﻿namespace Infrastructure.Database.Configurations.Write;
 
 internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage>
 {

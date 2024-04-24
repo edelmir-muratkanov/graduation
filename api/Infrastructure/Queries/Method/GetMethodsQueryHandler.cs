@@ -1,15 +1,10 @@
 ﻿using System.Linq.Expressions;
-using Application.Abstractions.Messaging;
 using Application.Method.GetMethods;
-using Infrastructure.Database;
-using Infrastructure.Database.Models;
-using Shared;
 using Shared.Mappings;
-using Shared.Results;
 
 namespace Infrastructure.Queries.Method;
 
-internal class GetMethodsQueryHandler(ApplicationReadDbContext dbContext)
+internal sealed class GetMethodsQueryHandler(ApplicationReadDbContext dbContext)
     : IQueryHandler<GetMethodsQuery, PaginatedList<GetMethodsResponse>>
 {
     public async Task<Result<PaginatedList<GetMethodsResponse>>> Handle(

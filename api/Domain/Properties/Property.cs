@@ -2,10 +2,6 @@
 
 public class Property : AuditableEntity
 {
-    public string Name { get; private set; }
-    public string Unit { get; private set; }
-
-
     private Property(Guid id, string name, string unit) : base(id)
     {
         Id = id;
@@ -16,6 +12,9 @@ public class Property : AuditableEntity
     private Property()
     {
     }
+
+    public string Name { get; private set; }
+    public string Unit { get; private set; }
 
     public static Result<Property> Create(string name, string unit)
     {

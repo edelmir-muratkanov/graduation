@@ -1,12 +1,9 @@
-﻿using Application.Abstractions.Messaging;
-using Application.Property.GetById;
+﻿using Application.Property.GetById;
 using Domain.Properties;
-using Infrastructure.Database;
-using Shared.Results;
 
 namespace Infrastructure.Queries.Property;
 
-internal class GetPropertyByIdQueryHandler(ApplicationReadDbContext context)
+internal sealed class GetPropertyByIdQueryHandler(ApplicationReadDbContext context)
     : IQueryHandler<GetPropertyByIdQuery, GetPropertyByIdResponse>
 {
     public async Task<Result<GetPropertyByIdResponse>> Handle(GetPropertyByIdQuery request,

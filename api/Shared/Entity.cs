@@ -4,9 +4,6 @@ public abstract class Entity
 {
     private readonly List<IDomainEvent> _domainEvents = [];
 
-    public Guid Id { get; protected init; }
-    public List<IDomainEvent> DomainEvents => _domainEvents.ToList();
-
     protected Entity(Guid id)
     {
         Id = id;
@@ -15,6 +12,9 @@ public abstract class Entity
     protected Entity()
     {
     }
+
+    public Guid Id { get; protected init; }
+    public List<IDomainEvent> DomainEvents => _domainEvents.ToList();
 
     public void ClearDomainEvents()
     {

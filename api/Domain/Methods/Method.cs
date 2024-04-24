@@ -4,12 +4,8 @@ namespace Domain.Methods;
 
 public class Method : AuditableEntity
 {
-    private readonly List<MethodParameter> _parameters = [];
     private readonly List<CollectorType> _collectorTypes = [];
-
-    public string Name { get; private set; }
-    public IList<CollectorType> CollectorTypes => _collectorTypes.ToList();
-    public IEnumerable<MethodParameter> Parameters => _parameters.ToList();
+    private readonly List<MethodParameter> _parameters = [];
 
 
     private Method(Guid id, string name, List<CollectorType> collectorTypes) : base(id)
@@ -22,6 +18,10 @@ public class Method : AuditableEntity
     private Method()
     {
     }
+
+    public string Name { get; private set; }
+    public IList<CollectorType> CollectorTypes => _collectorTypes.ToList();
+    public IEnumerable<MethodParameter> Parameters => _parameters.ToList();
 
     public static Result<Method> Create(string name, IEnumerable<CollectorType> collectorTypes)
     {
