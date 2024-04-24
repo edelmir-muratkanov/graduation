@@ -1,9 +1,11 @@
 ﻿using Api.Contracts.Project;
 using Api.Infrastructure;
+using Application.Project.AddMethods;
 using Application.Project.AddParameters;
 using Application.Project.Create;
 using Application.Project.GetProjectById;
 using Application.Project.GetProjects;
+using Application.Project.RemoveMethod;
 using Application.Project.RemoveParameter;
 using Carter;
 using Mapster;
@@ -82,6 +84,50 @@ public class ProjectEndpoints : ICarterModule
                 {
                     ProjectId = projectId,
                     ParameterId = parameterId
+                };
+                var result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500);
+
+        group.MapPost("{projectId:guid}/methods", async (
+                Guid projectId,
+                List<Guid> methodIds,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new AddProjectMethodsCommand
+                {
+                    ProjectId = projectId,
+                    MethodIds = methodIds
+                };
+                var result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.Created, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(201)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500);
+
+        group.MapDelete("{projectId:guid}/methods/{methodId:guid}", async (
+                Guid projectId,
+                Guid methodId,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new RemoveProjectMethodCommand
+                {
+                    ProjectId = projectId,
+                    MethodId = methodId
                 };
                 var result = await sender.Send(command, cancellationToken);
                 return result.Match(Results.NoContent, CustomResults.Problem);

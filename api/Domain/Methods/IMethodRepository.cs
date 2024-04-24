@@ -7,4 +7,5 @@ public interface IMethodRepository
     void Insert(Method method);
     void Update(Method method);
     void Remove(Method method);
+    Task<bool> Exists(Guid methodId);
 }

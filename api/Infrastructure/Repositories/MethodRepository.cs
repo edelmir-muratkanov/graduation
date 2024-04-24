@@ -17,6 +17,11 @@ internal class MethodRepository(ApplicationWriteDbContext context) : IMethodRepo
         return !await context.Methods.AnyAsync(m => m.Name == name);
     }
 
+    public async Task<bool> Exists(Guid id)
+    {
+        return await context.Methods.AnyAsync(m => m.Id == id);
+    }
+
     public void Insert(Method method)
     {
         context.Methods.Add(method);
