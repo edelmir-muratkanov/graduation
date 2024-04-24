@@ -20,6 +20,7 @@ internal sealed class GetMethodByIdQueryHandler(ApplicationReadDbContext dbConte
             CollectorTypes = m.CollectorTypes,
             Parameters = m.Parameters.Select(p => new GetMethodByIdParameterResponse
             {
+                Id = p.Id,
                 PropertyName = p.Property.Name,
                 First = p.FirstParameters,
                 Second = p.SecondParameters

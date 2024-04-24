@@ -5,6 +5,7 @@ namespace Application.Method.GetMethodById;
 
 public record GetMethodByIdParameterResponse
 {
+    public Guid Id { get; set; }
     public string PropertyName { get; set; }
     public ParameterValueGroup? First { get; set; }
     public ParameterValueGroup? Second { get; set; }

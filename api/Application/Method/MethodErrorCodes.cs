@@ -36,4 +36,10 @@ public static class MethodErrorCodes
     {
         public const string MissingId = nameof(MissingId);
     }
+
+    public static class RemoveParameter
+    {
+        public const string MissingMethodId = nameof(MissingMethodId);
+        public const string MissingParameterId = nameof(MissingParameterId);
+    }
 }

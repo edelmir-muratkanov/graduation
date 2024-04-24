@@ -62,9 +62,9 @@ public class Method : AuditableEntity
         return Result.Success();
     }
 
-    public Result<MethodParameter> RemoveParameter(Guid propertyId)
+    public Result<MethodParameter> RemoveParameter(Guid parameterId)
     {
-        var parameter = _parameters.FirstOrDefault(p => p.PropertyId == propertyId);
+        var parameter = _parameters.FirstOrDefault(p => p.Id == parameterId);
         if (parameter is null) return Result.Failure<MethodParameter>(MethodErrors.NotFoundParameter);
 
         _parameters.Remove(parameter);

@@ -1,10 +1,12 @@
-﻿using Api.Contracts.Method;
+﻿using System.Data;
+using Api.Contracts.Method;
 using Api.Infrastructure;
 using Application.Method.AddParameters;
 using Application.Method.Create;
 using Application.Method.Delete;
 using Application.Method.GetMethodById;
 using Application.Method.GetMethods;
+using Application.Method.RemoveParameter;
 using Application.Method.Update;
 using Carter;
 using Domain.Users;
@@ -60,6 +62,30 @@ public class MethodEndpoints : ICarterModule
             .ProducesProblem(409)
             .ProducesProblem(500)
             .WithName("Add method parameters");
+
+        group.MapDelete("{methodId:guid}/parameters/{parameterId:guid}", async (
+                Guid methodId,
+                Guid parameterId,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new RemoveMethodParameterCommand
+                {
+                    MethodId = methodId,
+                    ParameterId = parameterId
+                };
+
+                var result = await sender.Send(command, cancellationToken);
+
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization(Role.Admin.ToString())
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(404)
+            .ProducesProblem(409)
+            .ProducesProblem(500)
+            .WithName("Remove method parameter");
 
 
         group.MapGet("", async (
