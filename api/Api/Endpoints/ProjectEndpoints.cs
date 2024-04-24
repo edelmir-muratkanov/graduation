@@ -1,5 +1,6 @@
 ﻿using Api.Contracts.Project;
 using Api.Infrastructure;
+using Application.Project.AddMembers;
 using Application.Project.AddMethods;
 using Application.Project.AddParameters;
 using Application.Project.Create;
@@ -134,6 +135,28 @@ public class ProjectEndpoints : ICarterModule
             })
             .RequireAuthorization()
             .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500);
+
+        group.MapPost("{projectId:guid}/members", async (
+                Guid projectId,
+                List<Guid> memberIds,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new AddProjectMembersCommand
+                {
+                    MemberIds = memberIds,
+                    ProjectId = projectId
+                };
+                var result = await sender.Send(command, cancellationToken);
+                return result.Match(Results.Created, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces(201)
             .ProducesProblem(400)
             .ProducesProblem(401)
             .ProducesProblem(403)
