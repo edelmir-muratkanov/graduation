@@ -4,7 +4,6 @@ namespace Application.Method.RemoveParameter;
 
 internal class RemoveMethodParameterCommandHandler(
     IMethodRepository methodRepository,
-    IMethodParameterRepository methodParameterRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<RemoveMethodParameterCommand>
 {
     public async Task<Result> Handle(RemoveMethodParameterCommand request, CancellationToken cancellationToken)

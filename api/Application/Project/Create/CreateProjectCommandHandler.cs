@@ -1,11 +1,9 @@
-﻿using Application.Abstractions.Authentication;
-using Domain.Projects;
+﻿using Domain.Projects;
 using Domain.Properties;
 
 namespace Application.Project.Create;
 
 internal class CreateProjectCommandHandler(
-    ICurrentUserService currentUserService,
     IProjectRepository projectRepository,
     IProjectMethodRepository projectMethodRepository,
     IProjectParameterRepository projectParameterRepository,

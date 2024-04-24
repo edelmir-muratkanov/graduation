@@ -177,8 +177,8 @@ public class ProjectEndpoints : ICarterModule
                     SortOrder = sortOrder,
                     PageNumber = pageNumber ?? 1,
                     PageSize = pageSize ?? 10,
-                    SortColumn = sortColumn,
-                    SearchTerm = searchTerm
+                    SortColumn = sortColumn ?? string.Empty,
+                    SearchTerm = searchTerm ?? string.Empty
                 };
 
                 Result<PaginatedList<GetProjectsResponse>> result = await sender.Send(query, cancellationToken);

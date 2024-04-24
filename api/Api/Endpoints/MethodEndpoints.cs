@@ -100,8 +100,8 @@ public class MethodEndpoints : ICarterModule
                     SortOrder = sortOrder,
                     PageNumber = pageNumber ?? 1,
                     PageSize = pageSize ?? 10,
-                    SearchTerm = searchTerm,
-                    SortColumn = sortColumn
+                    SearchTerm = searchTerm ?? string.Empty,
+                    SortColumn = sortColumn ?? string.Empty
                 };
 
                 Result<PaginatedList<GetMethodsResponse>> result = await sender.Send(query, cancellationToken);

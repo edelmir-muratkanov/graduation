@@ -70,8 +70,8 @@ public class PropertyEndpoints : ICarterModule
                     SortOrder = sortOrder,
                     PageSize = pageSize ?? 10,
                     PageNumber = pageNumber ?? 1,
-                    SearchTerm = searchTerm,
-                    SortColumn = sortColumn
+                    SearchTerm = searchTerm ?? string.Empty,
+                    SortColumn = sortColumn ?? "CreatedAt"
                 };
                 Result<PaginatedList<Application.Property.Get.GetPropertiesResponse>>? result =
                     await sender.Send(query, cancellationToken);
