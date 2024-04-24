@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A862DCCB-FD16-4B2E-B758-5AED7D9820DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchitectureTests", "ArchitectureTests\ArchitectureTests.csproj", "{5ECFBA3B-2D29-444E-B69B-ED1E008794D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +34,7 @@ Global
 		{96A3B7AE-F1BA-4B30-AE41-0933C49CD48D} = {2AC309B8-8F42-46B1-954D-4FCDC6F16EB3}
 		{3E803282-8289-47A6-8C33-337DAC447791} = {2AC309B8-8F42-46B1-954D-4FCDC6F16EB3}
 		{3F20784A-6FB8-4823-BE51-B64FC47CDA73} = {2AC309B8-8F42-46B1-954D-4FCDC6F16EB3}
+		{5ECFBA3B-2D29-444E-B69B-ED1E008794D9} = {A862DCCB-FD16-4B2E-B758-5AED7D9820DB}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B93A8241-7CC1-4DF1-8185-01C125395AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -52,5 +57,9 @@ Global
 		{38424CEE-471B-41F7-A0F1-E43C2394BDFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38424CEE-471B-41F7-A0F1-E43C2394BDFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38424CEE-471B-41F7-A0F1-E43C2394BDFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ECFBA3B-2D29-444E-B69B-ED1E008794D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ECFBA3B-2D29-444E-B69B-ED1E008794D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ECFBA3B-2D29-444E-B69B-ED1E008794D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ECFBA3B-2D29-444E-B69B-ED1E008794D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
