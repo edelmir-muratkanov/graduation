@@ -39,7 +39,7 @@ internal class GetMethodsQueryHandler(ApplicationReadDbContext dbContext)
                     Id = m.Id,
                     Name = m.Name,
                     CollectorTypes = m.CollectorTypes
-                        .Select(e => e.ToString()),
+                        .Select(e => e.ToString())
                 }
             ).PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 

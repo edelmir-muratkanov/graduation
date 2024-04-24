@@ -9,10 +9,7 @@ internal sealed class DeleteMethodCommandHandler(IMethodRepository methodReposit
     {
         var method = await methodRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if (method is null)
-        {
-            return Result.Failure(MethodErrors.NotFound);
-        }
+        if (method is null) return Result.Failure(MethodErrors.NotFound);
 
         methodRepository.Remove(method);
         await unitOfWork.SaveChangesAsync(cancellationToken);

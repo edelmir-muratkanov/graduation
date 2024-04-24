@@ -1,5 +1,4 @@
-﻿
-namespace Domain.Methods;
+﻿namespace Domain.Methods;
 
 public interface IMethodParameterRepository
 {

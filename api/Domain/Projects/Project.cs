@@ -85,10 +85,7 @@ public class Project : AuditableEntity
 
     public Result AddMember(Guid memberId)
     {
-        if (_members.Any(m => m.MemberId == memberId))
-        {
-            return Result.Failure(ProjectErrors.AlreadyMember);
-        }
+        if (_members.Any(m => m.MemberId == memberId)) return Result.Failure(ProjectErrors.AlreadyMember);
 
         _members.Add(new ProjectMember(Id, memberId));
 
