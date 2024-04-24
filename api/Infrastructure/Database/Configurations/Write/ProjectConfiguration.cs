@@ -1,6 +1,4 @@
-﻿using Domain.Methods;
-using Domain.Projects;
-using Domain.Users;
+﻿using Domain.Projects;
 
 namespace Infrastructure.Database.Configurations.Write;
 
@@ -22,12 +20,6 @@ internal class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.Property(p => p.Operator)
             .HasMaxLength(255)
             .IsRequired();
-
-        builder.Property(p => p.CollectorType)
-            .HasConversion<string>();
-
-        builder.Property(p => p.ProjectType)
-            .HasConversion<string>();
 
         builder.HasMany(p => p.Members)
             .WithOne()

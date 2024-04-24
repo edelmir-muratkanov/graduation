@@ -10,8 +10,8 @@ public record GetProjectsResponse
     public string Name { get; set; }
     public string Country { get; set; }
     public string Operator { get; set; }
-    public ProjectType ProjectType { get; set; }
-    public CollectorType CollectorType { get; set; }
+    public string Type { get; set; }
+    public string CollectorType { get; set; }
 }
 
 public record GetProjectsQuery : IQuery<PaginatedList<GetProjectsResponse>>

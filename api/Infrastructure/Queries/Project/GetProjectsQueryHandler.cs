@@ -45,8 +45,8 @@ internal class GetProjectsQueryHandler(ApplicationReadDbContext dbContext)
                     Name = p.Name,
                     Country = p.Country,
                     Operator = p.Operator,
-                    CollectorType = p.CollectorType,
-                    ProjectType = p.ProjectType
+                    CollectorType = p.CollectorType.ToString(),
+                    Type = p.ProjectType.ToString()
                 }
             ).PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 
