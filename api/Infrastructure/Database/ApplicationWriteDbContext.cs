@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Data;
+using Domain.Calculation;
 using Domain.Methods;
 using Domain.Projects;
 using Domain.Properties;
@@ -17,6 +18,8 @@ internal sealed class ApplicationWriteDbContext(DbContextOptions<ApplicationWrit
     public DbSet<ProjectMethod> ProjectMethods => Set<ProjectMethod>();
     public DbSet<ProjectMember> ProjectMembers => Set<ProjectMember>();
     public DbSet<ProjectParameter> ProjectParameters => Set<ProjectParameter>();
+    public DbSet<Calculation> Calculations => Set<Calculation>();
+    public DbSet<CalculationItem> CalculationItems => Set<CalculationItem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

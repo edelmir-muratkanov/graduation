@@ -11,6 +11,8 @@ internal sealed class ApplicationReadDbContext(DbContextOptions<ApplicationReadD
     public DbSet<ProjectMethodReadModel> ProjectMethods => Set<ProjectMethodReadModel>();
     public DbSet<ProjectMemberReadModel> ProjectMembers => Set<ProjectMemberReadModel>();
     public DbSet<ProjectParameterReadModel> ProjectParameters => Set<ProjectParameterReadModel>();
+    public DbSet<CalculationReadModel> Calculations => Set<CalculationReadModel>();
+    public DbSet<CalculationItemReadModel> CalculationItems => Set<CalculationItemReadModel>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
