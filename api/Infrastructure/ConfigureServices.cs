@@ -5,9 +5,11 @@ using Domain.Methods;
 using Domain.Projects;
 using Domain.Properties;
 using Domain.Users;
+using Infrastructure.BackgroundJobs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+using Quartz;
 
 namespace Infrastructure;
 
@@ -27,6 +29,7 @@ public static class ConfigureServices
             throw new ArgumentNullException(nameof(connectionString));
         }
 
+
         services.AddSingleton(_ =>
             new DbConnectionFactory(
                 new NpgsqlDataSourceBuilder(connectionString).Build()));
@@ -37,7 +40,6 @@ public static class ConfigureServices
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
         services.AddSingleton<TrackAuditableEntityInterceptor>();
-        services.AddSingleton<PublishDomainEventsInterceptor>();
         services.AddSingleton<InsertOutboxMessagesInterceptor>();
 
         services.AddDbContext<ApplicationWriteDbContext>((sp, options) =>
@@ -47,6 +49,21 @@ public static class ConfigureServices
                     sp.GetRequiredService<TrackAuditableEntityInterceptor>()));
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationWriteDbContext>());
+
+
+        services.AddQuartz(configure =>
+        {
+            var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
+
+            configure.AddJob<ProcessOutboxMessagesJob>(jobKey)
+                .AddTrigger(trigger => trigger
+                    .ForJob(jobKey)
+                    .WithSimpleSchedule(schedule => schedule
+                        .WithIntervalInSeconds(10)
+                        .RepeatForever()));
+        });
+
+        services.AddQuartzHostedService();
 
 
         services.AddScoped<IUserRepository, UserRepository>();

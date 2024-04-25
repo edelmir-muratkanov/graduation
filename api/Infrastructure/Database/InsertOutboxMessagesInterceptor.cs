@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 
-namespace Infrastructure.Outbox;
+namespace Infrastructure.Database;
 
 internal sealed class InsertOutboxMessagesInterceptor : SaveChangesInterceptor
 {
