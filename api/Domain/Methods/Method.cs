@@ -27,7 +27,7 @@ public class Method : AuditableEntity
     {
         var method = new Method(Guid.NewGuid(), name, collectorTypes.ToHashSet().ToList());
 
-        method.Raise(new MethodCreatedDomainEvent(method.Id));
+        method.Raise(new MethodCreatedDomainEvent(method));
 
         return method;
     }
@@ -49,14 +49,15 @@ public class Method : AuditableEntity
         return Result.Success();
     }
 
-    public Result AddParameter(Guid propertyId, ParameterValueGroup? first, ParameterValueGroup? second)
+    public Result<MethodParameter> AddParameter(Guid propertyId, ParameterValueGroup? first,
+        ParameterValueGroup? second)
     {
         if (_parameters.Any(p => p.MethodId == Id && p.PropertyId == propertyId))
         {
-            return Result.Failure(MethodErrors.DuplicateParameters);
+            return Result.Failure<MethodParameter>(MethodErrors.DuplicateParameters);
         }
 
-        Result<MethodParameter>? result = MethodParameter.Create(Id, propertyId, first, second);
+        Result<MethodParameter> result = MethodParameter.Create(Id, propertyId, first, second);
 
         if (result.IsFailure)
         {
@@ -65,9 +66,9 @@ public class Method : AuditableEntity
 
         _parameters.Add(result.Value);
 
-        Raise(new MethodParameterAddedDomainEvent(result.Value.Id));
+        Raise(new MethodParameterAddedDomainEvent(this, result.Value));
 
-        return Result.Success();
+        return result;
     }
 
     public Result<MethodParameter> RemoveParameter(Guid parameterId)
@@ -80,7 +81,7 @@ public class Method : AuditableEntity
 
         _parameters.Remove(parameter);
 
-        Raise(new MethodParameterRemovedDomainEvent(parameter.Id));
+        Raise(new MethodParameterRemovedDomainEvent(this, parameter));
 
         return parameter;
     }

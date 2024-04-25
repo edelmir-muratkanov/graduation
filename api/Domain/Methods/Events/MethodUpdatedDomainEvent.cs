@@ -1,6 +1,6 @@
 namespace Domain.Methods.Events;
 
-public sealed class MethodUpdatedDomainEvent(Method method) : IDomainEvent
+public sealed record MethodUpdatedDomainEvent(Method Method) : IDomainEvent
 {
-    public Method Method { get; init; } = method;
+    public Method Method { get; set; } = Method;
 }

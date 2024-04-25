@@ -1,6 +1,7 @@
 namespace Domain.Methods.Events;
 
-public sealed class MethodParameterAddedDomainEvent(Guid methodParameterId) : IDomainEvent
+public sealed record MethodParameterAddedDomainEvent(Method Method, MethodParameter MethodParameter) : IDomainEvent
 {
-    public Guid MethodParameterId { get; init; } = methodParameterId;
+    public Method Method { get; set; } = Method;
+    public MethodParameter MethodParameter { get; set; } = MethodParameter;
 }
