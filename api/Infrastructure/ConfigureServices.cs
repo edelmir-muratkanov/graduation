@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
+using Domain.Calculation;
 using Domain.Methods;
 using Domain.Projects;
 using Domain.Properties;
@@ -56,6 +57,8 @@ public static class ConfigureServices
         services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
         services.AddScoped<IProjectMethodRepository, ProjectMethodRepository>();
         services.AddScoped<IProjectParameterRepository, ProjectParameterRepository>();
+        services.AddScoped<ICalculationRepository, CalculationRepository>();
+        services.AddScoped<ICalculationItemRepository, CalculationItemRepository>();
 
 
         services.AddScoped<IPasswordManager, PasswordManager>();
