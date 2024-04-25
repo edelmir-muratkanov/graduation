@@ -29,30 +29,30 @@ public class Calculation : Entity
         return calculation;
     }
 
-    public Result AddItem(string propertyName, Belonging belonging)
+    public Result<CalculationItem> AddItem(string propertyName, Belonging belonging)
     {
         if (_items.Any(i => i.PropertyName == propertyName))
         {
-            return Result.Failure(CalculationErrors.DuplicateItems);
+            return Result.Failure<CalculationItem>(CalculationErrors.DuplicateItems);
         }
 
         var item = CalculationItem.Create(Id, propertyName, belonging);
 
         _items.Add(item);
 
-        return Result.Success();
+        return item;
     }
 
-    public Result RemoveItem(string propertyName)
+    public Result<CalculationItem> RemoveItem(string propertyName)
     {
         CalculationItem? item = _items.FirstOrDefault(i => i.PropertyName == propertyName);
         if (item is null)
         {
-            return Result.Failure(CalculationErrors.ItemNotFound);
+            return Result.Failure<CalculationItem>(CalculationErrors.ItemNotFound);
         }
 
         _items.Remove(item);
 
-        return Result.Success();
+        return item;
     }
 }

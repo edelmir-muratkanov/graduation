@@ -7,4 +7,7 @@ public static class CalculationErrors
 
     public static readonly Error ItemNotFound = Error.NotFound(
         "Calculation.ItemNotFound", "Элемент расчета не найден");
+
+    public static readonly Error AlreadyExists = Error.Conflict(
+        "Calculation.AlreadyExists", "Результат расчета существует");
 }
