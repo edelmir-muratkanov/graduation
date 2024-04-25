@@ -1,6 +1,8 @@
 ﻿namespace Domain.Projects.Events;
 
-public sealed record ProjectParameterAddedDomainEvent(Guid ProjectParameterId) : IDomainEvent
+public sealed record ProjectParameterAddedDomainEvent(Project Project, ProjectParameter ProjectParameter)
+    : IDomainEvent
 {
-    public Guid ProjectParameterId { get; set; } = ProjectParameterId;
+    public Project Project { get; set; } = Project;
+    public ProjectParameter ProjectParameter { get; set; } = ProjectParameter;
 }

@@ -51,7 +51,7 @@ public class Project : AuditableEntity
             projectType,
             collectorType);
 
-        project.Raise(new ProjectCreatedDomainEvent(project.Id));
+        project.Raise(new ProjectCreatedDomainEvent(project));
 
         return project;
     }
@@ -88,7 +88,7 @@ public class Project : AuditableEntity
             CollectorType = (CollectorType)collectorType;
         }
 
-        Raise(new ProjectBaseInfoUpdatedDomainEvent(Id));
+        Raise(new ProjectBaseInfoUpdatedDomainEvent(this));
 
         return Result.Success();
     }
@@ -100,9 +100,11 @@ public class Project : AuditableEntity
             return Result.Failure(ProjectErrors.AlreadyMember);
         }
 
-        _members.Add(new ProjectMember(Id, memberId));
+        var projectMember = new ProjectMember(Id, memberId);
 
-        Raise(new ProjectMemberAddedDomainEvent { ProjectId = Id, MemberId = memberId });
+        _members.Add(projectMember);
+
+        Raise(new ProjectMemberAddedDomainEvent(this, projectMember));
 
         return Result.Success();
     }
@@ -118,7 +120,7 @@ public class Project : AuditableEntity
 
         _members.Remove(member);
 
-        Raise(new ProjectMemberRemovedDomainEvent { ProjectId = Id, MemberId = member.MemberId });
+        Raise(new ProjectMemberRemovedDomainEvent(this, member));
 
         return Result.Success();
     }
@@ -139,7 +141,7 @@ public class Project : AuditableEntity
 
         _parameters.Add(parameterResult.Value);
 
-        Raise(new ProjectParameterAddedDomainEvent(parameterResult.Value.Id));
+        Raise(new ProjectParameterAddedDomainEvent(this, parameterResult.Value));
 
         return Result.Success();
     }
@@ -154,7 +156,7 @@ public class Project : AuditableEntity
         }
 
         _parameters.Remove(parameter);
-        Raise(new ProjectParameterRemovedDomainEvent(Id, parameter.Id));
+        Raise(new ProjectParameterRemovedDomainEvent(this, parameter));
 
         return Result.Success();
     }
@@ -166,9 +168,11 @@ public class Project : AuditableEntity
             return Result.Failure(ProjectErrors.DuplicateMethod);
         }
 
-        _methods.Add(new ProjectMethod(Id, methodId));
+        var projectMethod = new ProjectMethod(Id, methodId);
 
-        Raise(new ProjectMethodAddedDomainEvent(Id, methodId));
+        _methods.Add(projectMethod);
+
+        Raise(new ProjectMethodAddedDomainEvent(this, projectMethod));
 
         return Result.Success();
     }
@@ -183,7 +187,7 @@ public class Project : AuditableEntity
         }
 
         _methods.Remove(method);
-        Raise(new ProjectMethodRemovedDomainEvent(Id, method.MethodId));
+        Raise(new ProjectMethodRemovedDomainEvent(this, method));
 
         return Result.Success();
     }
