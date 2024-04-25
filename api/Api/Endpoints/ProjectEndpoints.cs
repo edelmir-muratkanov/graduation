@@ -16,7 +16,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
 using Shared.Results;
-using CreateProjectParameter = Application.Project.Create.CreateProjectParameter;
 
 namespace Api.Endpoints;
 
@@ -28,23 +27,48 @@ public class ProjectEndpoints : ICarterModule
 
         group.MapPost("", async (CreateProjectRequest request, ISender sender, CancellationToken cancellationToken) =>
             {
-                var command = new CreateProjectCommand
+                var createProjectCommand = new CreateProjectCommand
                 {
                     Name = request.Name,
                     Country = request.Country,
                     Operator = request.Operator,
                     ProjectType = request.Type,
                     CollectorType = request.CollectorType,
-                    MethodIds = request.MethodIds,
-                    Parameters = request.Parameters.Select(p => new CreateProjectParameter
+                };
+
+                Result<Guid> createResult = await sender.Send(createProjectCommand, cancellationToken);
+
+                if (createResult.IsFailure)
+                {
+                    return CustomResults.Problem(createResult);
+                }
+
+                var addMethodsCommand = new AddProjectMethodsCommand
+                {
+                    ProjectId = createResult.Value,
+                    MethodIds = request.MethodIds
+                };
+
+                Result addMethodsResult = await sender.Send(addMethodsCommand, cancellationToken);
+
+                if (addMethodsResult.IsFailure)
+                {
+                    return CustomResults.Problem(addMethodsResult);
+                }
+
+                var addParametersCommand = new AddProjectParametersCommand
+                {
+                    ProjectId = createResult.Value,
+                    Parameters = request.Parameters.Select(p => new AddProjectParameter
                     {
-                        Value = p.Value,
-                        PropertyId = p.PropertyId
+                        PropertyId = p.PropertyId,
+                        Value = p.Value
                     }).ToList()
                 };
 
-                Result result = await sender.Send(command, cancellationToken);
-                return result.Match(Results.Created, CustomResults.Problem);
+                Result addParametersResult = await sender.Send(addParametersCommand, cancellationToken);
+
+                return addParametersResult.Match(Results.Created, CustomResults.Problem);
             })
             .RequireAuthorization()
             .Produces(201)

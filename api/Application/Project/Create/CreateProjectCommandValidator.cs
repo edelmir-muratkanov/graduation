@@ -18,22 +18,5 @@ internal class CreateProjectCommandValidator : AbstractValidator<CreateProjectCo
 
         RuleFor(c => c.ProjectType)
             .IsInEnum().WithErrorCode(ProjectErrorCodes.Create.InvalidProjectType);
-
-        RuleFor(c => c.MethodIds)
-            .NotEmpty().WithErrorCode(ProjectErrorCodes.Create.MissingMethods);
-
-        RuleFor(c => c.Parameters)
-            .NotEmpty().WithErrorCode(ProjectErrorCodes.Create.MissingParameters);
-
-        RuleForEach(c => c.Parameters)
-            .NotEmpty().WithErrorCode(ProjectErrorCodes.Create.MissingParameter)
-            .ChildRules(rules =>
-            {
-                rules.RuleFor(p => p.PropertyId)
-                    .NotEmpty().WithErrorCode(ProjectErrorCodes.Create.MissingProperty);
-
-                rules.RuleFor(p => p.Value)
-                    .NotEmpty().WithErrorCode(ProjectErrorCodes.Create.MissingParameterValue);
-            });
     }
 }

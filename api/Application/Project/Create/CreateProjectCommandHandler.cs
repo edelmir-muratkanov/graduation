@@ -1,26 +1,14 @@
 ﻿using Domain.Projects;
-using Domain.Properties;
 
 namespace Application.Project.Create;
 
 internal class CreateProjectCommandHandler(
     IProjectRepository projectRepository,
-    IProjectMethodRepository projectMethodRepository,
-    IProjectParameterRepository projectParameterRepository,
-    IPropertyRepository propertyRepository,
     IUnitOfWork unitOfWork)
-    : ICommandHandler<CreateProjectCommand>
+    : ICommandHandler<CreateProjectCommand, Guid>
 {
-    public async Task<Result> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
     {
-        foreach (CreateProjectParameter? parameter in request.Parameters)
-        {
-            if (!await propertyRepository.Exists(parameter.PropertyId))
-            {
-                return Result.Failure(ProjectParameterErrors.InvalidProperty);
-            }
-        }
-
         Result<Domain.Projects.Project>? projectResult = Domain.Projects.Project.Create(
             request.Name,
             request.Country,
@@ -30,35 +18,13 @@ internal class CreateProjectCommandHandler(
 
         if (projectResult.IsFailure)
         {
-            return projectResult;
+            return Result.Failure<Guid>(projectResult.Error);
         }
 
-        Domain.Projects.Project? project = projectResult.Value;
-
-        var parameterResults = request.Parameters
-            .Select(p => project.AddParameter(p.PropertyId, p.Value))
-            .ToList();
-
-        if (parameterResults.Any(r => r.IsFailure))
-        {
-            return Result.Failure(ValidationError.FromResults(parameterResults));
-        }
-
-        var methodResults = request.MethodIds
-            .Select(m => project.AddMethod(m))
-            .ToList();
-
-        if (methodResults.Any(r => r.IsFailure))
-        {
-            return Result.Failure(ValidationError.FromResults(methodResults));
-        }
-
-        projectRepository.Insert(project);
-        projectMethodRepository.InsertRange(project.Methods);
-        projectParameterRepository.InsertRange(project.Parameters);
+        projectRepository.Insert(projectResult.Value);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success(projectResult.Value.Id);
     }
 }
