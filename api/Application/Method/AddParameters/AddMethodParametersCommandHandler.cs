@@ -5,8 +5,8 @@ namespace Application.Method.AddParameters;
 
 internal class AddMethodParametersCommandHandler(
     IMethodRepository methodRepository,
-    IMethodParameterRepository methodParameterRepository,
     IPropertyRepository propertyRepository,
+    IMethodParameterRepository methodParameterRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<AddMethodParametersCommand>
 {
     public async Task<Result> Handle(AddMethodParametersCommand request, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ internal class AddMethodParametersCommandHandler(
             return Result.Failure(ValidationError.FromResults(results));
         }
 
-        methodParameterRepository.InsertRange(method.Parameters);
+        methodParameterRepository.InsertRange(results.Select(r => r.Value));
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
