@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Application.Abstractions.Behaviours;
+using Domain.Calculation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -22,6 +23,8 @@ public static class ConfigureServices
 
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
+
+        services.AddScoped<ICalculationService, CalculationService>();
 
         return services;
     }
