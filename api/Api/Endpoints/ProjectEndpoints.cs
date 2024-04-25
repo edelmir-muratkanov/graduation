@@ -1,5 +1,6 @@
 ﻿using Api.Contracts.Project;
 using Api.Infrastructure;
+using Application.Calculations.GetByProject;
 using Application.Project.AddMembers;
 using Application.Project.AddMethods;
 using Application.Project.AddParameters;
@@ -129,6 +130,24 @@ public class ProjectEndpoints : ICarterModule
             .ProducesProblem(404)
             .ProducesProblem(500)
             .WithName("Delete project");
+
+        group.MapGet("{id:guid}/calculations", async (
+                Guid id,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var query = new GetCalculationsByProjectQuery
+                {
+                    ProjectId = id
+                };
+
+                Result<List<CalculationResponse>> result = await sender.Send(query, cancellationToken);
+
+                return result.Match(Results.Ok, CustomResults.Problem);
+            })
+            .Produces(200)
+            .ProducesProblem(500)
+            .WithName("Get project calculations");
 
         group.MapPost("{id:guid}/parameters", async (
                 Guid id,
