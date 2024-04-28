@@ -7,7 +7,7 @@ internal sealed class CalculationItemConfiguration : IEntityTypeConfiguration<Ca
     public void Configure(EntityTypeBuilder<CalculationItem> builder)
     {
         builder.HasKey(i => i.Id);
-        builder.HasIndex(i => i.PropertyName).IsUnique();
+        builder.HasIndex(i => new { i.CalculationId, i.PropertyName }).IsUnique();
 
         builder.Property(i => i.Belonging)
             .HasConversion(
