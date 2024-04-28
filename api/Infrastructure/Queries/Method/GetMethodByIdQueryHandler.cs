@@ -10,19 +10,22 @@ internal sealed class GetMethodByIdQueryHandler(ApplicationReadDbContext dbConte
         GetMethodByIdQuery request,
         CancellationToken cancellationToken)
     {
-        GetMethodByIdResponse? method = await dbContext.Methods.Select(m => new GetMethodByIdResponse
-        {
-            Id = m.Id,
-            Name = m.Name,
-            CollectorTypes = m.CollectorTypes,
-            Parameters = m.Parameters.Select(p => new GetMethodByIdParameterResponse
-            {
-                Id = p.Id,
-                PropertyName = p.Property.Name,
-                First = p.FirstParameters,
-                Second = p.SecondParameters
-            }).ToList()
-        }).FirstOrDefaultAsync(cancellationToken);
+        GetMethodByIdResponse? method = await dbContext.Methods
+            .Where(m => m.Id == request.Id)
+            .Select(m =>
+                new GetMethodByIdResponse
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    CollectorTypes = m.CollectorTypes,
+                    Parameters = m.Parameters.Select(p => new GetMethodByIdParameterResponse
+                    {
+                        Id = p.Id,
+                        PropertyName = p.Property.Name,
+                        First = p.FirstParameters,
+                        Second = p.SecondParameters
+                    }).ToList()
+                }).FirstOrDefaultAsync(cancellationToken);
 
         return method ?? Result.Failure<GetMethodByIdResponse>(MethodErrors.NotFound);
     }
