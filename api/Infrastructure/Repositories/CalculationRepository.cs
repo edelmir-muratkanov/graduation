@@ -6,15 +6,17 @@ internal sealed class CalculationRepository(ApplicationWriteDbContext dbContext)
 {
     public async Task<Calculation?> GetByIdAsync(Guid calculationId, CancellationToken cancellationToken)
     {
-        return await dbContext.Calculations.FirstOrDefaultAsync(c => c.Id == calculationId, cancellationToken);
+        return await dbContext.Calculations.Include(c => c.Items)
+            .FirstOrDefaultAsync(c => c.Id == calculationId, cancellationToken);
     }
 
     public async Task<Calculation?> GetByProjectAndMethodAsync(Guid projectId, Guid methodId,
         CancellationToken cancellationToken)
     {
-        return await dbContext.Calculations.FirstOrDefaultAsync(
-            c => c.ProjectId == projectId && c.MethodId == methodId,
-            cancellationToken);
+        return await dbContext.Calculations.Include(c => c.Items)
+            .FirstOrDefaultAsync(
+                c => c.ProjectId == projectId && c.MethodId == methodId,
+                cancellationToken);
     }
 
     public async Task<bool> Exists(Guid projectId, Guid methodId, CancellationToken cancellationToken)

@@ -93,11 +93,11 @@ public class Project : AuditableEntity
         return Result.Success();
     }
 
-    public Result AddMember(Guid memberId)
+    public Result<ProjectMember> AddMember(Guid memberId)
     {
         if (_members.Any(m => m.MemberId == memberId))
         {
-            return Result.Failure(ProjectErrors.AlreadyMember);
+            return Result.Failure<ProjectMember>(ProjectErrors.AlreadyMember);
         }
 
         var projectMember = new ProjectMember(Id, memberId);
@@ -106,7 +106,7 @@ public class Project : AuditableEntity
 
         Raise(new ProjectMemberAddedDomainEvent(Id, projectMember.MemberId));
 
-        return Result.Success();
+        return Result.Success(projectMember);
     }
 
     public Result RemoveMember(Guid memberId)
@@ -161,11 +161,11 @@ public class Project : AuditableEntity
         return Result.Success();
     }
 
-    public Result AddMethod(Guid methodId)
+    public Result<ProjectMethod> AddMethod(Guid methodId)
     {
         if (_methods.Any(m => m.MethodId == methodId))
         {
-            return Result.Failure(ProjectErrors.DuplicateMethod);
+            return Result.Failure<ProjectMethod>(ProjectErrors.DuplicateMethod);
         }
 
         var projectMethod = new ProjectMethod(Id, methodId);
@@ -174,7 +174,7 @@ public class Project : AuditableEntity
 
         Raise(new ProjectMethodAddedDomainEvent(Id, projectMethod.MethodId));
 
-        return Result.Success();
+        return Result.Success(projectMethod);
     }
 
     public Result RemoveMethod(Guid methodId)

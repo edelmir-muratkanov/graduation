@@ -55,4 +55,17 @@ public class Calculation : Entity
 
         return item;
     }
+
+    public Result UpdateItem(string propertyName, Belonging belonging)
+    {
+        CalculationItem? item = _items.FirstOrDefault(i => i.PropertyName == propertyName);
+        if (item is null)
+        {
+            return Result.Failure(CalculationErrors.ItemNotFound);
+        }
+
+        item.UpdateBelonging(belonging);
+
+        return Result.Success();
+    }
 }

@@ -21,4 +21,9 @@ public class CalculationItem : Entity
 
         return item;
     }
+
+    public void UpdateBelonging(Belonging belonging)
+    {
+        Belonging = belonging;
+    }
 }
