@@ -51,7 +51,7 @@ public class Project : AuditableEntity
             projectType,
             collectorType);
 
-        project.Raise(new ProjectCreatedDomainEvent(project));
+        project.Raise(new ProjectCreatedDomainEvent(project.Id));
 
         return project;
     }
@@ -88,7 +88,7 @@ public class Project : AuditableEntity
             CollectorType = (CollectorType)collectorType;
         }
 
-        Raise(new ProjectBaseInfoUpdatedDomainEvent(this));
+        Raise(new ProjectBaseInfoUpdatedDomainEvent(Id));
 
         return Result.Success();
     }
@@ -104,7 +104,7 @@ public class Project : AuditableEntity
 
         _members.Add(projectMember);
 
-        Raise(new ProjectMemberAddedDomainEvent(this, projectMember));
+        Raise(new ProjectMemberAddedDomainEvent(Id, projectMember.MemberId));
 
         return Result.Success();
     }
@@ -120,7 +120,7 @@ public class Project : AuditableEntity
 
         _members.Remove(member);
 
-        Raise(new ProjectMemberRemovedDomainEvent(this, member));
+        Raise(new ProjectMemberRemovedDomainEvent(Id, member.MemberId));
 
         return Result.Success();
     }
@@ -141,7 +141,7 @@ public class Project : AuditableEntity
 
         _parameters.Add(parameterResult.Value);
 
-        Raise(new ProjectParameterAddedDomainEvent(this, parameterResult.Value));
+        Raise(new ProjectParameterAddedDomainEvent(Id, parameterResult.Value.Id));
 
         return Result.Success();
     }
@@ -156,7 +156,7 @@ public class Project : AuditableEntity
         }
 
         _parameters.Remove(parameter);
-        Raise(new ProjectParameterRemovedDomainEvent(this, parameter));
+        Raise(new ProjectParameterRemovedDomainEvent(Id, parameter.PropertyId));
 
         return Result.Success();
     }
@@ -172,7 +172,7 @@ public class Project : AuditableEntity
 
         _methods.Add(projectMethod);
 
-        Raise(new ProjectMethodAddedDomainEvent(this, projectMethod));
+        Raise(new ProjectMethodAddedDomainEvent(Id, projectMethod.MethodId));
 
         return Result.Success();
     }
@@ -187,7 +187,7 @@ public class Project : AuditableEntity
         }
 
         _methods.Remove(method);
-        Raise(new ProjectMethodRemovedDomainEvent(this, method));
+        Raise(new ProjectMethodRemovedDomainEvent(Id, method.MethodId));
 
         return Result.Success();
     }

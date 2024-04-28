@@ -1,7 +1,7 @@
 ﻿namespace Domain.Projects.Events;
 
-public sealed record ProjectMemberAddedDomainEvent(Project Project, ProjectMember ProjectMember) : IDomainEvent
+public sealed record ProjectMemberAddedDomainEvent(Guid ProjectId, Guid MemberId) : IDomainEvent
 {
-    public Project Project { get; set; } = Project;
-    public ProjectMember ProjectMember { get; set; } = ProjectMember;
+    public Guid Project { get; set; } = ProjectId;
+    public Guid MemberId { get; set; } = MemberId;
 }

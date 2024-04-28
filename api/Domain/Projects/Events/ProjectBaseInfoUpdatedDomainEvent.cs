@@ -1,6 +1,6 @@
 ﻿namespace Domain.Projects.Events;
 
-public sealed record ProjectBaseInfoUpdatedDomainEvent(Project Project) : IDomainEvent
+public sealed record ProjectBaseInfoUpdatedDomainEvent(Guid ProjectId) : IDomainEvent
 {
-    public Project Project { get; set; } = Project;
+    public Guid ProjectId { get; set; } = ProjectId;
 }

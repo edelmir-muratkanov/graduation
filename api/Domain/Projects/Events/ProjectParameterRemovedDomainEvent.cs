@@ -1,7 +1,7 @@
 ﻿namespace Domain.Projects.Events;
 
-public sealed record ProjectParameterRemovedDomainEvent(Project Project, ProjectParameter ProjectParameter) : IDomainEvent
+public sealed record ProjectParameterRemovedDomainEvent(Guid ProjectId, Guid PropertyId) : IDomainEvent
 {
-    public Project Project { get; set; } = Project;
-    public ProjectParameter ProjectParameter { get; set; } = ProjectParameter;
+    public Guid ProjectId { get; set; } = ProjectId;
+    public Guid PropertyId { get; set; } = PropertyId;
 }
