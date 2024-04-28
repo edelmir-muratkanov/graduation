@@ -1,5 +1,8 @@
 ﻿namespace Domain.Methods;
 
+/// <summary>
+/// <see cref="Method"/> parameter
+/// </summary>
 public class MethodParameter : Entity
 {
     private MethodParameter(
@@ -22,7 +25,9 @@ public class MethodParameter : Entity
 
     public Guid MethodId { get; private set; }
     public Guid PropertyId { get; private set; }
+
     public ParameterValueGroup? FirstParameters { get; private set; }
+
     public ParameterValueGroup? SecondParameters { get; private set; }
 
     public static Result<MethodParameter> Create(

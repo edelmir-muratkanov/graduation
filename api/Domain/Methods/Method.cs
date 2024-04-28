@@ -2,11 +2,13 @@
 
 namespace Domain.Methods;
 
+/// <summary>
+/// Eor method <example>Co2 injection</example>
+/// </summary>
 public class Method : AuditableEntity
 {
     private readonly List<CollectorType> _collectorTypes = [];
     private readonly List<MethodParameter> _parameters = [];
-
 
     private Method(Guid id, string name, List<CollectorType> collectorTypes) : base(id)
     {
@@ -49,7 +51,9 @@ public class Method : AuditableEntity
         return Result.Success();
     }
 
-    public Result<MethodParameter> AddParameter(Guid propertyId, ParameterValueGroup? first,
+    public Result<MethodParameter> AddParameter(
+        Guid propertyId,
+        ParameterValueGroup? first,
         ParameterValueGroup? second)
     {
         if (_parameters.Any(p => p.MethodId == Id && p.PropertyId == propertyId))
