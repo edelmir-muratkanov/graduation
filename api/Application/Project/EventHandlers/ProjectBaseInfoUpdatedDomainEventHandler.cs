@@ -1,4 +1,5 @@
 ﻿using Application.Calculations;
+using Application.Method;
 using Domain.Calculation;
 using Domain.Methods;
 using Domain.Projects;
@@ -7,17 +8,31 @@ using Domain.Projects.Events;
 namespace Application.Project.EventHandlers;
 
 internal sealed class ProjectBaseInfoUpdatedDomainEventHandler(
+    IProjectRepository projectRepository,
     ICalculationRepository calculationRepository,
     IMethodRepository methodRepository)
     : INotificationHandler<ProjectBaseInfoUpdatedDomainEvent>
 {
     public async Task Handle(ProjectBaseInfoUpdatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        foreach (ProjectMethod projectMethod in notification.Project.Methods)
+        Domain.Projects.Project? project = await projectRepository
+            .GetByIdAsync(notification.ProjectId, cancellationToken);
+
+        if (project is null)
+        {
+            throw new ProjectNotFoundException(notification.ProjectId);
+        }
+
+        foreach (ProjectMethod projectMethod in project.Methods)
         {
             Domain.Methods.Method method = await methodRepository.GetByIdAsync(
                 projectMethod.MethodId,
                 cancellationToken);
+
+            if (method is null)
+            {
+                throw new MethodNotFoundException(projectMethod.MethodId);
+            }
 
             Calculation? calculation = await calculationRepository.GetByProjectAndMethodAsync(
                 projectMethod.ProjectId,
@@ -29,7 +44,7 @@ internal sealed class ProjectBaseInfoUpdatedDomainEventHandler(
                 throw new CalculationNotFoundException(projectMethod.ProjectId, projectMethod.MethodId);
             }
 
-            int degree = method!.CollectorTypes.Contains(notification.Project.CollectorType) ? 1 : -1;
+            int degree = method.CollectorTypes.Contains(project.CollectorType) ? 1 : -1;
 
 
             calculation.RemoveItem("Тип коллектора");

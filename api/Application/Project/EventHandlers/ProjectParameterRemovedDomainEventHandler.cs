@@ -1,4 +1,6 @@
 ﻿using Application.Calculations;
+using Application.Method;
+using Application.Property;
 using Domain.Calculation;
 using Domain.Methods;
 using Domain.Projects;
@@ -8,6 +10,7 @@ using Domain.Properties;
 namespace Application.Project.EventHandlers;
 
 internal sealed class ProjectParameterRemovedDomainEventHandler(
+    IProjectRepository projectRepository,
     ICalculationRepository calculationRepository,
     IPropertyRepository propertyRepository,
     IMethodRepository methodRepository,
@@ -16,21 +19,39 @@ internal sealed class ProjectParameterRemovedDomainEventHandler(
 {
     public async Task Handle(ProjectParameterRemovedDomainEvent notification, CancellationToken cancellationToken)
     {
-        if (notification.Project.Methods.Count == 0)
+        Domain.Projects.Project? project = await projectRepository
+            .GetByIdAsync(notification.ProjectId, cancellationToken);
+
+        if (project is null)
+        {
+            throw new ProjectNotFoundException(notification.ProjectId);
+        }
+
+        if (project.Methods.Count == 0)
         {
             return;
         }
 
-        foreach (ProjectMethod projectMethod in notification.Project.Methods)
+        foreach (ProjectMethod projectMethod in project.Methods)
         {
             Domain.Properties.Property? property = await propertyRepository
-                .GetByIdAsync(notification.ProjectParameter.Id, cancellationToken);
+                .GetByIdAsync(notification.PropertyId, cancellationToken);
 
+            if (property is null)
+            {
+                throw new PropertyNotFoundException(notification.PropertyId);
+            }
+            
             Domain.Methods.Method? method = await methodRepository
                 .GetByIdAsync(projectMethod.MethodId, cancellationToken);
 
-            MethodParameter? methodParameter = method!.Parameters
-                .FirstOrDefault(p => p.PropertyId == notification.ProjectParameter.PropertyId);
+            if (method is null)
+            {
+                throw new MethodNotFoundException(projectMethod.MethodId);
+            }
+
+            MethodParameter? methodParameter = method.Parameters
+                .FirstOrDefault(p => p.PropertyId == notification.PropertyId);
 
             if (methodParameter is null)
             {

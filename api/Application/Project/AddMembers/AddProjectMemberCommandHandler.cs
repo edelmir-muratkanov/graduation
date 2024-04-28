@@ -5,6 +5,7 @@ namespace Application.Project.AddMembers;
 internal sealed class AddProjectMembersCommandHandler(
     ICurrentUserService currentUserService,
     IProjectRepository projectRepository,
+    IProjectMemberRepository projectMemberRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<AddProjectMembersCommand>
 {
     public async Task<Result> Handle(AddProjectMembersCommand request, CancellationToken cancellationToken)
@@ -28,7 +29,7 @@ internal sealed class AddProjectMembersCommandHandler(
             return Result.Failure(ValidationError.FromResults(results));
         }
 
-        projectRepository.Update(project);
+        projectMemberRepository.InsertRange(results.Select(r => r.Value).ToList());
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

@@ -1,4 +1,6 @@
 ﻿using Application.Calculations;
+using Application.Method;
+using Application.Property;
 using Domain.Calculation;
 using Domain.Methods;
 using Domain.Projects;
@@ -8,6 +10,7 @@ using Domain.Properties;
 namespace Application.Project.EventHandlers;
 
 internal sealed class ProjectParameterAddedDomainEventHandler(
+    IProjectRepository projectRepository,
     ICalculationRepository calculationRepository,
     ICalculationService calculationService,
     IPropertyRepository propertyRepository,
@@ -17,22 +20,44 @@ internal sealed class ProjectParameterAddedDomainEventHandler(
 {
     public async Task Handle(ProjectParameterAddedDomainEvent notification, CancellationToken cancellationToken)
     {
-        if (notification.Project.Methods.Count == 0)
+        Domain.Projects.Project? project = await projectRepository
+            .GetByIdAsync(notification.ProjectId, cancellationToken);
+
+        if (project is null)
+        {
+            throw new ProjectNotFoundException(notification.ProjectId);
+        }
+
+
+        if (project.Methods.Count == 0)
         {
             return;
         }
 
+        ProjectParameter projectParameter = project.Parameters
+            .FirstOrDefault(p => p.Id == notification.ProjectParameterId);
+
         Domain.Properties.Property? property = await propertyRepository
-            .GetByIdAsync(notification.ProjectParameter.PropertyId, cancellationToken);
+            .GetByIdAsync(projectParameter!.PropertyId, cancellationToken);
+
+        if (property is null)
+        {
+            throw new PropertyNotFoundException(projectParameter.PropertyId);
+        }
 
 
-        foreach (ProjectMethod projectMethod in notification.Project.Methods)
+        foreach (ProjectMethod projectMethod in project.Methods)
         {
             Domain.Methods.Method method = await methodRepository
                 .GetByIdAsync(projectMethod.MethodId, cancellationToken);
 
-            MethodParameter? methodParameter = method!.Parameters
-                .FirstOrDefault(p => p.PropertyId == notification.ProjectParameter.PropertyId);
+            if (method is null)
+            {
+                throw new MethodNotFoundException(projectMethod.MethodId);
+            }
+
+            MethodParameter? methodParameter = method.Parameters
+                .FirstOrDefault(p => p.PropertyId == property.Id);
 
             if (methodParameter is null)
             {
@@ -40,24 +65,28 @@ internal sealed class ProjectParameterAddedDomainEventHandler(
             }
 
             Calculation? calculation = await calculationRepository
-                .GetByProjectAndMethodAsync(notification.Project.Id, method!.Id, cancellationToken);
+                .GetByProjectAndMethodAsync(project.Id, method.Id, cancellationToken);
 
             if (calculation is null)
             {
-                throw new CalculationNotFoundException(notification.Project.Id, method.Id);
+                throw new CalculationNotFoundException(project.Id, method.Id);
             }
 
-            Result<CalculationItem> deleteResults = calculation.RemoveItem(property!.Name);
-            calculationItemRepository.Remove(deleteResults.Value);
+            CalculationItem? calculationItem = calculation.Items.FirstOrDefault(i => i.PropertyName == property.Name);
+
+            if (calculationItem is null)
+            {
+                continue;
+            }
 
             Belonging belonging = calculationService.CalculateBelongingDegree(
-                notification.ProjectParameter.Value,
+                projectParameter.Value,
                 methodParameter.FirstParameters,
                 methodParameter.SecondParameters);
 
-            Result<CalculationItem> addResult = calculation.AddItem(property.Name, belonging);
+            calculationItem.UpdateBelonging(belonging);
 
-            calculationItemRepository.Insert(addResult.Value);
+            calculationRepository.Update(calculation);
         }
     }
 }

@@ -7,6 +7,7 @@ internal sealed class AddProjectMethodsCommandHandler(
     ICurrentUserService currentUserService,
     IProjectRepository projectRepository,
     IMethodRepository methodRepository,
+    IProjectMethodRepository projectMethodRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<AddProjectMethodsCommand>
 {
     public async Task<Result> Handle(AddProjectMethodsCommand request, CancellationToken cancellationToken)
@@ -40,7 +41,7 @@ internal sealed class AddProjectMethodsCommandHandler(
             return Result.Failure(ValidationError.FromResults(results));
         }
 
-        projectRepository.Update(project);
+        projectMethodRepository.InsertRange(results.Select(r => r.Value).ToList());
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
