@@ -4,7 +4,7 @@ using Domain.Properties;
 using FluentAssertions;
 using NSubstitute;
 
-namespace Domain.UnitTests.Calculation;
+namespace Domain.UnitTests.Calculations;
 
 public class CalculationServiceTests
 {

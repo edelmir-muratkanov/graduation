@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Shared.Results;
 
-namespace Domain.UnitTests.Calculation;
+namespace Domain.UnitTests.Calculations;
 
 public class CalculationTests
 {

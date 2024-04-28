@@ -1,7 +1,7 @@
 ﻿using Domain.Calculation;
 using FluentAssertions;
 
-namespace Domain.UnitTests.Calculation;
+namespace Domain.UnitTests.Calculations;
 
 public class CalculationItemTests
 {
