@@ -29,7 +29,7 @@ public class Method : AuditableEntity
     {
         var method = new Method(Guid.NewGuid(), name, collectorTypes.ToHashSet().ToList());
 
-        method.Raise(new MethodCreatedDomainEvent(method));
+        method.Raise(new MethodCreatedDomainEvent(method.Id));
 
         return method;
     }
@@ -48,6 +48,7 @@ public class Method : AuditableEntity
             collectorTypes.ForEach(c => _collectorTypes.Add(c));
         }
 
+        Raise(new MethodUpdatedDomainEvent(Id));
         return Result.Success();
     }
 
@@ -70,7 +71,7 @@ public class Method : AuditableEntity
 
         _parameters.Add(result.Value);
 
-        Raise(new MethodParameterAddedDomainEvent(this, result.Value));
+        Raise(new MethodParameterAddedDomainEvent(Id, result.Value.Id));
 
         return result;
     }
@@ -85,7 +86,7 @@ public class Method : AuditableEntity
 
         _parameters.Remove(parameter);
 
-        Raise(new MethodParameterRemovedDomainEvent(this, parameter));
+        Raise(new MethodParameterRemovedDomainEvent(Id, parameter.PropertyId));
 
         return parameter;
     }
