@@ -47,7 +47,7 @@ internal class AddProjectParametersCommandHandler(
             return Result.Failure(ValidationError.FromResults(results));
         }
 
-        projectParameterRepository.InsertRange(project.Parameters);
+        projectParameterRepository.InsertRange(results.Select(r => r.Value).ToList());
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

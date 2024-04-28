@@ -125,11 +125,11 @@ public class Project : AuditableEntity
         return Result.Success();
     }
 
-    public Result AddParameter(Guid propertyId, double value)
+    public Result<ProjectParameter> AddParameter(Guid propertyId, double value)
     {
         if (_parameters.Any(p => p.PropertyId == propertyId))
         {
-            return Result.Failure(ProjectErrors.DuplicateParameter);
+            return Result.Failure<ProjectParameter>(ProjectErrors.DuplicateParameter);
         }
 
         Result<ProjectParameter>? parameterResult = ProjectParameter.Create(Id, propertyId, value);
@@ -143,7 +143,7 @@ public class Project : AuditableEntity
 
         Raise(new ProjectParameterAddedDomainEvent(Id, parameterResult.Value.Id));
 
-        return Result.Success();
+        return Result.Success(parameterResult.Value);
     }
 
     public Result RemoveParameter(Guid parameterId)
