@@ -32,16 +32,16 @@ internal sealed class ProjectParameterRemovedDomainEventHandler(
             return;
         }
 
+        Domain.Properties.Property? property = await propertyRepository
+            .GetByIdAsync(notification.PropertyId, cancellationToken);
+
+        if (property is null)
+        {
+            throw new PropertyNotFoundException(notification.PropertyId);
+        }
+
         foreach (ProjectMethod projectMethod in project.Methods)
         {
-            Domain.Properties.Property? property = await propertyRepository
-                .GetByIdAsync(notification.PropertyId, cancellationToken);
-
-            if (property is null)
-            {
-                throw new PropertyNotFoundException(notification.PropertyId);
-            }
-            
             Domain.Methods.Method? method = await methodRepository
                 .GetByIdAsync(projectMethod.MethodId, cancellationToken);
 
