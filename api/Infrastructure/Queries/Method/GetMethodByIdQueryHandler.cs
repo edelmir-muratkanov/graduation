@@ -22,6 +22,7 @@ internal sealed class GetMethodByIdQueryHandler(ApplicationReadDbContext dbConte
                     {
                         Id = p.Id,
                         PropertyName = p.Property.Name,
+                        PropertyUnit = p.Property.Unit,
                         First = p.FirstParameters,
                         Second = p.SecondParameters
                     }).ToList()
