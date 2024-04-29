@@ -72,7 +72,7 @@ public class ProjectEndpoints : ICarterModule
                 return addParametersResult.Match(Results.Created, CustomResults.Problem);
             })
             .RequireAuthorization()
-            .Produces(201)
+            .Produces<Guid>(201)
             .ProducesProblem(400)
             .ProducesProblem(401)
             .ProducesProblem(409)
@@ -101,7 +101,7 @@ public class ProjectEndpoints : ICarterModule
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
-            .Produces(200)
+            .Produces<PaginatedList<GetProjectsResponse>>(200)
             .ProducesProblem(500)
             .WithName("Get projects");
 
@@ -111,7 +111,7 @@ public class ProjectEndpoints : ICarterModule
                 Result<GetProjectByIdResponse> result = await sender.Send(query, cancellationToken);
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
-            .Produces(200)
+            .Produces<GetProjectByIdResponse>(200)
             .ProducesProblem(404)
             .ProducesProblem(500)
             .WithDescription("Get project");
@@ -145,7 +145,7 @@ public class ProjectEndpoints : ICarterModule
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
-            .Produces(200)
+            .Produces<List<CalculationResponse>>(200)
             .ProducesProblem(500)
             .WithName("Get project calculations");
 

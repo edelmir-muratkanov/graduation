@@ -34,8 +34,7 @@ public class PropertyEndpoints : ICarterModule
                 return result.Match(Results.Created, CustomResults.Problem);
             })
             .RequireAuthorization(Role.Admin.ToString())
-            .Produces(201)
-            .ProducesProblem(404)
+            .Produces<CreatePropertyResponse>(201)
             .ProducesProblem(409)
             .ProducesProblem(500)
             .WithName("Create property");

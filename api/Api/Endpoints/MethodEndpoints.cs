@@ -39,53 +39,6 @@ public class MethodEndpoints : ICarterModule
             .Produces(500)
             .WithName("Create method");
 
-        group.MapPost("{id:guid}/parameters", async (
-                Guid id,
-                List<AddMethodParametersRequest> parametersRequests,
-                ISender sender,
-                CancellationToken cancellationToken) =>
-            {
-                List<MethodParameter> parameters = parametersRequests.Adapt<List<MethodParameter>>();
-
-                var command = new AddMethodParametersCommand(id, parameters);
-
-                Result result = await sender.Send(command, cancellationToken);
-
-                return result.Match(Results.NoContent, CustomResults.Problem);
-            })
-            .RequireAuthorization(Role.Admin.ToString())
-            .Produces(204)
-            .ProducesProblem(400)
-            .ProducesProblem(404)
-            .ProducesProblem(409)
-            .ProducesProblem(500)
-            .WithName("Add method parameters");
-
-        group.MapDelete("{methodId:guid}/parameters/{parameterId:guid}", async (
-                Guid methodId,
-                Guid parameterId,
-                ISender sender,
-                CancellationToken cancellationToken) =>
-            {
-                var command = new RemoveMethodParameterCommand
-                {
-                    MethodId = methodId,
-                    ParameterId = parameterId
-                };
-
-                Result result = await sender.Send(command, cancellationToken);
-
-                return result.Match(Results.NoContent, CustomResults.Problem);
-            })
-            .RequireAuthorization(Role.Admin.ToString())
-            .Produces(204)
-            .ProducesProblem(400)
-            .ProducesProblem(404)
-            .ProducesProblem(409)
-            .ProducesProblem(500)
-            .WithName("Remove method parameter");
-
-
         group.MapGet("", async (
                 string? searchTerm,
                 string? sortColumn,
@@ -107,7 +60,7 @@ public class MethodEndpoints : ICarterModule
                 Result<PaginatedList<GetMethodsResponse>> result = await sender.Send(query, cancellationToken);
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
-            .Produces(200)
+            .Produces<PaginatedList<GetMethodsResponse>>(200)
             .Produces(500)
             .WithName("Get methods");
 
@@ -162,5 +115,52 @@ public class MethodEndpoints : ICarterModule
             .ProducesProblem(403)
             .ProducesProblem(404)
             .ProducesProblem(500);
+
+
+        group.MapPost("{id:guid}/parameters", async (
+                Guid id,
+                List<AddMethodParametersRequest> parametersRequests,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                List<MethodParameter> parameters = parametersRequests.Adapt<List<MethodParameter>>();
+
+                var command = new AddMethodParametersCommand(id, parameters);
+
+                Result result = await sender.Send(command, cancellationToken);
+
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization(Role.Admin.ToString())
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(404)
+            .ProducesProblem(409)
+            .ProducesProblem(500)
+            .WithName("Add method parameters");
+
+        group.MapDelete("{methodId:guid}/parameters/{parameterId:guid}", async (
+                Guid methodId,
+                Guid parameterId,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new RemoveMethodParameterCommand
+                {
+                    MethodId = methodId,
+                    ParameterId = parameterId
+                };
+
+                Result result = await sender.Send(command, cancellationToken);
+
+                return result.Match(Results.NoContent, CustomResults.Problem);
+            })
+            .RequireAuthorization(Role.Admin.ToString())
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(404)
+            .ProducesProblem(409)
+            .ProducesProblem(500)
+            .WithName("Remove method parameter");
     }
 }
