@@ -1,4 +1,5 @@
-﻿using Api.Contracts.Property;
+﻿using Api.Contracts;
+using Api.Contracts.Property;
 using Api.Infrastructure;
 using Application.Property.Create;
 using Application.Property.Delete;
@@ -56,21 +57,17 @@ public class PropertyEndpoints : ICarterModule
             .WithName("Delete property");
 
         group.MapGet("", async (
-                string? searchTerm,
-                string? sortColumn,
-                [FromQuery] SortOrder sortOrder,
-                int? pageNumber,
-                int? pageSize,
+                [AsParameters] QueryParameters queryParameters,
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
                 var query = new GetPropertiesQuery
                 {
-                    SortOrder = sortOrder,
-                    PageSize = pageSize ?? 10,
-                    PageNumber = pageNumber ?? 1,
-                    SearchTerm = searchTerm ?? string.Empty,
-                    SortColumn = sortColumn ?? "CreatedAt"
+                    PageSize = queryParameters.PageSize,
+                    PageNumber = queryParameters.PageNumber,
+                    SearchTerm = queryParameters.SearchTerm,
+                    SortColumn = queryParameters.SortColumn,
+                    SortOrder = queryParameters.SortOrder,
                 };
                 Result<PaginatedList<Application.Property.Get.GetPropertiesResponse>>? result =
                     await sender.Send(query, cancellationToken);

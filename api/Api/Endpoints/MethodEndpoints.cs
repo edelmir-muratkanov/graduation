@@ -1,4 +1,5 @@
-﻿using Api.Contracts.Method;
+﻿using Api.Contracts;
+using Api.Contracts.Method;
 using Api.Infrastructure;
 using Application.Method.AddParameters;
 using Application.Method.Create;
@@ -40,21 +41,17 @@ public class MethodEndpoints : ICarterModule
             .WithName("Create method");
 
         group.MapGet("", async (
-                string? searchTerm,
-                string? sortColumn,
-                [FromQuery] SortOrder sortOrder,
-                int? pageNumber,
-                int? pageSize,
+                [AsParameters] QueryParameters queryParameters,
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
                 var query = new GetMethodsQuery
                 {
-                    SortOrder = sortOrder,
-                    PageNumber = pageNumber ?? 1,
-                    PageSize = pageSize ?? 10,
-                    SearchTerm = searchTerm ?? string.Empty,
-                    SortColumn = sortColumn ?? string.Empty
+                    SortOrder = queryParameters.SortOrder,
+                    PageNumber = queryParameters.PageNumber,
+                    PageSize = queryParameters.PageSize,
+                    SearchTerm = queryParameters.SearchTerm,
+                    SortColumn = queryParameters.SortColumn
                 };
 
                 Result<PaginatedList<GetMethodsResponse>> result = await sender.Send(query, cancellationToken);

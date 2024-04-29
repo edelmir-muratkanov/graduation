@@ -1,4 +1,5 @@
-﻿using Api.Contracts.Project;
+﻿using Api.Contracts;
+using Api.Contracts.Project;
 using Api.Infrastructure;
 using Application.Calculations.GetByProject;
 using Application.Project.AddMembers;
@@ -80,21 +81,17 @@ public class ProjectEndpoints : ICarterModule
             .WithName("Create project");
 
         group.MapGet("", async (
-                string? searchTerm,
-                string? sortColumn,
-                [FromQuery] SortOrder sortOrder,
-                int? pageNumber,
-                int? pageSize,
+                [AsParameters] QueryParameters queryParameters,
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
                 var query = new GetProjectsQuery
                 {
-                    SortOrder = sortOrder,
-                    PageNumber = pageNumber ?? 1,
-                    PageSize = pageSize ?? 10,
-                    SortColumn = sortColumn ?? string.Empty,
-                    SearchTerm = searchTerm ?? string.Empty
+                    SortOrder = queryParameters.SortOrder,
+                    PageNumber = queryParameters.PageNumber,
+                    PageSize = queryParameters.PageSize,
+                    SortColumn = queryParameters.SortColumn,
+                    SearchTerm = queryParameters.SearchTerm
                 };
 
                 Result<PaginatedList<GetProjectsResponse>> result = await sender.Send(query, cancellationToken);
