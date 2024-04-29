@@ -1,4 +1,6 @@
-﻿using Shared;
+﻿using Domain;
+using Domain.Projects;
+using Shared;
 
 namespace Application.Project.GetProjects;
 
@@ -8,8 +10,8 @@ public record GetProjectsResponse
     public string Name { get; set; }
     public string Country { get; set; }
     public string Operator { get; set; }
-    public string Type { get; set; }
-    public string CollectorType { get; set; }
+    public ProjectType Type { get; set; }
+    public CollectorType CollectorType { get; set; }
 }
 
 public record GetProjectsQuery : IQuery<PaginatedList<GetProjectsResponse>>
