@@ -26,9 +26,9 @@ internal sealed class GetMethodsQueryHandler(ApplicationReadDbContext dbContext)
             _ => property => property.CreatedAt
         };
 
-        methodsQuery = request.SortOrder == SortOrder.Asc
-            ? methodsQuery.OrderBy(keySelector)
-            : methodsQuery.OrderByDescending(keySelector);
+        methodsQuery = request.SortOrder == SortOrder.Desc
+            ? methodsQuery.OrderByDescending(keySelector)
+            : methodsQuery.OrderBy(keySelector);
 
         PaginatedList<GetMethodsResponse>? methods = await methodsQuery.AsSplitQuery()
             .Select(m =>
@@ -38,7 +38,7 @@ internal sealed class GetMethodsQueryHandler(ApplicationReadDbContext dbContext)
                     Name = m.Name,
                     CollectorTypes = m.CollectorTypes
                 }
-            ).PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
+            ).PaginatedListAsync(request.PageNumber ?? 1, request.PageSize ?? 10, cancellationToken);
 
 
         return methods;

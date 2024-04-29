@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Application.Property.Get;
+using Shared.Mappings;
 
 namespace Infrastructure.Queries.Property;
 
@@ -28,15 +29,17 @@ internal sealed class GetPropertiesQueryHandler(ApplicationReadDbContext context
             ? propertiesQuery.OrderByDescending(keySelector)
             : propertiesQuery.OrderBy(keySelector);
 
-        IQueryable<GetPropertiesResponse>? properties = propertiesQuery.Select(p =>
-            new GetPropertiesResponse(p.Id, p.Name, p.Unit));
+        PaginatedList<GetPropertiesResponse> properties = await propertiesQuery
+            .Select(p => new GetPropertiesResponse(
+                p.Id,
+                p.Name,
+                p.Unit))
+            .PaginatedListAsync(
+                request.PageNumber ?? 1,
+                request.PageSize ?? 10,
+                cancellationToken);
 
-        var list = await PaginatedList<GetPropertiesResponse>.CreateAsync(
-            properties,
-            request.PageNumber,
-            request.PageSize,
-            cancellationToken);
 
-        return list;
+        return properties;
     }
 }

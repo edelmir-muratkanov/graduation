@@ -30,9 +30,9 @@ internal sealed class GetProjectsQueryHandler(ApplicationReadDbContext dbContext
             _ => property => property.CreatedAt
         };
 
-        projectsQuery = request.SortOrder == SortOrder.Asc
-            ? projectsQuery.OrderBy(keySelector)
-            : projectsQuery.OrderByDescending(keySelector);
+        projectsQuery = request.SortOrder == SortOrder.Desc
+            ? projectsQuery.OrderByDescending(keySelector)
+            : projectsQuery.OrderBy(keySelector);
 
         PaginatedList<GetProjectsResponse>? projects = await projectsQuery.AsSplitQuery()
             .Select(p =>
@@ -44,8 +44,8 @@ internal sealed class GetProjectsQueryHandler(ApplicationReadDbContext dbContext
                     Operator = p.Operator,
                     CollectorType = p.CollectorType,
                     Type = p.ProjectType
-                }
-            ).PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
+                })
+            .PaginatedListAsync(request.PageNumber ?? 1, request.PageSize ?? 10, cancellationToken);
 
 
         return projects;
