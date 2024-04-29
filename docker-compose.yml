@@ -5,6 +5,22 @@ volumes:
 
 
 services:
+  api:
+    build: 
+      context: ./api
+      dockerfile: ./Api/Dockerfile
+    ports:
+      - 8080:8080
+      - 8081:8081
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DATABASE__HOST=database
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - database
+
   database:
     image: postgres:alpine
     restart: always
