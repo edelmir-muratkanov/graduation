@@ -13,10 +13,20 @@ internal sealed class CalculationRepository(ApplicationWriteDbContext dbContext)
     public async Task<Calculation?> GetByProjectAndMethodAsync(Guid projectId, Guid methodId,
         CancellationToken cancellationToken)
     {
-        return await dbContext.Calculations.Include(c => c.Items)
+        return await dbContext.Calculations
+            .Include(c => c.Items)
             .FirstOrDefaultAsync(
                 c => c.ProjectId == projectId && c.MethodId == methodId,
                 cancellationToken);
+    }
+
+    public async Task<List<Calculation>> GetByMethodAsync(Guid methodId,
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Calculations
+            .Include(c => c.Items)
+            .Where(c => c.MethodId == methodId)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<bool> Exists(Guid projectId, Guid methodId, CancellationToken cancellationToken)
