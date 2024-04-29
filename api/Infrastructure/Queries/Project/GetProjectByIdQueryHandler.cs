@@ -33,6 +33,7 @@ internal sealed class GetProjectByIdQueryHandler(ApplicationReadDbContext dbCont
                 {
                     Id = pp.Id,
                     Name = pp.Property.Name,
+                    Unit = pp.Property.Unit,
                     Value = pp.Value
                 }).ToList()
             })
