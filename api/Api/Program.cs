@@ -50,15 +50,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!))
         };
 
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
-            {
-                context.Token = context.Request.Cookies[AuthConstants.AccessTokenKey];
-
-                return Task.CompletedTask;
-            }
-        };
+        // options.Events = new JwtBearerEvents
+        // {
+        //     OnMessageReceived = context =>
+        //     {
+        //         context.Token = context.Request.Cookies[AuthConstants.AccessTokenKey];
+        //
+        //         return Task.CompletedTask;
+        //     }
+        // };
     });
 
 builder.Services.AddAuthorizationBuilder()

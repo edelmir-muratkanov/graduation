@@ -46,12 +46,6 @@ public class AuthEndpoints : ICarterModule
                 {
                     return CustomResults.Problem(result);
                 }
-
-                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken,
-                    new CookieOptions
-                    {
-                        Expires = DateTimeOffset.Now.AddMinutes(jwtOptions.Value.AccessExpiryInMinutes)
-                    });
                 context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken,
                     new CookieOptions
                     {
@@ -78,7 +72,7 @@ public class AuthEndpoints : ICarterModule
                 IOptions<JwtOptions> jwtOptions,
                 CancellationToken cancellationToken) =>
             {
-                string? access = context.Request.Cookies[AuthConstants.AccessTokenKey];
+                string? access = context.Request.Headers.Authorization[0]?.Split(" ")[1];
                 string? refresh = context.Request.Cookies[AuthConstants.RefreshTokenKey];
 
                 var command = new RefreshCommand(access!, refresh!);
@@ -92,12 +86,7 @@ public class AuthEndpoints : ICarterModule
                 }
 
                 var response = new RefreshResponse(result.Value.AccessToken);
-
-                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken,
-                    new CookieOptions
-                    {
-                        Expires = DateTimeOffset.Now.AddMinutes(jwtOptions.Value.AccessExpiryInMinutes)
-                    });
+                
                 context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken,
                     new CookieOptions
                     {
@@ -125,12 +114,7 @@ public class AuthEndpoints : ICarterModule
                 {
                     return CustomResults.Problem(result);
                 }
-
-                context.Response.Cookies.Append(AuthConstants.AccessTokenKey, result.Value.AccessToken,
-                    new CookieOptions
-                    {
-                        Expires = DateTimeOffset.Now.AddMinutes(jwtOptions.Value.AccessExpiryInMinutes)
-                    });
+                
                 context.Response.Cookies.Append(AuthConstants.RefreshTokenKey, result.Value.RefreshToken,
                     new CookieOptions
                     {
