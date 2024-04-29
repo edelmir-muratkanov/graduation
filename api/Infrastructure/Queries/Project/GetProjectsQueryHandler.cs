@@ -16,9 +16,9 @@ internal sealed class GetProjectsQueryHandler(ApplicationReadDbContext dbContext
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
             projectsQuery = projectsQuery.Where(m =>
-                m.Name.Contains(request.SearchTerm)
-                || m.Country.Contains(request.SearchTerm)
-                || m.Operator.Contains(request.SearchTerm));
+                EF.Functions.ILike(m.Name, $"%{request.SearchTerm}%")
+                || EF.Functions.ILike(m.Country, $"%{request.SearchTerm}%")
+                || EF.Functions.ILike(m.Operator, $"%{request.SearchTerm}%"));
         }
 
 

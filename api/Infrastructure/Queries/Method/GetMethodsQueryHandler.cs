@@ -15,7 +15,8 @@ internal sealed class GetMethodsQueryHandler(ApplicationReadDbContext dbContext)
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
-            methodsQuery = methodsQuery.Where(m => m.Name.Contains(request.SearchTerm));
+            methodsQuery = methodsQuery.Where(m =>
+                EF.Functions.ILike(m.Name, $"%{request.SearchTerm}%"));
         }
 
 

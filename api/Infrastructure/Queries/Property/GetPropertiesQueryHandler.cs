@@ -13,7 +13,8 @@ internal sealed class GetPropertiesQueryHandler(ApplicationReadDbContext context
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
-            propertiesQuery = propertiesQuery.Where(p => p.Name.Contains(request.SearchTerm));
+            propertiesQuery = propertiesQuery.Where(p =>
+                EF.Functions.ILike(p.Name, $"%{request.SearchTerm}%"));
         }
 
         Expression<Func<PropertyReadModel, object>> keySelector = request.SortColumn?.ToLower() switch
