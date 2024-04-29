@@ -100,7 +100,7 @@ public class AuthEndpoints : ICarterModule
             .ProducesProblem(500)
             .WithName("Refresh");
 
-        group.MapPost("api/auth/register", async (
+        group.MapPost("register", async (
                 RegisterCommand request,
                 HttpContext context,
                 ISender sender,
