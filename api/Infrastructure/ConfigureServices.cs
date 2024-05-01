@@ -35,7 +35,8 @@ public static class ConfigureServices
                 new NpgsqlDataSourceBuilder(connectionString).Build()));
 
         services.AddDbContext<ApplicationReadDbContext>(options =>
-            options.UseNpgsql(connectionString)
+            options.UseNpgsql(connectionString, o =>
+                    o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
                 .UseSnakeCaseNamingConvention()
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
@@ -43,7 +44,8 @@ public static class ConfigureServices
         services.AddSingleton<InsertOutboxMessagesInterceptor>();
 
         services.AddDbContext<ApplicationWriteDbContext>((sp, options) =>
-            options.UseNpgsql(connectionString)
+            options.UseNpgsql(connectionString, o =>
+                    o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
                 .UseSnakeCaseNamingConvention()
                 .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>(),
                     sp.GetRequiredService<TrackAuditableEntityInterceptor>()));
