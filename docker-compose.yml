@@ -14,7 +14,7 @@ services:
       - 8081:8081
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - DATABASE__HOST=database
+      - ConnectionStrings__Database=Host=database; Port=5432; Database=graduation; Username=admin; Password=123;Include Error Detail=true
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
