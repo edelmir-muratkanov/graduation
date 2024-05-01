@@ -51,6 +51,19 @@ public class AuthEndpoints : ICarterModule
             .ProducesProblem(500)
             .WithSummary("Register user")
             .WithName("Register");
+
+        group.MapPost("logout", MapPostLogout)
+            .Produces(200)
+            .ProducesProblem(401)
+            .ProducesProblem(500)
+            .WithSummary("Logout user")
+            .WithName("Logout");
+    }
+
+    private static Task<IResult> MapPostLogout(HttpContext context, CancellationToken cancellationToken)
+    {
+        context.Response.Cookies.Delete(AuthConstants.RefreshTokenKey);
+        return Task.FromResult(Results.Ok());
     }
 
     private static async Task<IResult> MapPostRegister(
@@ -87,10 +100,23 @@ public class AuthEndpoints : ICarterModule
         IOptions<JwtOptions> jwtOptions,
         CancellationToken cancellationToken)
     {
-        string? access = context.Request.Headers.Authorization[0]?.Split(" ")[1];
-        string? refresh = context.Request.Cookies[AuthConstants.RefreshTokenKey];
+        if (!context.Request.Headers.ContainsKey("Authorization") ||
+            context.Request.Headers.Authorization.Count == 0 ||
+            !context.Request.Headers.Authorization[0]!.StartsWith("Bearer "))
+        {
+            return Results.Unauthorized();
+        }
 
-        var command = new RefreshCommand(access!, refresh!);
+        string access = context.Request.Headers.Authorization[0]!["Bearer ".Length..];
+
+        context.Request.Cookies.TryGetValue(AuthConstants.RefreshTokenKey, out string? refresh);
+
+        if (string.IsNullOrWhiteSpace(refresh))
+        {
+            return Results.Unauthorized();
+        }
+
+        var command = new RefreshCommand(access, refresh);
 
         Result<RefreshResponse> result = await sender.Send(command, cancellationToken);
 
