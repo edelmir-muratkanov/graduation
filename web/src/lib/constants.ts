@@ -1,3 +1,6 @@
+import type { Role } from '@/types'
+import { CollectorType, ProjectType } from '@/types'
+
 export const STORAGE_KEYS = {
   AccessToken: 'access-token',
 }
@@ -10,11 +13,11 @@ export const RoleTranslates: Record<Role, string> = {
 }
 
 export const CollectorTypeTranslates: Record<CollectorType, string> = {
-  Carbonate: 'Карбонат',
-  Terrigen: 'Терриген',
+  [CollectorType.Carbonate]: 'Карбонат',
+  [CollectorType.Terrigen]: 'Терриген',
 }
 
 export const ProjectTypeTranslates: Record<ProjectType, string> = {
-  Ground: 'Наземное',
-  Shelf: 'Шельфовое',
+  [ProjectType.Ground]: 'Наземное',
+  [ProjectType.Shelf]: 'Шельфовое',
 }

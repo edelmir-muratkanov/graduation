@@ -1,13 +1,16 @@
+import type { Project } from '@/types'
+
 import { API } from '../../instance'
 
 export type GetProjectsRequestConfig = RequestConfig | void
 
-type Item = Project & ProjectStatistic
-
-export interface GetProjectsResponse {
-  count: number
-  items: Item[]
-}
+export type GetProjectsResponse = Omit<
+  Project,
+  'parameters' | 'members' | 'ownerId' | 'methods'
+>
 
 export const getProjects = (params?: GetProjectsRequestConfig) =>
-  API.get<GetProjectsResponse>('projects', params?.config)
+  API.get<BasePaginatedResponse<GetProjectsResponse>>(
+    'projects',
+    params?.config,
+  )

@@ -1,3 +1,5 @@
+import type { Method } from '@/types'
+
 import { API } from '../../instance'
 
 export type GetMethodRequestConfig = RequestConfig | void

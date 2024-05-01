@@ -103,7 +103,7 @@ export const CreateProjectForm = () => {
           />
           <FormField
             control={state.form.control}
-            name='projectType'
+            name='type'
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor='type' className='sr-only'>
@@ -112,8 +112,8 @@ export const CreateProjectForm = () => {
                 <FormDescription />
                 <Select
                   name={field.name}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value?.toString()}
+                  onValueChange={(value: string) => field.onChange(+value)}
                   disabled={field.disabled || state.loading}
                 >
                   <FormControl>
@@ -126,11 +126,11 @@ export const CreateProjectForm = () => {
                   </FormControl>
 
                   <SelectContent>
-                    <SelectItem value='Ground'>
-                      {ProjectTypeTranslates.Ground}
+                    <SelectItem value='0'>
+                      {ProjectTypeTranslates[0]}
                     </SelectItem>
-                    <SelectItem value='Shelf'>
-                      {ProjectTypeTranslates.Shelf}
+                    <SelectItem value='1'>
+                      {ProjectTypeTranslates[1]}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -149,8 +149,8 @@ export const CreateProjectForm = () => {
                 <FormDescription />
                 <Select
                   name={field.name}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value?.toString()}
+                  onValueChange={(value: string) => field.onChange(+value)}
                   disabled={field.disabled || state.loading}
                 >
                   <FormControl>
@@ -163,11 +163,11 @@ export const CreateProjectForm = () => {
                   </FormControl>
 
                   <SelectContent>
-                    <SelectItem value='Terrigen'>
-                      {CollectorTypeTranslates.Terrigen}
+                    <SelectItem value='0'>
+                      {CollectorTypeTranslates[0]}
                     </SelectItem>
-                    <SelectItem value='Carbonate'>
-                      {CollectorTypeTranslates.Carbonate}
+                    <SelectItem value='1'>
+                      {CollectorTypeTranslates[1]}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -184,25 +184,14 @@ export const CreateProjectForm = () => {
                 <FormDescription />
                 <FormControl>
                   <MultipleSelector
-                    {...field}
                     className='h-9'
-                    value={
-                      field.value?.map(m => ({
-                        value: m.methodId,
-                        label: state.methods.find(
-                          method => method.id === m.methodId,
-                        )?.name as string,
-                      })) || []
-                    }
-                    defaultOptions={state.methods.map(m => ({
-                      label: m.name,
-                      value: m.id,
+                    defaultOptions={state.methods.map(method => ({
+                      label: method.name,
+                      value: method.id,
                     }))}
                     placeholder='Выберите методы'
                     onChange={options =>
-                      field.onChange(
-                        options.map(option => ({ methodId: option.value })),
-                      )
+                      field.onChange(options.map(option => option.value))
                     }
                     hidePlaceholderWhenSelected
                   />

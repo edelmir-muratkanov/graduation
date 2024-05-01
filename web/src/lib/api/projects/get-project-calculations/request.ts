@@ -3,13 +3,12 @@ import { API } from '../../instance'
 export type GetProjectCalculationsRequestConfig = RequestConfig | void
 
 export type ProjectCalculationsResponse = {
+  name: string
   ratio: number
-  method: Pick<Method, 'name' | 'id'>
   applicability: string
   items: {
-    collectorType: CollectorType
+    name: string
     ratio: number
-    property: Pick<Property, 'name'>
   }[]
 }
 

@@ -42,7 +42,7 @@ export const MethodsApplecabilityChart = () => {
         <LineChart data={calculations}>
           <XAxis
             type='category'
-            dataKey='method.name'
+            dataKey='name'
             tick={{ fontSize: 12 }}
             tickMargin={10}
             padding={{ left: 30, right: 30 }}

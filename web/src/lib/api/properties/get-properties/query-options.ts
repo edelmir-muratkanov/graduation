@@ -6,7 +6,7 @@ export const getPropertiesQueryOptions = (
   settings?: QuerySettings<typeof getProperties>,
 ) =>
   queryOptions({
-    queryKey: ['properties'],
+    queryKey: ['properties', settings?.config?.params],
     queryFn: ({ signal }) =>
       getProperties({
         config: {

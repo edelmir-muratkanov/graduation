@@ -5,29 +5,24 @@ const zeroToUndefind = z.literal(0).transform(() => '')
 const required = 'Обязательное поле'
 
 const groupSchema = z.object({
-  x: z.number({ invalid_type_error: required }).or(zeroToUndefind),
-  xMin: z.number({ invalid_type_error: required }).or(zeroToUndefind),
-  xMax: z.number({ invalid_type_error: required }).or(zeroToUndefind),
+  avg: z.number({ invalid_type_error: required }).or(zeroToUndefind),
+  min: z.number({ invalid_type_error: required }).or(zeroToUndefind),
+  max: z.number({ invalid_type_error: required }).or(zeroToUndefind),
 })
 
-const parameterSchema = z
-  .object({
-    first: groupSchema.optional(),
-    second: groupSchema.optional(),
-  })
-  .refine(v => v.first || v.second, {
-    message: 'Должно иметь x1 или x2',
-  })
-
-const collectorType = z.union([z.literal('Terrigen'), z.literal('Carbonate')])
+const collectorType = z.number({ invalid_type_error: required })
 
 export const createMethodFormSchema = z.object({
-  name: z.string().min(1, { message: required }),
+  name: z.string().trim().min(1, required),
   collectorTypes: z.array(collectorType).nonempty({ message: required }),
-  data: z
+  parameters: z
     .object({
-      propertyId: z.string().cuid({ message: required }),
-      parameters: parameterSchema,
+      propertyId: z.string().trim().min(1, required),
+      first: groupSchema.optional(),
+      second: groupSchema.optional(),
+    })
+    .refine(v => v.first || v.second, {
+      message: 'Должно иметь x1 или x2',
     })
     .array()
     .nonempty({ message: 'Должен иметь хотя бы один параметр' }),

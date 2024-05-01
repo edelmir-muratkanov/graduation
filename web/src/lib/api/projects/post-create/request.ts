@@ -1,12 +1,14 @@
+import type { CollectorType, ProjectType } from '@/types'
+
 import { API } from '../../instance'
 
 export interface PostCreateProjectParams {
   name: string
   country: string
   operator: string
-  projectType: ProjectType
+  type: ProjectType
   collectorType: CollectorType
-  methodIds: { methodId: string }[]
+  methodIds: string[]
   parameters: { propertyId: string; value: number }[]
 }
 

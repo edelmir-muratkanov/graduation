@@ -6,6 +6,7 @@ import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
 import { useGetMethodsQuery } from '@/lib/api'
 import { useDebounce } from '@/lib/useDebounce'
+import type { Method } from '@/types'
 
 import { COLUMNS } from './columns'
 
@@ -13,7 +14,7 @@ export const useMethodsTable = () => {
   const columns = useMemo(() => COLUMNS, [])
   const navigate = useNavigate()
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
+    pageIndex: 1,
     pageSize: 10,
   })
 
@@ -26,9 +27,9 @@ export const useMethodsTable = () => {
   const getMethodsQuery = useGetMethodsQuery({
     config: {
       params: {
-        limit: pagination.pageSize,
-        offset: pagination.pageIndex * pagination.pageSize,
-        search: debouncedGlobalFilter,
+        pageSize: pagination.pageSize,
+        pageNumber: pagination.pageIndex,
+        searchTerm: debouncedGlobalFilter,
       },
     },
   })
@@ -38,7 +39,7 @@ export const useMethodsTable = () => {
   const table = useReactTable({
     data: getMethodsQuery.data.data.items ?? defaultData,
     columns,
-    rowCount: getMethodsQuery.data.data.count,
+    rowCount: getMethodsQuery.data.data.totalCount,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     onPaginationChange: setPagination,
@@ -50,7 +51,7 @@ export const useMethodsTable = () => {
 
   const handleRowClick = (
     event: MouseEvent,
-    row: Row<Omit<Method & MethodStatistic, 'parameters'>>,
+    row: Row<Omit<Method, 'parameters'>>,
   ) => {
     if (event.metaKey || event.ctrlKey) {
       const win = window.open(`/parameters/${row.original.id}`, '_blank')

@@ -5,17 +5,17 @@ import { useGetProjectCalculationsQuery, useGetProjectQuery } from '@/lib/api'
 export const useProjectCalculations = () => {
   const { projectId } = useParams({ from: '/projects/$projectId/' })
   const getProjectCalculationsQuery = useGetProjectCalculationsQuery(projectId)
-  const getProjectQuery = useGetProjectQuery(projectId)
+  const projectQuery = useGetProjectQuery(projectId)
 
   const acceptableParameters = getProjectCalculationsQuery.data.data.map(c => ({
     allParameters: c.items.length,
     acceptableParameters: c.items.filter(i => i.ratio >= 0.25).length,
-    methodName: c.method.name,
+    methodName: c.name,
   }))
 
   return {
     calculations: getProjectCalculationsQuery.data.data,
-    properties: getProjectQuery.data.data.parameters,
     acceptableParameters,
+    project: projectQuery.data.data,
   }
 }

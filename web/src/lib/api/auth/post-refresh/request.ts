@@ -1,11 +1,10 @@
 import { API } from '../../instance'
 
-export interface PostRefreshResponse {
-  user: User
+export type PostRefreshRequestConfig = RequestConfig
+
+export type PostRefreshResponse = {
   token: string
 }
-
-export type PostRefreshRequestConfig = RequestConfig
 
 export const postRefresh = ({ config }: PostRefreshRequestConfig) =>
   API.post<PostRefreshResponse>('auth/refresh', undefined, config)

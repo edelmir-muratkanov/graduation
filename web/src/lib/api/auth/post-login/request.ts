@@ -1,12 +1,13 @@
+import type { User } from '@/types'
+
 import { API } from '../../instance'
 
-export interface PostLoginParams {
+export type PostLoginParams = {
   email: string
   password: string
 }
 
-export interface PostLoginResponse {
-  user: User
+export type PostLoginResponse = User & {
   token: string
 }
 

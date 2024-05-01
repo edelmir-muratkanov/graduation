@@ -1,14 +1,10 @@
+import type { Method } from '@/types'
+
 import { API } from '../../instance'
 
 export type GetMethodsRequestConfig = RequestConfig | void
 
-export interface GetMethodsResponse {
-  count: number
-  items: Pick<
-    Method & MethodStatistic,
-    'id' | 'name' | '_count' | 'collectorTypes'
-  >[]
-}
+export type GetMethodsResponse = Omit<Method, 'parameters'>
 
 export const getMethods = (params?: GetMethodsRequestConfig) =>
-  API.get<GetMethodsResponse>('methods', params?.config)
+  API.get<BasePaginatedResponse<GetMethodsResponse>>('methods', params?.config)
