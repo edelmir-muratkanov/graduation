@@ -1,56 +1,43 @@
-# compiled output
-/dist
-/node_modules
-/build
-
-# Logs
-logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# OS
+﻿*.swp
+*.*~
+project.lock.json
 .DS_Store
+*.pyc
+nupkg/
 
-# Tests
-/coverage
-/.nyc_output
+# Visual Studio Code
+.vscode/
 
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+# Rider
+.idea/
 
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# Visual Studio
+.vs/
 
-# dotenv environment variable files
-.env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+# Fleet
+.fleet/
 
-# temp directory
-.temp
-.tmp
+# Code Rush
+.cr/
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn

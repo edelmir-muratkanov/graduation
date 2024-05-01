@@ -2,11 +2,10 @@ import { createColumnHelper } from '@tanstack/react-table'
 
 import { Badge } from '@/components/ui'
 import { CollectorTypeTranslates } from '@/lib/constants'
+import type { Method } from '@/types'
 
 const columnHelper =
-  createColumnHelper<
-    Pick<Method & MethodStatistic, 'id' | 'name' | '_count' | 'collectorTypes'>
-  >()
+  createColumnHelper<Pick<Method, 'id' | 'name' | 'collectorTypes'>>()
 
 export const COLUMNS = [
   columnHelper.accessor('name', {
@@ -26,12 +25,6 @@ export const COLUMNS = [
         ))}
       </div>
     ),
-    footer: props => props.column.id,
-  }),
-
-  columnHelper.accessor('_count.projects', {
-    header: '№ Проектов',
-    cell: info => info.getValue(),
     footer: props => props.column.id,
   }),
 ]

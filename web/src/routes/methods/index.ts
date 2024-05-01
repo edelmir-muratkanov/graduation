@@ -5,6 +5,10 @@ import { MethodsLoading } from '@/pages/methods/loading'
 
 export const Route = createFileRoute('/methods/')({
   loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData(getMethodsQueryOptions()),
+    queryClient.ensureQueryData(
+      getMethodsQueryOptions({
+        config: { params: { pageSize: 10, pageNumber: 1 } },
+      }),
+    ),
   pendingComponent: MethodsLoading,
 })

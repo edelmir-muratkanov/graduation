@@ -1,11 +1,13 @@
+import type { Property } from '@/types'
+
 import { API } from '../../instance'
 
 export type GetPropertiesRequestConfig = RequestConfig | void
 
-export interface GetPropertiesResponse {
-  count: number
-  items: (Property & PropertyStatistic)[]
-}
+export type GetPropertiesResponse = Property
 
 export const getProperties = (params?: GetPropertiesRequestConfig) =>
-  API.get<GetPropertiesResponse>('properties', params?.config)
+  API.get<BasePaginatedResponse<GetPropertiesResponse>>(
+    'properties',
+    params?.config,
+  )

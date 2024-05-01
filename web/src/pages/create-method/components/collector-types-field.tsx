@@ -11,11 +11,12 @@ import {
   Text,
 } from '@/components/ui'
 import { CollectorTypeTranslates } from '@/lib/constants'
+import { CollectorType } from '@/types'
 
 import { useCreateMethodForm } from '../hooks/useCreateMethodForm'
 
 export const CollectorTypesField = () => {
-  const { state, functions } = useCreateMethodForm()
+  const { state } = useCreateMethodForm()
   const { control } = useFormContext()
 
   return (
@@ -36,20 +37,26 @@ export const CollectorTypesField = () => {
                   id: field.name,
                   'aria-invalid': fieldState.invalid,
                 }}
-                value={field.value?.map((v: CollectorType) =>
-                  functions.getMultipleSelectorValue(v),
-                )}
+                value={field.value.map((v: string) => ({
+                  label:
+                    +v === 0
+                      ? CollectorTypeTranslates[0]
+                      : CollectorTypeTranslates[1],
+                  value: v,
+                }))}
                 defaultOptions={[
                   {
-                    label: CollectorTypeTranslates.Terrigen,
-                    value: 'Terrigen',
+                    label: CollectorTypeTranslates[CollectorType.Terrigen],
+                    value: CollectorType.Terrigen.toString(),
                   },
                   {
-                    label: CollectorTypeTranslates.Carbonate,
-                    value: 'Carbonate',
+                    label: CollectorTypeTranslates[CollectorType.Carbonate],
+                    value: CollectorType.Carbonate.toString(),
                   },
                 ]}
-                onChange={options => field.onChange(options.map(o => o.value))}
+                onChange={options => {
+                  field.onChange(options.map(o => +o.value))
+                }}
                 placeholder='Выберите типы коллекторов'
                 hidePlaceholderWhenSelected
                 emptyIndicator={<Text>Nothing to select</Text>}

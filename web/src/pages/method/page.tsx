@@ -25,7 +25,7 @@ import { CollectorTypeTranslates } from '@/lib/constants'
 import { useMethodPage } from './useMethodPage'
 
 export const MethodPage = () => {
-  const { method, properties } = useMethodPage()
+  const { method } = useMethodPage()
 
   return (
     <div className='w-full space-y-4'>
@@ -78,29 +78,25 @@ export const MethodPage = () => {
                   <TableHead>Свойство</TableHead>
                   <TableHead>Минимальное значение</TableHead>
                   <TableHead>Максимальное значение</TableHead>
+                  <TableHead>Единицы измерения</TableHead>
                 </TableRow>
               </TableHeader>
 
               <TableBody>
                 {method.data.parameters.map(parameter => (
-                  <TableRow key={parameter.propertyId}>
+                  <TableRow key={parameter.id}>
+                    <TableCell>{parameter.propertyName}</TableCell>
                     <TableCell>
-                      {
-                        properties.data.items.find(
-                          item => item.id === parameter.propertyId,
-                        )?.name
-                      }
+                      {parameter.first?.min
+                        ? parameter.first.min
+                        : parameter.second?.min}
                     </TableCell>
                     <TableCell>
-                      {parameter.parameters.first?.xMin
-                        ? parameter.parameters.first.xMin
-                        : parameter.parameters.second?.xMin}
+                      {parameter.second?.max
+                        ? parameter.second.max
+                        : parameter.first?.max}
                     </TableCell>
-                    <TableCell>
-                      {parameter.parameters.second?.xMax
-                        ? parameter.parameters.second.xMax
-                        : parameter.parameters.first?.xMax}
-                    </TableCell>
+                    <TableCell>{parameter.propertyUnit}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

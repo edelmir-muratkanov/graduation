@@ -48,14 +48,16 @@ export const ProjectInfo = () => {
               <TableRow>
                 <TableHead>Название</TableHead>
                 <TableHead>Значение</TableHead>
+                <TableHead>Единицы измерения</TableHead>
               </TableRow>
             </TableHeader>
 
             <TableBody>
               {data.data.parameters.map(parameter => (
-                <TableRow key={parameter.property.id}>
-                  <TableCell>{parameter.property.name}</TableCell>
+                <TableRow key={parameter.id}>
+                  <TableCell>{parameter.name}</TableCell>
                   <TableCell>{parameter.value}</TableCell>
+                  <TableCell>{parameter.unit}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

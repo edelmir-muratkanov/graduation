@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-table'
 
 import { useGetProjectsQuery } from '@/lib/api'
+import type { Project } from '@/types'
 
 import { COLUMNS } from './columns'
 
@@ -22,7 +23,7 @@ export const useProjectsTable = () => {
   const navigate = useNavigate()
 
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
+    pageIndex: 1,
     pageSize: 10,
   })
 
@@ -31,8 +32,8 @@ export const useProjectsTable = () => {
   const getProjectsQuery = useGetProjectsQuery({
     config: {
       params: {
-        limit: pagination.pageSize,
-        offset: pagination.pageIndex * pagination.pageSize,
+        pageSize: pagination.pageSize,
+        pageNumber: pagination.pageIndex,
       },
     },
   })
@@ -42,7 +43,7 @@ export const useProjectsTable = () => {
   const table = useReactTable({
     data: getProjectsQuery.data?.data.items ?? defaultData,
     columns,
-    rowCount: getProjectsQuery.data?.data.count,
+    rowCount: getProjectsQuery.data?.data.totalCount,
     state: { pagination, globalFilter },
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
@@ -53,7 +54,7 @@ export const useProjectsTable = () => {
 
   const handleRowClick = (
     event: MouseEvent,
-    row: Row<Project & ProjectStatistic>,
+    row: Row<Omit<Project, 'parameters' | 'members' | 'ownerId' | 'methods'>>,
   ) => {
     if (event.metaKey || event.ctrlKey) {
       const win = window.open(`/projects/${row.original.id}`, '_blank')

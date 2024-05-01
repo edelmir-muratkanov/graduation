@@ -3,9 +3,7 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 
-import type { Option } from '@/components/ui'
 import { useGetPropertiesQuery, usePostCreateMethodMutation } from '@/lib/api'
-import { CollectorTypeTranslates } from '@/lib/constants'
 import { queryClient } from '@/lib/contexts'
 
 import {
@@ -19,12 +17,12 @@ export const useCreateMethodForm = () => {
     defaultValues: {
       name: '',
       collectorTypes: [],
-      data: [],
+      parameters: [],
     },
   })
-  const dataFormArray = useFieldArray({
+  const parametersFormArray = useFieldArray({
     control: form.control,
-    name: 'data',
+    name: 'parameters',
   })
 
   const postCreateMethodMutation = usePostCreateMethodMutation({
@@ -45,56 +43,47 @@ export const useCreateMethodForm = () => {
       params: {
         name: values.name,
         collectorTypes: values.collectorTypes,
-        data: values.data.map(d => ({
+        parameters: values.parameters.map(d => ({
           propertyId: d.propertyId,
-          parameters: {
-            first: d.parameters.first
-              ? {
-                  x: +d.parameters.first.x,
-                  xMax: +d.parameters.first.xMax,
-                  xMin: +d.parameters.first.xMin,
-                }
-              : undefined,
-            second: d.parameters.second
-              ? {
-                  x: +d.parameters.second.x,
-                  xMax: +d.parameters.second.xMax,
-                  xMin: +d.parameters.second.xMin,
-                }
-              : undefined,
-          },
+          firstParameters: d.first
+            ? {
+                avg: +d.first.avg,
+                max: +d.first.max,
+                min: +d.first.min,
+              }
+            : undefined,
+          secondParameters: d.second
+            ? {
+                avg: +d.second.avg,
+                max: +d.second.max,
+                min: +d.second.min,
+              }
+            : undefined,
         })),
       },
     })
   })
 
-  form.watch('data')
+  const parameters = form.watch('parameters')
 
-  const getPropertiesQuery = useGetPropertiesQuery()
-
-  const getMultipleSelectorValue = (value: CollectorType): Option => ({
-    label:
-      value === 'Carbonate'
-        ? CollectorTypeTranslates.Carbonate
-        : CollectorTypeTranslates.Terrigen,
-    value: value === 'Carbonate' ? 'Carbonate' : 'Terrigen',
+  const getPropertiesQuery = useGetPropertiesQuery({
+    config: { params: { pageSize: 100, sortColumn: 'name' } },
   })
 
   const setParameter = (index: number, type: 'first' | 'second') => {
-    form.setValue(`data.${index}.parameters.${type}`, {
-      x: '',
-      xMax: '',
-      xMin: '',
+    form.setValue(`parameters.${index}.${type}`, {
+      avg: '',
+      max: '',
+      min: '',
     })
   }
 
   const addData = () =>
-    dataFormArray.append({
+    parametersFormArray.append({
       propertyId: '',
-      parameters: {},
     })
 
-  const removeData = (index: number) => dataFormArray.remove(index)
+  const removeData = (index: number) => parametersFormArray.remove(index)
 
   const convertToNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const n = parseFloat(e.target.value)
@@ -106,12 +95,12 @@ export const useCreateMethodForm = () => {
       form,
       formErrors: form.formState.errors,
       loading: false,
-      dataFields: dataFormArray.fields,
+      parametersFields: parametersFormArray.fields,
       properties: getPropertiesQuery.data.data.items,
+      parameters,
     },
     functions: {
       onSubmit,
-      getMultipleSelectorValue,
       setParameter,
       addData,
       removeData,

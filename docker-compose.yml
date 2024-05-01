@@ -1,0 +1,34 @@
+version: '3.8'
+
+volumes:
+  database:
+
+
+services:
+  api:
+    build: 
+      context: ./api
+      dockerfile: ./Api/Dockerfile
+    ports:
+      - 8080:8080
+      - 8081:8081
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Database=Host=database; Port=5432; Database=graduation; Username=admin; Password=123;Include Error Detail=true
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - database
+
+  database:
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5433:5432
+    volumes:
+      - database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=graduation

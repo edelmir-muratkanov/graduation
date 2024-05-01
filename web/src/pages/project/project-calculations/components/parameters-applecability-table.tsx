@@ -10,7 +10,11 @@ import {
 import { useProjectCalculations } from '../useProjectCalculations'
 
 export const ParametersApplecabilityTable = () => {
-  const { calculations, properties } = useProjectCalculations()
+  const { calculations } = useProjectCalculations()
+
+  const properties = calculations
+    .flatMap(c => c.items.map(i => i.name))
+    .filter((el, index, self) => index === self.indexOf(el))
 
   return (
     <Table className='my-5 table-fixed '>
@@ -27,40 +31,21 @@ export const ParametersApplecabilityTable = () => {
         </TableRow>
         <TableRow>
           {calculations.map(c => (
-            <TableHead key={`Head-${c.method.name}`} className='text-center'>
-              {c.method.name}
+            <TableHead key={`Head-${c.name}`} className='text-center'>
+              {c.name}
             </TableHead>
           ))}
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell>Тип коллектора</TableCell>
-          {calculations.map(c => {
-            const item = c.items.find(i => i.collectorType)
-            return (
-              <TableCell
-                key={`${c.method.name}-${item?.property?.name || 'Тип коллектора'}`}
-                className='text-center'
-              >
-                {item?.ratio}
-              </TableCell>
-            )
-          })}
-        </TableRow>
-        {properties.map(({ property }) => (
-          <TableRow key={property.name}>
-            <TableCell>{property.name}</TableCell>
+        {properties.map(name => (
+          <TableRow key={name}>
+            <TableCell>{name}</TableCell>
             {calculations.map(c => {
-              const item = c.items.find(
-                i => i.property && i.property.name === property.name,
-              )
+              const item = c.items.find(i => i.name === name)
 
               return (
-                <TableCell
-                  key={`${property.name}-${c.method.name}`}
-                  className='text-center'
-                >
+                <TableCell key={`${name}-${c.name}`} className='text-center'>
                   {item ? item.ratio.toLocaleString('ru-KZ') : '-'}
                 </TableCell>
               )

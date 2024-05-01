@@ -38,14 +38,16 @@ export const useLoginForm = () => {
   })
 
   const onSubmit = form.handleSubmit(async values => {
-    const res = await postLoginMutation.mutateAsync({
+    const {
+      data: { token, ...user },
+    } = await postLoginMutation.mutateAsync({
       params: values,
     })
 
-    if (res.data.token && res.data.user) {
+    if (token && user.id) {
       flushSync(() => {
-        localStorage.setItem(STORAGE_KEYS.AccessToken, res.data.token)
-        setUser(res.data.user)
+        localStorage.setItem(STORAGE_KEYS.AccessToken, token)
+        setUser(user)
       })
       navigate({ to: redirectUrl ?? '/', replace: true })
     }

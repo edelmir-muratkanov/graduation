@@ -26,7 +26,7 @@ export const PropertyIdField = ({ index }: PropertyIdFieldProps) => {
   return (
     <FormField
       control={control}
-      name={`data.${index}.propertyId`}
+      name={`parameters.${index}.propertyId`}
       render={({ field }) => (
         <FormItem className='w-full'>
           <FormLabel className='sr-only'>
@@ -34,7 +34,7 @@ export const PropertyIdField = ({ index }: PropertyIdFieldProps) => {
           </FormLabel>
           <FormDescription />
           <Select
-            name={`data.${index}.propertyId`}
+            name={`parameters.${index}.propertyId`}
             onValueChange={field.onChange}
             value={field.value}
             disabled={state.loading || field.disabled}

@@ -26,7 +26,7 @@ export const ParameterField = ({ index, type }: ParameterFieldProps) => {
     <div className='grid grid-cols-3 col-span-12 gap-2'>
       <FormField
         control={control}
-        name={`data.${index}.parameters.${type}.xMin`}
+        name={`parameters.${index}.${type}.min`}
         render={({ field }) => (
           <FormItem>
             <FormLabel className='sr-only'>
@@ -38,7 +38,7 @@ export const ParameterField = ({ index, type }: ParameterFieldProps) => {
                 type='number'
                 placeholder={`Введите минимальный x${type === 'first' ? 1 : 2}`}
                 {...field}
-                value={field.value.toString()}
+                value={field.value}
                 onChange={e => field.onChange(functions.convertToNumber(e))}
                 disabled={state.loading || field.disabled}
               />
@@ -49,7 +49,7 @@ export const ParameterField = ({ index, type }: ParameterFieldProps) => {
       />
       <FormField
         control={control}
-        name={`data.${index}.parameters.${type}.x`}
+        name={`parameters.${index}.${type}.avg`}
         render={({ field }) => (
           <FormItem>
             <FormLabel className='sr-only'>
@@ -61,7 +61,7 @@ export const ParameterField = ({ index, type }: ParameterFieldProps) => {
                 type='number'
                 placeholder={`Введите x${type === 'first' ? 1 : 2}`}
                 {...field}
-                value={field.value.toString()}
+                value={field.value}
                 onChange={e => field.onChange(functions.convertToNumber(e))}
               />
             </FormControl>
@@ -71,7 +71,7 @@ export const ParameterField = ({ index, type }: ParameterFieldProps) => {
       />
       <FormField
         control={control}
-        name={`data.${index}.parameters.${type}.xMax`}
+        name={`parameters.${index}.${type}.max`}
         render={({ field }) => (
           <FormItem>
             <FormLabel className='sr-only'>

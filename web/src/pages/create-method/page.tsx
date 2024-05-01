@@ -34,9 +34,9 @@ export const CreateMethodPage = () => {
 
           <div className='flex flex-col'>
             <Heading>Список параметров</Heading>
-            <FormMessage>{state.formErrors.data?.message}</FormMessage>
+            <FormMessage>{state.formErrors.parameters?.message}</FormMessage>
             <ul className='space-y-4'>
-              {state.dataFields.map((field, index) => {
+              {state.parametersFields.map((field, index) => {
                 return (
                   <li key={field.id} className='grid grid-cols-12 grid-rows-3'>
                     <div className='flex justify-between items-center col-span-12 row-span-1'>
@@ -52,7 +52,7 @@ export const CreateMethodPage = () => {
                       </Button>
                     </div>
                     <div className='grid  col-span-12 row-span-2'>
-                      {field?.parameters.first ? (
+                      {state.form.watch(`parameters.${index}`).first ? (
                         <ParameterField index={index} type='first' />
                       ) : (
                         <Button
@@ -65,7 +65,7 @@ export const CreateMethodPage = () => {
                         </Button>
                       )}
 
-                      {field?.parameters.second ? (
+                      {state.form.watch(`parameters.${index}`).second ? (
                         <ParameterField index={index} type='second' />
                       ) : (
                         <Button
@@ -80,8 +80,8 @@ export const CreateMethodPage = () => {
                         </Button>
                       )}
                       <FormMessage>
-                        {state.formErrors.data &&
-                          state.formErrors.data[index]?.parameters?.message}
+                        {state.formErrors.parameters &&
+                          state.formErrors.parameters[index]?.message}
                       </FormMessage>
                     </div>
                   </li>

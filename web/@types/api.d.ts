@@ -28,7 +28,18 @@ type RequestConfig<Params = undefined> = Params extends undefined
   : { params: Params; config?: ApiRequestConfig }
 
 interface BaseErrorResponse {
-  message: string
-  error: string
-  statusCode: number
+  type: string
+  title: string
+  status: number
+  detail: string
+  instance: string
+  errors?: Record<string, string>
+}
+
+interface BasePaginatedResponse<T> {
+  totalPages: number
+  totalCount: number
+  hasPreviousePage: boolean
+  hasNextPage: boolean
+  items: T[]
 }

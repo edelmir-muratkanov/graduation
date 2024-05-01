@@ -1,27 +1,19 @@
+import type { CollectorType, MethodParameterGroup } from '@/types'
+
 import { API } from '../../instance'
 
-type Group = {
-  x: number
-  xMin: number
-  xMax: number
-}
-
-type Parameters = {
-  first?: Group
-  second?: Group
-}
-
-export interface PostCreateMethodParams {
+export interface PostCreateMethodRequest {
   name: string
   collectorTypes: CollectorType[]
-  data: {
+  parameters: {
     propertyId: string
-    parameters: Parameters
+    firstParameters?: MethodParameterGroup
+    secondParameters?: MethodParameterGroup
   }[]
 }
 
 export type PostCreateMethodRequestConfig =
-  RequestConfig<PostCreateMethodParams>
+  RequestConfig<PostCreateMethodRequest>
 
 export const postCreateMethod = ({
   params,

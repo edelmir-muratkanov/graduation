@@ -7,6 +7,7 @@ import { Footer } from '@/components/footer'
 import { Header } from '@/components/header'
 import { NotFound } from '@/components/not-found'
 import { Toaster } from '@/components/ui'
+import type { User } from '@/types'
 
 const TOASTER_DURATION = 5000
 
