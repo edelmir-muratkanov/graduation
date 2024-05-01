@@ -8,6 +8,7 @@ using Application.Project.AddParameters;
 using Application.Project.Create;
 using Application.Project.GetProjectById;
 using Application.Project.GetProjects;
+using Application.Project.GetUserProjects;
 using Application.Project.Remove;
 using Application.Project.RemoveMember;
 using Application.Project.RemoveMethod;
@@ -18,6 +19,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
 using Shared.Results;
+using GetProjectsResponse = Application.Project.GetProjects.GetProjectsResponse;
 
 namespace Api.Endpoints;
 
@@ -25,7 +27,7 @@ public class ProjectEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder group = app.MapGroup("api/projects").WithTags("projects");
+        RouteGroupBuilder group = app.MapGroup("api/projects").WithTags("projects").WithOpenApi();
 
         group.MapPost("", async (CreateProjectRequest request, ISender sender, CancellationToken cancellationToken) =>
             {
@@ -98,7 +100,7 @@ public class ProjectEndpoints : ICarterModule
 
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
-            .Produces<PaginatedList<GetProjectsResponse>>(200)
+            .Produces<PaginatedList<GetProjectsResponse>>()
             .ProducesProblem(500)
             .WithName("Get projects");
 
@@ -108,10 +110,26 @@ public class ProjectEndpoints : ICarterModule
                 Result<GetProjectByIdResponse> result = await sender.Send(query, cancellationToken);
                 return result.Match(Results.Ok, CustomResults.Problem);
             })
-            .Produces<GetProjectByIdResponse>(200)
+            .Produces<GetProjectByIdResponse>()
             .ProducesProblem(404)
             .ProducesProblem(500)
             .WithDescription("Get project");
+
+        group.MapGet("mine", async (ISender sender, CancellationToken cancellationToken) =>
+            {
+                var query = new GetUserProjectsQuery
+                {
+                };
+                Result<List<ProjectResponse>> result =
+                    await sender.Send(query, cancellationToken);
+                return result.Match(Results.Ok, CustomResults.Problem);
+            })
+            .RequireAuthorization()
+            .Produces<List<ProjectResponse>>()
+            .ProducesProblem(401)
+            .ProducesProblem(500)
+            .WithName("Get user projects")
+            .WithSummary("Get user projects by user id");
 
         group.MapDelete("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
             {
