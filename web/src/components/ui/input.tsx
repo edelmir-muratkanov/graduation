@@ -15,11 +15,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <>
         {hasIcon ? (
           <div
-            className='flex items-center justify-center gap-2 px-3 h-10 rounded-md border border-input bg-transparent ring-offset-background focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-2 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50'
+            className='flex items-center justify-center gap-2  h-10 rounded-md border border-input bg-transparent ring-offset-background focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-2 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50'
             data-disabled={props.disabled}
           >
             {startIcon && (
-              <div className={cn('text-muted-foreground')}>{startIcon}</div>
+              <div className={cn('text-muted-foreground pl-3')}>
+                {startIcon}
+              </div>
             )}
             <input
               type={type}
@@ -31,7 +33,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               {...props}
             />
             {endIcon && (
-              <div className={cn('text-muted-foreground')}>{endIcon}</div>
+              <div className={cn('text-muted-foreground pr-3')}>{endIcon}</div>
             )}
           </div>
         ) : (
