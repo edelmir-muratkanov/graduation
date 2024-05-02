@@ -1,12 +1,8 @@
 import type { MouseEvent } from 'react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import type { Row } from '@tanstack/react-table'
-import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
 import { useGetProjectsQuery } from '@/lib/api'
 import type { Project } from '@/types'
@@ -33,7 +29,8 @@ export const useProjectsTable = () => {
     config: {
       params: {
         pageSize: pagination.pageSize,
-        pageNumber: pagination.pageIndex,
+        pageNumber: pagination.pageIndex + 1,
+        searchTerm: globalFilter,
       },
     },
   })
@@ -47,10 +44,19 @@ export const useProjectsTable = () => {
     state: { pagination, globalFilter },
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    manualFiltering: true,
     manualPagination: true,
     debugTable: process.env.NODE_ENV !== 'production',
   })
+
+  useEffect(() => {
+    if (setPagination) {
+      setPagination(pagination => ({
+        pageIndex: 0,
+        pageSize: pagination.pageSize,
+      }))
+    }
+  }, [globalFilter, setPagination])
 
   const handleRowClick = (
     event: MouseEvent,

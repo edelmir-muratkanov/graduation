@@ -28,7 +28,7 @@ export const ProjectsTable = () => {
           value={state.globalFilter}
           onChange={e => functions.setGlobalFilter(e.target.value)}
           placeholder='Найти...'
-          className='p-2 font-lg shadow border border-block w-[200px]'
+          className='p-2 font-lg shadow border border-block w-[300px]'
         />
         <Select
           onValueChange={e => state.table.setPageSize(Number(e))}
