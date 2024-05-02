@@ -16,6 +16,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  ScrollArea,
   Select,
   SelectContent,
   SelectItem,
@@ -23,7 +24,6 @@ import {
   SelectValue,
   Text,
 } from '@/components/ui'
-import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { ParameterField } from './parameter-field'
 import { useAddParameter } from './useAddParameters'
