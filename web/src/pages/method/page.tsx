@@ -11,6 +11,7 @@ import {
 import { cn } from '@/lib/cn'
 import { useProfile } from '@/lib/contexts'
 
+import { AddParameters } from './components/add-parameters/add-parameters'
 import { BaseInfo } from './components/base-info'
 import { ParametersList } from './components/parameters-list'
 import { UpdateBaseInfo } from './components/update-base-info/update-base-info'
@@ -43,15 +44,16 @@ export const MethodPage = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className='w-full flex space-x-6'>
+      <div className='w-full flex space-x-6 pb-10'>
         <div className={cn('w-full space-y-5', isAdmin && 'w-[80%]')}>
           <BaseInfo method={methodData.data} />
           <ParametersList method={methodData.data} />
         </div>
 
         {isAdmin && (
-          <div>
+          <div className='space-y-4'>
             <UpdateBaseInfo />
+            <AddParameters />
           </div>
         )}
       </div>
