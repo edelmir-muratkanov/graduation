@@ -1,4 +1,5 @@
 export * from './get-profile'
 export * from './post-login'
+export * from './post-logout'
 export * from './post-refresh'
 export * from './post-register'
