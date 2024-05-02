@@ -36,7 +36,7 @@ export const AddParameters = () => {
       onOpenChange={open => functions.setIsOpen(open)}
     >
       <DialogTrigger asChild>
-        <Button className='w-[300px]'>Добавить параметры</Button>
+        <Button size='lg'>Добавить параметры</Button>
       </DialogTrigger>
 
       <DialogContent className='max-w-4xl'>

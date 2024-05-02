@@ -31,7 +31,7 @@ export const UpdateBaseInfo = () => {
       onOpenChange={open => functions.setIsOpen(open)}
     >
       <DialogTrigger asChild>
-        <Button className='w-[300px]'>Обновить базовую информацию</Button>
+        <Button size='lg'>Обновить базовую информацию</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

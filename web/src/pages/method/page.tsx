@@ -13,6 +13,7 @@ import { useProfile } from '@/lib/contexts'
 
 import { AddParameters } from './components/add-parameters/add-parameters'
 import { BaseInfo } from './components/base-info'
+import { DeleteMethod } from './components/delete-method'
 import { ParametersList } from './components/parameters-list'
 import { UpdateBaseInfo } from './components/update-base-info/update-base-info'
 import { useMethodPage } from './useMethodPage'
@@ -51,9 +52,10 @@ export const MethodPage = () => {
         </div>
 
         {isAdmin && (
-          <div className='space-y-4'>
+          <div className='flex flex-col h-full space-y-4'>
             <UpdateBaseInfo />
             <AddParameters />
+            <DeleteMethod classname='self-end' methodId={methodData.data.id} />
           </div>
         )}
       </div>
