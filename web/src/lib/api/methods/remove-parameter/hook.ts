@@ -12,7 +12,7 @@ export const useDeleteMethodParameterMutation = (
   >,
 ) =>
   useMutation({
-    mutationKey: ['postAddMethodParameter'],
+    mutationKey: ['deleteMethodParameter'],
     mutationFn: ({ config }) =>
       deleteMethodParameter(methodId, parameterId, {
         config: { ...settings?.config, ...config },
