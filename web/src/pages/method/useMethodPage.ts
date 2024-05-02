@@ -7,5 +7,5 @@ export const useMethodPage = () => {
   const { methodId } = route.useParams()
   const methodQuery = useGetMethodQuery(methodId)
 
-  return { method: methodQuery.data }
+  return { methodId, methodData: methodQuery.data }
 }
