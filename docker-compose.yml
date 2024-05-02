@@ -6,9 +6,9 @@ volumes:
 
 services:
   api:
-    build: 
+    build:
       context: ./api
-      dockerfile: ./Api/Dockerfile
+      dockerfile: ./src/Api/Dockerfile
     ports:
       - 8080:8080
       - 8081:8081
