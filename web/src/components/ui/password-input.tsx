@@ -12,28 +12,28 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
     const [showPassword, setShowPassword] = useState(false)
 
     return (
-      <div className='relative'>
-        <Input
-          type={showPassword ? 'text' : 'password'}
-          className={cn('pr-10', className)}
-          ref={ref}
-          {...props}
-        />
-        <Button
-          type='button'
-          variant='ghost'
-          size='sm'
-          className='absolute right-0 top-0  h-full px-3 py-2 hover:bg-transparent'
-          onClick={() => setShowPassword(!showPassword)}
-          disabled={!props.value || props.disabled}
-        >
-          {showPassword ? (
-            <EyeOffIcon className='h-4 w-4' aria-hidden='true' />
-          ) : (
-            <EyeIcon className='h-4 w-4' aria-hidden='true' />
-          )}
-        </Button>
-      </div>
+      <Input
+        type={showPassword ? 'text' : 'password'}
+        className={cn('pr-10 h-9', className)}
+        ref={ref}
+        endIcon={
+          <Button
+            type='button'
+            variant='ghost'
+            size='sm'
+            className=' h-full px-3 py-2 hover:bg-transparent'
+            onClick={() => setShowPassword(!showPassword)}
+            disabled={!props.value || props.disabled}
+          >
+            {showPassword ? (
+              <EyeOffIcon className='h-4 w-4' aria-hidden='true' />
+            ) : (
+              <EyeIcon className='h-4 w-4' aria-hidden='true' />
+            )}
+          </Button>
+        }
+        {...props}
+      />
     )
   },
 )
