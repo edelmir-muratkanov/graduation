@@ -1,4 +1,5 @@
 import { flexRender } from '@tanstack/react-table'
+import { X } from 'lucide-react'
 
 import {
   Button,
@@ -27,7 +28,13 @@ export const MethodsTable = () => {
           value={state.globalFilter}
           onChange={e => functions.setGlobalFilter(e.target.value)}
           placeholder='Поиск...'
-          className='p-2 font-lg shadow border border-block w-[200px]'
+          className='p-2 font-lg shadow border border-block w-[400px]'
+          endIcon={
+            <X
+              className='size-5 cursor-pointer'
+              onClick={() => functions.setGlobalFilter('')}
+            />
+          }
         />
         <Select
           onValueChange={e => state.table.setPageSize(Number(e))}
@@ -120,11 +127,6 @@ export const MethodsTable = () => {
             Следующая страница
           </Button>
         </div>
-
-        <span className='self-end border px-3 h-8 rounded-md'>
-          {state.table.getState().pagination.pageIndex + 1} /{' '}
-          {state.table.getPageCount()}
-        </span>
       </div>
     </div>
   )

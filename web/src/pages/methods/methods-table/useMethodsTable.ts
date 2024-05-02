@@ -18,9 +18,7 @@ export const useMethodsTable = () => {
     pageSize: 10,
   })
 
-  const [globalFilter, setGlobalFilter] = useState<string | undefined>(
-    undefined,
-  )
+  const [globalFilter, setGlobalFilter] = useState('')
 
   const debouncedGlobalFilter = useDebounce(globalFilter, 1_000)
 
@@ -39,12 +37,13 @@ export const useMethodsTable = () => {
   const table = useReactTable({
     data: getMethodsQuery.data.data.items ?? defaultData,
     columns,
-    rowCount: getMethodsQuery.data.data.totalCount,
+    pageCount: getMethodsQuery.data.data.totalPages,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     onPaginationChange: setPagination,
     manualFiltering: true,
     onGlobalFilterChange: setGlobalFilter,
+    autoResetPageIndex: true,
     state: { pagination, globalFilter },
     debugTable: !import.meta.env.PROD,
   })
