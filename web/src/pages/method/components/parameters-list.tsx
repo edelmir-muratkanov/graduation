@@ -12,6 +12,8 @@ import {
 } from '@/components/ui'
 import type { Method } from '@/types'
 
+import { DeleteParameterButton } from './delete-parameter-button'
+
 export const ParametersList = ({ method }: { method: Method }) => {
   return (
     <Card>
@@ -44,6 +46,12 @@ export const ParametersList = ({ method }: { method: Method }) => {
                     : parameter.first?.max}
                 </TableCell>
                 <TableCell>{parameter.propertyUnit}</TableCell>
+                <TableCell>
+                  <DeleteParameterButton
+                    methodId={method.id}
+                    parameterId={parameter.id}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
