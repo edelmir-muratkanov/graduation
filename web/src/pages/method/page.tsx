@@ -46,7 +46,7 @@ export const MethodPage = () => {
       </Breadcrumb>
 
       <div className='w-full flex space-x-6 pb-10'>
-        <div className={cn('w-full space-y-5', isAdmin && 'w-[80%]')}>
+        <div className={cn('w-full space-y-5')}>
           <BaseInfo method={methodData.data} />
           <ParametersList method={methodData.data} />
         </div>
