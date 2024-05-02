@@ -139,11 +139,12 @@ public class MethodEndpoints : ICarterModule
 
     private static async Task<IResult> MapPatchUpdateMethodBaseInformation(
         Guid id,
-        UpdateMethodCommand request,
+        UpdateMethodBaseInformationRequest request,
         ISender sender,
         CancellationToken cancellationToken)
     {
-        Result result = await sender.Send(request, cancellationToken);
+        var command = new UpdateMethodCommand(id, request.Name, request.CollectorTypes);
+        Result result = await sender.Send(command, cancellationToken);
 
         return result.Match(Results.NoContent, CustomResults.Problem);
     }
