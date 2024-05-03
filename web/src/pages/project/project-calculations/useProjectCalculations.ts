@@ -1,11 +1,13 @@
 import { useParams } from '@tanstack/react-router'
 
-import { useGetProjectCalculationsQuery, useGetProjectQuery } from '@/lib/api'
+import { useGetProjectCalculationsQuery } from '@/lib/api'
+
+import { useProjectPage } from '../useProjectPage'
 
 export const useProjectCalculations = () => {
   const { projectId } = useParams({ from: '/projects/$projectId/' })
   const getProjectCalculationsQuery = useGetProjectCalculationsQuery(projectId)
-  const projectQuery = useGetProjectQuery(projectId)
+  const { state } = useProjectPage()
 
   const acceptableParameters = getProjectCalculationsQuery.data.data.map(c => ({
     allParameters: c.items.length,
@@ -16,6 +18,6 @@ export const useProjectCalculations = () => {
   return {
     calculations: getProjectCalculationsQuery.data.data,
     acceptableParameters,
-    project: projectQuery.data.data,
+    project: state.project,
   }
 }

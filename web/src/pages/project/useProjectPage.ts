@@ -10,11 +10,7 @@ export const useProjectPage = () => {
 
   const { tab = 'info' } = useSearch()
   const params = useParams()
-  const {
-    data: {
-      data: { name },
-    },
-  } = useGetProjectQuery(params.projectId)
+  const getProjectQuery = useGetProjectQuery(params.projectId)
 
   const hanleTabsValueChange = (value: string) =>
     navigate({
@@ -26,7 +22,7 @@ export const useProjectPage = () => {
     })
 
   return {
-    state: { tab, project: name },
+    state: { tab, project: getProjectQuery.data.data },
     functions: { hanleTabsValueChange },
   }
 }

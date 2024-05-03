@@ -14,10 +14,10 @@ import {
 } from '@/components/ui'
 import { CollectorTypeTranslates, ProjectTypeTranslates } from '@/lib/constants'
 
-import { useProjectInfo } from './useProjectInfo'
+import { useProjectPage } from '../useProjectPage'
 
 export const ProjectInfo = () => {
-  const { data } = useProjectInfo()
+  const { state } = useProjectPage()
   return (
     <TabsContent value='info' className='space-y-5'>
       <Card className='h-fit'>
@@ -27,12 +27,15 @@ export const ProjectInfo = () => {
 
         <CardContent>
           <div className='flex flex-col space-y-0'>
-            <Text>Название: {data.data.name}</Text>
-            <Text>Оператор: {data.data.operator}</Text>
-            <Text>Страна: {data.data.country}</Text>
-            <Text>Тип проекта: {ProjectTypeTranslates[data.data.type]}</Text>
+            <Text>Название: {state.project.name}</Text>
+            <Text>Оператор: {state.project.operator}</Text>
+            <Text>Страна: {state.project.country}</Text>
             <Text>
-              Тип коллектора: {CollectorTypeTranslates[data.data.collectorType]}
+              Тип проекта: {ProjectTypeTranslates[state.project.type]}
+            </Text>
+            <Text>
+              Тип коллектора:{' '}
+              {CollectorTypeTranslates[state.project.collectorType]}
             </Text>
           </div>
         </CardContent>
@@ -53,7 +56,7 @@ export const ProjectInfo = () => {
             </TableHeader>
 
             <TableBody>
-              {data.data.parameters.map(parameter => (
+              {state.project.parameters.map(parameter => (
                 <TableRow key={parameter.id}>
                   <TableCell>{parameter.name}</TableCell>
                   <TableCell>{parameter.value}</TableCell>

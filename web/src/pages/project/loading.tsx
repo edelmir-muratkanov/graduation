@@ -42,7 +42,7 @@ export const ProjectLoading = () => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{state.project}</BreadcrumbPage>
+              <BreadcrumbPage>{state.project.name}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
