@@ -57,10 +57,12 @@ export const ProjectInfo = ({
             {state.project.methods.map(method => (
               <li className='flex items-center w-full gap-x-4' key={method.id}>
                 <Text>{method.name}</Text>
-                <DeleteMethodButton
-                  projectId={state.project.id}
-                  methodId={method.id}
-                />
+                {isOwnerOrMember && (
+                  <DeleteMethodButton
+                    projectId={state.project.id}
+                    methodId={method.id}
+                  />
+                )}
               </li>
             ))}
           </ul>
