@@ -42,13 +42,16 @@ public static class ConfigureServices
 
         services.AddSingleton<TrackAuditableEntityInterceptor>();
         services.AddSingleton<InsertOutboxMessagesInterceptor>();
+        services.AddSingleton<PublishDomainEventsInterceptor>();
 
         services.AddDbContext<ApplicationWriteDbContext>((sp, options) =>
             options.UseNpgsql(connectionString, o =>
                     o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
                 .UseSnakeCaseNamingConvention()
-                .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>(),
-                    sp.GetRequiredService<TrackAuditableEntityInterceptor>()));
+                .AddInterceptors(
+                    sp.GetRequiredService<InsertOutboxMessagesInterceptor>(),
+                    sp.GetRequiredService<TrackAuditableEntityInterceptor>(),
+                    sp.GetRequiredService<PublishDomainEventsInterceptor>()));
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationWriteDbContext>());
 
