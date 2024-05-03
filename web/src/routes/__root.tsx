@@ -35,7 +35,7 @@ export const Route = createRootRouteWithContext<{
   component: () => (
     <div className='relative flex min-h-screen flex-col bg-background'>
       <Header />
-      <main className='flex flex-1 container pt-[1.5rem]'>
+      <main className='flex flex-1 container max-w-screen-2xl pt-[1.5rem]'>
         <Outlet />
       </main>
       <Footer />
