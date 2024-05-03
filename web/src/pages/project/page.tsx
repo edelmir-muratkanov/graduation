@@ -13,6 +13,7 @@ import {
 } from '@/components/ui'
 import { useProfile } from '@/lib/contexts'
 
+import { AddProjectMethods } from './components/add-methods/add-project-methods'
 import { AddProjectParameters } from './components/add-project-parameters/add-project-parameters'
 import { ProjectCalculations } from './components/project-calculations/project-calculations'
 import { ProjectInfo } from './components/project-info/project-info'
@@ -48,7 +49,7 @@ export const ProjectPage = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className='w-full flex'>
+      <div className='w-full flex gap-x-4'>
         <Tabs
           className='w-full space-y-4'
           value={state.tab}
@@ -69,7 +70,12 @@ export const ProjectPage = () => {
 
         {isOwnerOrMember && (
           <div className='flex flex-col h-full space-y-4'>
-            {isOwnerOrMember && <AddProjectParameters />}
+            {isOwnerOrMember && (
+              <>
+                <AddProjectParameters />
+                <AddProjectMethods />
+              </>
+            )}
           </div>
         )}
       </div>

@@ -49,6 +49,21 @@ export const ProjectInfo = ({
 
       <Card>
         <CardHeader>
+          <CardTitle>Список используемых методов</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul>
+            {state.project.methods.map(method => (
+              <li key={method.id}>
+                <Text>{method.name}</Text>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Список параметров</CardTitle>
         </CardHeader>
         <CardContent>

@@ -1,3 +1,4 @@
+export * from './add-methods'
 export * from './add-parameters'
 export * from './get-project'
 export * from './get-project-calculations'
