@@ -16,6 +16,7 @@ import { CollectorTypeTranslates, ProjectTypeTranslates } from '@/lib/constants'
 
 import { useProjectPage } from '../../useProjectPage'
 
+import { DeleteMethodButton } from './delete-method-button'
 import { DeleteParameterButton } from './delete-parameter-button'
 
 export const ProjectInfo = ({
@@ -54,8 +55,12 @@ export const ProjectInfo = ({
         <CardContent>
           <ul>
             {state.project.methods.map(method => (
-              <li key={method.id}>
+              <li className='flex items-center w-full gap-x-4' key={method.id}>
                 <Text>{method.name}</Text>
+                <DeleteMethodButton
+                  projectId={state.project.id}
+                  methodId={method.id}
+                />
               </li>
             ))}
           </ul>
