@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 
 import { useGetPropertiesQuery } from '@/lib/api'
-import { usePostAddMethodParametersMutation } from '@/lib/api/methods/add-parameters'
+import { usePostAddMethodParametersMutation } from '@/lib/api/methods/post-add-parameters'
 import { queryClient } from '@/lib/contexts'
 
 import { useMethodPage } from '../../useMethodPage'
