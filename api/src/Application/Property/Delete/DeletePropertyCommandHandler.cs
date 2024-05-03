@@ -1,8 +1,12 @@
-﻿using Domain.Properties;
+﻿using Domain.Calculation;
+using Domain.Properties;
 
 namespace Application.Property.Delete;
 
-internal sealed class DeletePropertyCommandHandler(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork)
+internal sealed class DeletePropertyCommandHandler(
+    IPropertyRepository propertyRepository,
+    ICalculationRepository calculationRepository,
+    IUnitOfWork unitOfWork)
     : ICommandHandler<DeletePropertyCommand>
 {
     public async Task<Result> Handle(DeletePropertyCommand request, CancellationToken cancellationToken)
@@ -15,6 +19,14 @@ internal sealed class DeletePropertyCommandHandler(IPropertyRepository propertyR
         }
 
         propertyRepository.Remove(property);
+
+        List<Calculation> calculations = await calculationRepository.Get(null, cancellationToken);
+
+        foreach (Calculation calculation in calculations)
+        {
+            calculation.RemoveItem(property.Name);
+            calculationRepository.Update(calculation);
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

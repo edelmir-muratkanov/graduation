@@ -1,50 +1,35 @@
-﻿using Domain.Calculation;
+﻿using System.Linq.Expressions;
+using Domain.Calculation;
 
 namespace Infrastructure.Repositories;
 
 internal sealed class CalculationRepository(ApplicationWriteDbContext dbContext) : ICalculationRepository
 {
-    public async Task<Calculation?> GetByIdAsync(Guid calculationId, CancellationToken cancellationToken)
-    {
-        return await dbContext.Calculations.Include(c => c.Items)
-            .FirstOrDefaultAsync(c => c.Id == calculationId, cancellationToken);
-    }
-
-    public async Task<Calculation?> GetByProjectAndMethodAsync(Guid projectId, Guid methodId,
+    public async Task<Calculation?> GetOne(
+        Expression<Func<Calculation, bool>> predicate,
         CancellationToken cancellationToken)
     {
         return await dbContext.Calculations
             .Include(c => c.Items)
-            .FirstOrDefaultAsync(
-                c => c.ProjectId == projectId && c.MethodId == methodId,
-                cancellationToken);
+            .FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
-    public async Task<List<Calculation>> GetByMethodAsync(Guid methodId,
-        CancellationToken cancellationToken = default)
+    public async Task<List<Calculation>> Get(
+        Expression<Func<Calculation, bool>> predicate,
+        CancellationToken cancellationToken)
     {
         return await dbContext.Calculations
             .Include(c => c.Items)
-            .Where(c => c.MethodId == methodId)
+            .Where(predicate)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<bool> Exists(Guid projectId, Guid methodId, CancellationToken cancellationToken)
-    {
-        return await dbContext.Calculations.AnyAsync(
-            c => c.ProjectId == projectId && c.MethodId == methodId,
-            cancellationToken);
-    }
 
     public void Insert(Calculation calculation)
     {
         dbContext.Calculations.Add(calculation);
     }
 
-    public void InsertRange(IEnumerable<Calculation> calculations)
-    {
-        dbContext.Calculations.AddRange(calculations);
-    }
 
     public void Update(Calculation calculation)
     {

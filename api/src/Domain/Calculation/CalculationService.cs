@@ -34,7 +34,9 @@ public sealed class CalculationService(
 
     public async Task<Result> Update(Project project, Method method)
     {
-        Calculation? calculation = await calculationRepository.GetByProjectAndMethodAsync(project.Id, method.Id);
+        Calculation? calculation = await calculationRepository.GetOne(calculation =>
+            calculation.ProjectId == project.Id &&
+            calculation.MethodId == method.Id);
 
         if (calculation is null)
         {

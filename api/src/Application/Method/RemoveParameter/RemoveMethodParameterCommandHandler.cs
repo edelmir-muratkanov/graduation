@@ -1,14 +1,13 @@
 ﻿using Domain.Calculation;
 using Domain.Methods;
-using Domain.Projects;
+using Domain.Properties;
 
 namespace Application.Method.RemoveParameter;
 
 internal class RemoveMethodParameterCommandHandler(
     IMethodRepository methodRepository,
-    ICalculationService calculationService,
     ICalculationRepository calculationRepository,
-    IProjectRepository projectRepository,
+    IPropertyRepository propertyRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<RemoveMethodParameterCommand>
 {
     public async Task<Result> Handle(RemoveMethodParameterCommand request, CancellationToken cancellationToken)
@@ -22,19 +21,16 @@ internal class RemoveMethodParameterCommandHandler(
 
         method.RemoveParameter(request.ParameterId);
 
-        List<Calculation> calculations = await calculationRepository.GetByMethodAsync(method.Id, cancellationToken);
+        Domain.Properties.Property? property = await propertyRepository
+            .GetByIdAsync(request.ParameterId, cancellationToken);
+
+        List<Calculation> calculations = await calculationRepository
+            .Get(calculation => calculation.MethodId == method.Id, cancellationToken);
 
         foreach (Calculation calculation in calculations)
         {
-            Domain.Projects.Project? project = await projectRepository
-                .GetByIdAsync(calculation.ProjectId, cancellationToken);
-
-            Result result = await calculationService.Update(project!, method);
-
-            if (result.IsFailure)
-            {
-                return result;
-            }
+            calculation.RemoveItem(property!.Name);
+            calculationRepository.Update(calculation);
         }
 
         methodRepository.Update(method);

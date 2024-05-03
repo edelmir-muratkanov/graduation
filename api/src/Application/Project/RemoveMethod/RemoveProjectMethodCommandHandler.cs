@@ -29,13 +29,12 @@ internal sealed class RemoveProjectMethodCommandHandler(
         project.RemoveMethod(request.MethodId);
 
 
-        Calculation? calculation = await calculationRepository.GetByProjectAndMethodAsync(
-            request.ProjectId,
-            request.MethodId,
+        Calculation? calculation = await calculationRepository.GetOne(
+            c => c.ProjectId == request.ProjectId && c.MethodId == request.MethodId,
             cancellationToken);
-        
+
         calculationRepository.Remove(calculation!);
-        
+
         projectRepository.Update(project);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

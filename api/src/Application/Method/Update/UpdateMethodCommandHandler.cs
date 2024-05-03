@@ -22,7 +22,9 @@ internal sealed class UpdateMethodCommandHandler(
 
         method.ChangeNameAndCollectorTypes(request.Name, request.CollectorTypes);
 
-        List<Calculation> calculations = await calculationRepository.GetByMethodAsync(method.Id, cancellationToken);
+        List<Calculation> calculations = await calculationRepository.Get(
+            c => c.MethodId == method.Id,
+            cancellationToken);
 
         foreach (Calculation calculation in calculations)
         {
