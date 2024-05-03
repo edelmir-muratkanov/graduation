@@ -1,9 +1,65 @@
 ﻿using Domain.Methods;
+using Domain.Projects;
+using Domain.Properties;
 
 namespace Domain.Calculation;
 
-public sealed class CalculationService : ICalculationService
+public sealed class CalculationService(
+    IPropertyRepository propertyRepository,
+    ICalculationRepository calculationRepository)
+    : ICalculationService
 {
+    public async Task<Result> Create(Project project, Method method)
+    {
+        var calculation = Calculation.Create(project.Id, method.Id);
+
+        foreach (MethodParameter methodParameter in method.Parameters)
+        {
+            Property property = await propertyRepository.GetByIdAsync(methodParameter.PropertyId);
+
+            double? projectParameterValue = project.Parameters
+                .FirstOrDefault(p => p.PropertyId == methodParameter.PropertyId)?.Value;
+
+            Belonging belonging = CalculateBelongingDegree(
+                projectParameterValue,
+                methodParameter.FirstParameters,
+                methodParameter.SecondParameters);
+
+            calculation.AddItem(property!.Name, belonging);
+        }
+
+        calculationRepository.Insert(calculation);
+        return Result.Success();
+    }
+
+    public async Task<Result> Update(Project project, Method method)
+    {
+        Calculation? calculation = await calculationRepository.GetByProjectAndMethodAsync(project.Id, method.Id);
+
+        if (calculation is null)
+        {
+            return Result.Failure(CalculationErrors.NotFound);
+        }
+
+        foreach (MethodParameter methodParameter in method!.Parameters)
+        {
+            Property property = await propertyRepository.GetByIdAsync(methodParameter.PropertyId);
+
+            double? projectParameterValue = project!.Parameters
+                .FirstOrDefault(p => p.PropertyId == methodParameter.PropertyId)?.Value;
+
+            Belonging belonging = CalculateBelongingDegree(
+                projectParameterValue,
+                methodParameter.FirstParameters,
+                methodParameter.SecondParameters);
+
+            calculation!.UpdateItem(property!.Name, belonging);
+        }
+
+        calculationRepository.Update(calculation);
+        return Result.Success();
+    }
+
     public Belonging CalculateBelongingDegree(
         double? nullableProjectValue,
         ParameterValueGroup? methodFirst,

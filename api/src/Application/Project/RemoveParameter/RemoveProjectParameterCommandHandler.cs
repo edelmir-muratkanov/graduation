@@ -1,10 +1,14 @@
-﻿using Domain.Projects;
+﻿using Domain.Calculation;
+using Domain.Methods;
+using Domain.Projects;
 
 namespace Application.Project.RemoveParameter;
 
 internal class RemoveProjectParameterCommandHandler(
     ICurrentUserService currentUserService,
     IProjectRepository projectRepository,
+    IMethodRepository methodRepository,
+    ICalculationService calculationService,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RemoveProjectParameterCommand>
 {
@@ -28,6 +32,18 @@ internal class RemoveProjectParameterCommandHandler(
         }
 
         project.RemoveParameter(request.ParameterId);
+
+        foreach (ProjectMethod projectMethod in project.Methods)
+        {
+            Domain.Methods.Method? method = await methodRepository
+                .GetByIdAsync(projectMethod.MethodId, cancellationToken);
+            
+            Result result = await calculationService.Update(project, method!);
+            if (result.IsFailure)
+            {
+                return result;
+            }
+        }
 
         projectRepository.Update(project);
         await unitOfWork.SaveChangesAsync(cancellationToken);

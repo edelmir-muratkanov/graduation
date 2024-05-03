@@ -1,10 +1,12 @@
-﻿using Domain.Projects;
+﻿using Domain.Calculation;
+using Domain.Projects;
 
 namespace Application.Project.RemoveMethod;
 
 internal sealed class RemoveProjectMethodCommandHandler(
     ICurrentUserService currentUserService,
     IProjectRepository projectRepository,
+    ICalculationRepository calculationRepository,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RemoveProjectMethodCommand>
 {
@@ -26,6 +28,14 @@ internal sealed class RemoveProjectMethodCommandHandler(
 
         project.RemoveMethod(request.MethodId);
 
+
+        Calculation? calculation = await calculationRepository.GetByProjectAndMethodAsync(
+            request.ProjectId,
+            request.MethodId,
+            cancellationToken);
+        
+        calculationRepository.Remove(calculation!);
+        
         projectRepository.Update(project);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

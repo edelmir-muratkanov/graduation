@@ -42,7 +42,6 @@ public static class ConfigureServices
 
         services.AddSingleton<TrackAuditableEntityInterceptor>();
         services.AddSingleton<InsertOutboxMessagesInterceptor>();
-        services.AddSingleton<PublishDomainEventsInterceptor>();
 
         services.AddDbContext<ApplicationWriteDbContext>((sp, options) =>
             options.UseNpgsql(connectionString, o =>
@@ -50,8 +49,7 @@ public static class ConfigureServices
                 .UseSnakeCaseNamingConvention()
                 .AddInterceptors(
                     sp.GetRequiredService<InsertOutboxMessagesInterceptor>(),
-                    sp.GetRequiredService<TrackAuditableEntityInterceptor>(),
-                    sp.GetRequiredService<PublishDomainEventsInterceptor>()));
+                    sp.GetRequiredService<TrackAuditableEntityInterceptor>()));
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationWriteDbContext>());
 

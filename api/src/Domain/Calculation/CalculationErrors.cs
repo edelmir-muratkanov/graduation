@@ -2,6 +2,7 @@
 
 public static class CalculationErrors
 {
+    public static readonly Error NotFound = Error.NotFound("Calculation.NotFound", "Результат расчета не найден");
     public static readonly Error DuplicateItems = Error.Conflict(
         "Calculation.DuplicateItems", "Результат расчета уже содержит указанный элемент");
 

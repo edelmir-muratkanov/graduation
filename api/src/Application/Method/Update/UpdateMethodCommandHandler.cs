@@ -1,9 +1,14 @@
-﻿using Domain.Methods;
+﻿using Domain.Calculation;
+using Domain.Methods;
+using Domain.Projects;
 
 namespace Application.Method.Update;
 
 internal sealed class UpdateMethodCommandHandler(
     IMethodRepository methodRepository,
+    IProjectRepository projectRepository,
+    ICalculationRepository calculationRepository,
+    ICalculationService calculationService,
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateMethodCommand>
 {
     public async Task<Result> Handle(UpdateMethodCommand request, CancellationToken cancellationToken)
@@ -16,6 +21,21 @@ internal sealed class UpdateMethodCommandHandler(
         }
 
         method.ChangeNameAndCollectorTypes(request.Name, request.CollectorTypes);
+
+        List<Calculation> calculations = await calculationRepository.GetByMethodAsync(method.Id, cancellationToken);
+
+        foreach (Calculation calculation in calculations)
+        {
+            Domain.Projects.Project? project = await projectRepository
+                .GetByIdAsync(calculation.ProjectId, cancellationToken);
+
+            Result result = await calculationService.Update(project!, method);
+
+            if (result.IsFailure)
+            {
+                return result;
+            }
+        }
 
         methodRepository.Update(method);
 

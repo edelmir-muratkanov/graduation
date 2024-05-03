@@ -50,4 +50,9 @@ internal sealed class CalculationRepository(ApplicationWriteDbContext dbContext)
     {
         dbContext.Calculations.Update(calculation);
     }
+
+    public void Remove(Calculation calculation)
+    {
+        dbContext.Calculations.Remove(calculation);
+    }
 }

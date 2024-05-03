@@ -15,4 +15,5 @@ public interface ICalculationRepository
     void Insert(Calculation calculation);
     void InsertRange(IEnumerable<Calculation> calculations);
     void Update(Calculation calculation);
+    void Remove(Calculation calculation);
 }

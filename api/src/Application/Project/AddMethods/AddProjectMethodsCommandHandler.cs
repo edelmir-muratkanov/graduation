@@ -1,4 +1,5 @@
-﻿using Domain.Methods;
+﻿using Domain.Calculation;
+using Domain.Methods;
 using Domain.Projects;
 
 namespace Application.Project.AddMethods;
@@ -8,6 +9,7 @@ internal sealed class AddProjectMethodsCommandHandler(
     IProjectRepository projectRepository,
     IMethodRepository methodRepository,
     IProjectMethodRepository projectMethodRepository,
+    ICalculationService calculationService,
     IUnitOfWork unitOfWork) : ICommandHandler<AddProjectMethodsCommand>
 {
     public async Task<Result> Handle(AddProjectMethodsCommand request, CancellationToken cancellationToken)
@@ -39,6 +41,16 @@ internal sealed class AddProjectMethodsCommandHandler(
         if (results.Any(r => r.IsFailure))
         {
             return Result.Failure(ValidationError.FromResults(results));
+        }
+
+        foreach (Guid methodId in request.MethodIds)
+        {
+            Domain.Methods.Method method = await methodRepository.GetByIdAsync(methodId, cancellationToken);
+            Result result = await calculationService.Create(project, method!);
+            if (result.IsFailure)
+            {
+                return Result.Failure(ValidationError.FromResults([result]));
+            }
         }
 
         projectMethodRepository.InsertRange(results.Select(r => r.Value).ToList());
