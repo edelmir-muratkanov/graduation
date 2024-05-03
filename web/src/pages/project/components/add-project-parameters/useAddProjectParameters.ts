@@ -9,7 +9,7 @@ import {
 } from '@/lib/api'
 import { queryClient } from '@/lib/contexts'
 
-import { useProjectPage } from '../useProjectPage'
+import { useProjectPage } from '../../useProjectPage'
 
 import {
   type AddProjectParametersFormSchema,

@@ -14,9 +14,15 @@ import {
 } from '@/components/ui'
 import { CollectorTypeTranslates, ProjectTypeTranslates } from '@/lib/constants'
 
-import { useProjectPage } from '../useProjectPage'
+import { useProjectPage } from '../../useProjectPage'
 
-export const ProjectInfo = () => {
+import { DeleteParameterButton } from './delete-parameter-button'
+
+export const ProjectInfo = ({
+  isOwnerOrMember,
+}: {
+  isOwnerOrMember: boolean
+}) => {
   const { state } = useProjectPage()
   return (
     <TabsContent value='info' className='space-y-5'>
@@ -61,6 +67,14 @@ export const ProjectInfo = () => {
                   <TableCell>{parameter.name}</TableCell>
                   <TableCell>{parameter.value}</TableCell>
                   <TableCell>{parameter.unit}</TableCell>
+                  {isOwnerOrMember && (
+                    <TableCell>
+                      <DeleteParameterButton
+                        projectId={state.project.id}
+                        parameterId={parameter.id}
+                      />
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

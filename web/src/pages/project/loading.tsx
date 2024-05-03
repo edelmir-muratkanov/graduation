@@ -12,8 +12,8 @@ import {
   TabsTrigger,
 } from '@/components/ui'
 
-import { ProjectCalculationsLoading } from './project-calculations/project-calculations-loading'
-import { ProjectInfoLoading } from './project-info/project-info-loading'
+import { ProjectCalculationsLoading } from './components/project-calculations/project-calculations-loading'
+import { ProjectInfoLoading } from './components/project-info/project-info-loading'
 import { useProjectPage } from './useProjectPage'
 
 export const ProjectLoading = () => {

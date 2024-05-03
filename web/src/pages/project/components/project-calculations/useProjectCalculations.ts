@@ -2,7 +2,7 @@ import { useParams } from '@tanstack/react-router'
 
 import { useGetProjectCalculationsQuery } from '@/lib/api'
 
-import { useProjectPage } from '../useProjectPage'
+import { useProjectPage } from '../../useProjectPage'
 
 export const useProjectCalculations = () => {
   const { projectId } = useParams({ from: '/projects/$projectId/' })

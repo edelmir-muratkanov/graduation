@@ -13,9 +13,9 @@ import {
 } from '@/components/ui'
 import { useProfile } from '@/lib/contexts'
 
-import { AddProjectParameters } from './add-project-parameters/add-project-parameters'
-import { ProjectCalculations } from './project-calculations/project-calculations'
-import { ProjectInfo } from './project-info/project-info'
+import { AddProjectParameters } from './components/add-project-parameters/add-project-parameters'
+import { ProjectCalculations } from './components/project-calculations/project-calculations'
+import { ProjectInfo } from './components/project-info/project-info'
 import { useProjectPage } from './useProjectPage'
 
 export const ProjectPage = () => {
@@ -63,7 +63,7 @@ export const ProjectPage = () => {
             </TabsList>
           </div>
 
-          <ProjectInfo />
+          <ProjectInfo isOwnerOrMember={isOwnerOrMember} />
           <ProjectCalculations />
         </Tabs>
 
