@@ -13,6 +13,7 @@ using Application.Project.Remove;
 using Application.Project.RemoveMember;
 using Application.Project.RemoveMethod;
 using Application.Project.RemoveParameter;
+using Application.Project.Update;
 using Carter;
 using Mapster;
 using MediatR;
@@ -63,6 +64,16 @@ public class ProjectEndpoints : ICarterModule
             .WithName("Get projects list by authenticated user")
             .WithSummary("Get projects list by authenticated user");
 
+        group.MapPatch("{id:guid}", MapUpdateProject)
+            .Produces(204)
+            .ProducesProblem(400)
+            .ProducesProblem(401)
+            .ProducesProblem(403)
+            .ProducesProblem(404)
+            .ProducesProblem(500)
+            .WithSummary("Update project`s base info")
+            .WithName("Update project");
+
         group.MapDelete("{id:guid}", MapDeleteProject)
             .Produces(204)
             .ProducesProblem(400)
@@ -75,7 +86,7 @@ public class ProjectEndpoints : ICarterModule
 
         group.MapGet("{id:guid}/calculations", MapGetProjectCalculations)
             .AllowAnonymous()
-            .Produces<List<CalculationResponse>>(200)
+            .Produces<List<CalculationResponse>>()
             .ProducesProblem(500)
             .WithSummary("Get project calculations list")
             .WithName("Get project calculations");
@@ -138,6 +149,23 @@ public class ProjectEndpoints : ICarterModule
             .ProducesProblem(500)
             .WithSummary("Remove project member")
             .WithName("Remove project member");
+    }
+
+    private static async Task<IResult> MapUpdateProject(
+        Guid id,
+        UpdateProject request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateProjectCommand(
+            id,
+            request.Name,
+            request.Country,
+            request.Operator,
+            request.Type,
+            request.CollectorType);
+        Result result = await sender.Send(command, cancellationToken);
+        return result.Match(Results.NoContent, CustomResults.Problem);
     }
 
     private static async Task<IResult> MapDeleteProjectMember(
@@ -215,6 +243,7 @@ public class ProjectEndpoints : ICarterModule
         return result.Match(Results.NoContent, CustomResults.Problem);
     }
 
+
     private static async Task<IResult> MapAddProjectParameters(
         Guid id,
         List<AddProjectParametersRequest> parametersRequests,
@@ -261,9 +290,7 @@ public class ProjectEndpoints : ICarterModule
 
     private static async Task<IResult> MapGetProjectByUser(ISender sender, CancellationToken cancellationToken)
     {
-        var query = new GetUserProjectsQuery
-        {
-        };
+        var query = new GetUserProjectsQuery();
         Result<List<ProjectResponse>> result = await sender.Send(query, cancellationToken);
         return result.Match(Results.Ok, CustomResults.Problem);
     }
