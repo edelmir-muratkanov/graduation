@@ -17,37 +17,37 @@ import { useDeleteProjectMutation } from '@/lib/api'
 import { cn } from '@/lib/cn'
 import { queryClient } from '@/lib/contexts'
 
-interface DeleteMethodProps {
-  methodId: string
+interface DeleteProjectProps {
+  projectId: string
   classname?: string
 }
 
-export const DeleteMethod = ({ methodId, classname }: DeleteMethodProps) => {
+export const DeleteProject = ({ projectId, classname }: DeleteProjectProps) => {
   const navigate = useNavigate()
-  const deleteMethodMutation = useDeleteProjectMutation(methodId, {
+  const deleteProjectMutation = useDeleteProjectMutation(projectId, {
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['methods'] })
-        toast.success('Метод успешно удален.')
-        navigate({ to: '/methods' })
+        queryClient.invalidateQueries({ queryKey: ['projects'] })
+        toast.success('Проект успешно удален.')
+        navigate({ to: '/projects' })
       },
     },
   })
 
-  const onClick = async () => deleteMethodMutation.mutateAsync({})
+  const onClick = async () => deleteProjectMutation.mutateAsync({})
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button size='lg' variant='destructive'>
-          Удалить метод
+          Удалить проект
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent className={cn(classname)}>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Вы уверены что хотите удалить метод?
+            Вы уверены что хотите удалить проект?
           </AlertDialogTitle>
           <AlertDialogDescription>
             Это действие будет невозможно отменить.

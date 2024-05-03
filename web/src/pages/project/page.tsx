@@ -15,6 +15,7 @@ import { useProfile } from '@/lib/contexts'
 
 import { AddProjectMethods } from './components/add-methods/add-project-methods'
 import { AddProjectParameters } from './components/add-project-parameters/add-project-parameters'
+import { DeleteProject } from './components/delete-project'
 import { ProjectCalculations } from './components/project-calculations/project-calculations'
 import { ProjectInfo } from './components/project-info/project-info'
 import { useProjectPage } from './useProjectPage'
@@ -76,6 +77,7 @@ export const ProjectPage = () => {
                 <AddProjectMethods />
               </>
             )}
+            {isOwner && <DeleteProject projectId={state.project.id} />}
           </div>
         )}
       </div>
