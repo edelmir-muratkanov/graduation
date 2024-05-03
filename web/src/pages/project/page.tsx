@@ -18,6 +18,7 @@ import { AddProjectParameters } from './components/add-project-parameters/add-pr
 import { DeleteProject } from './components/delete-project'
 import { ProjectCalculations } from './components/project-calculations/project-calculations'
 import { ProjectInfo } from './components/project-info/project-info'
+import { UpdateProjectBaseInfo } from './components/update-base-info/update-base-info'
 import { useProjectPage } from './useProjectPage'
 
 export const ProjectPage = () => {
@@ -71,6 +72,7 @@ export const ProjectPage = () => {
 
         {isOwnerOrMember && (
           <div className='flex flex-col h-full space-y-4'>
+            {isOwner && <UpdateProjectBaseInfo />}
             {isOwnerOrMember && (
               <>
                 <AddProjectParameters />
