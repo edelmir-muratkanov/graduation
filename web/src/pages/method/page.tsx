@@ -48,7 +48,7 @@ export const MethodPage = () => {
       <div className='w-full flex space-x-6 pb-10'>
         <div className={cn('w-full space-y-5')}>
           <BaseInfo method={methodData.data} />
-          <ParametersList method={methodData.data} />
+          <ParametersList method={methodData.data} isAdmin={isAdmin} />
         </div>
 
         {isAdmin && (

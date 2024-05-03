@@ -14,7 +14,13 @@ import type { Method } from '@/types'
 
 import { DeleteParameterButton } from './delete-parameter-button'
 
-export const ParametersList = ({ method }: { method: Method }) => {
+export const ParametersList = ({
+  method,
+  isAdmin = false,
+}: {
+  method: Method
+  isAdmin: boolean
+}) => {
   return (
     <Card>
       <CardHeader>
@@ -46,12 +52,14 @@ export const ParametersList = ({ method }: { method: Method }) => {
                     : parameter.first?.max}
                 </TableCell>
                 <TableCell>{parameter.propertyUnit}</TableCell>
-                <TableCell>
-                  <DeleteParameterButton
-                    methodId={method.id}
-                    parameterId={parameter.id}
-                  />
-                </TableCell>
+                {isAdmin && (
+                  <TableCell>
+                    <DeleteParameterButton
+                      methodId={method.id}
+                      parameterId={parameter.id}
+                    />
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
