@@ -19,10 +19,15 @@ internal class RemoveMethodParameterCommandHandler(
             return Result.Failure(MethodErrors.NotFound);
         }
 
-        method.RemoveParameter(request.ParameterId);
+        Result<MethodParameter> result = method.RemoveParameter(request.ParameterId);
+
+        if (result.IsFailure)
+        {
+            return result;
+        }
 
         Domain.Properties.Property? property = await propertyRepository
-            .GetByIdAsync(request.ParameterId, cancellationToken);
+            .GetByIdAsync(result.Value.PropertyId, cancellationToken);
 
         List<Calculation> calculations = await calculationRepository
             .Get(calculation => calculation.MethodId == method.Id, cancellationToken);
