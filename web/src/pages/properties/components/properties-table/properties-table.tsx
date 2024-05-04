@@ -1,4 +1,5 @@
 import { flexRender } from '@tanstack/react-table'
+import { X } from 'lucide-react'
 
 import {
   Button,
@@ -27,8 +28,14 @@ export const PropertiesTable = () => {
         <Input
           value={state.globalFilter}
           onChange={e => functions.setGlobalFilter(e.target.value)}
-          placeholder='Найти...'
-          className='p-2 font-lg shadow border border-block w-[300px]'
+          placeholder='Поиск...'
+          className='p-2 font-lg shadow border border-block w-[400px]'
+          endIcon={
+            <X
+              className='size-5 cursor-pointer'
+              onClick={() => functions.setGlobalFilter('')}
+            />
+          }
         />
         <Select
           onValueChange={e => state.table.setPageSize(Number(e))}

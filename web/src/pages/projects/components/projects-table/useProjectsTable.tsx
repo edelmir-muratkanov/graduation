@@ -5,6 +5,7 @@ import type { Row } from '@tanstack/react-table'
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
 import { useGetProjectsQuery } from '@/lib/api'
+import { useDebounce } from '@/lib/useDebounce'
 import type { Project } from '@/types'
 
 import { COLUMNS } from './columns'
@@ -25,12 +26,14 @@ export const useProjectsTable = () => {
 
   const [globalFilter, setGlobalFilter] = useState('')
 
+  const debouncedGlobalFilter = useDebounce(globalFilter, 1_000)
+
   const getProjectsQuery = useGetProjectsQuery({
     config: {
       params: {
         pageSize: pagination.pageSize,
         pageNumber: pagination.pageIndex + 1,
-        searchTerm: globalFilter,
+        searchTerm: debouncedGlobalFilter,
         sortColumn: 'name',
       },
     },
