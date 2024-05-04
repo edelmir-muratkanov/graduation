@@ -69,7 +69,7 @@ export const AddProjectMethods = () => {
                         field.onChange(options.map(option => option.value))
                       }
                       hidePlaceholderWhenSelected
-                      emptyIndicator={<div>Nothing to select</div>}
+                      emptyIndicator={<div>Ничего не найдено</div>}
                     />
                   </FormControl>
                   <FormMessage />
