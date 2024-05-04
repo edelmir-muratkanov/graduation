@@ -42,12 +42,12 @@ export const ParametersList = ({
               <TableRow key={parameter.id}>
                 <TableCell>{parameter.propertyName}</TableCell>
                 <TableCell>
-                  {parameter.first?.min
+                  {parameter.first
                     ? parameter.first.min
                     : parameter.second?.min}
                 </TableCell>
                 <TableCell>
-                  {parameter.second?.max
+                  {parameter.second
                     ? parameter.second.max
                     : parameter.first?.max}
                 </TableCell>
