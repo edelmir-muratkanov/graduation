@@ -17,6 +17,7 @@ export const useAddProjectMembers = () => {
     config: {
       params: {
         pageSize: 100,
+        sortColumn: 'email',
       },
     },
   })

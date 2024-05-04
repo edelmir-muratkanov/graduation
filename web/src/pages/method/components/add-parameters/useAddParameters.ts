@@ -17,7 +17,7 @@ export const useAddParameter = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   const getPropertiesQuery = useGetPropertiesQuery({
-    config: { params: { pageSize: 100 } },
+    config: { params: { pageSize: 100, sortColumn: 'name' } },
   })
 
   const form = useForm<AddParametersFormSchema>({

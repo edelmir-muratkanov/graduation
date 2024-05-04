@@ -29,6 +29,7 @@ export const usePropertiesTable = () => {
         pageSize: pagination.pageSize,
         pageNumber: pagination.pageIndex + 1,
         searchTerm: debouncedGlobalFilter,
+        sortColumn: 'name',
       },
     },
   })

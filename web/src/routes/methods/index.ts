@@ -7,7 +7,14 @@ export const Route = createFileRoute('/methods/')({
   loader: ({ context: { queryClient } }) =>
     queryClient.ensureQueryData(
       getMethodsQueryOptions({
-        config: { params: { pageSize: 10, pageNumber: 1 } },
+        config: {
+          params: {
+            pageSize: 10,
+            pageNumber: 1,
+            searchTerm: '',
+            sortColumn: 'name',
+          },
+        },
       }),
     ),
   pendingComponent: MethodsLoading,

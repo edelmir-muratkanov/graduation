@@ -19,7 +19,7 @@ export const useProjectsTable = () => {
   const navigate = useNavigate()
 
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 1,
+    pageIndex: 0,
     pageSize: 10,
   })
 
@@ -31,6 +31,7 @@ export const useProjectsTable = () => {
         pageSize: pagination.pageSize,
         pageNumber: pagination.pageIndex + 1,
         searchTerm: globalFilter,
+        sortColumn: 'name',
       },
     },
   })

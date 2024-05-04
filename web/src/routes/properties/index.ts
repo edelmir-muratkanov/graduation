@@ -12,6 +12,7 @@ export const Route = createFileRoute('/properties/')({
             pageNumber: 1,
             pageSize: 10,
             searchTerm: '',
+            sortColumn: 'name',
           },
         },
       }),

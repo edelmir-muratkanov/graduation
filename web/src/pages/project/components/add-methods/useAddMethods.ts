@@ -17,6 +17,7 @@ export const useAddMethods = () => {
     config: {
       params: {
         pageSize: 100,
+        sortColumn: 'name',
       },
     },
   })

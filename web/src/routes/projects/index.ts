@@ -11,6 +11,8 @@ export const Route = createFileRoute('/projects/')({
           params: {
             pageSize: 10,
             pageNumber: 1,
+            searchTerm: '',
+            sortColumn: 'name',
           },
         },
       }),
