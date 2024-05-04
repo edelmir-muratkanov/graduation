@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui'
 
+import { CreateProperty } from './components/create-property/create-property'
 import { PropertiesTable } from './components/properties-table/properties-table'
 
 export const PropertiesPage = () => {
@@ -28,6 +29,7 @@ export const PropertiesPage = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+        <CreateProperty />
       </div>
       <PropertiesTable />
     </div>
