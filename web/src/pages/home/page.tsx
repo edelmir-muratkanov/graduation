@@ -1,20 +1,19 @@
 import { Link } from '@tanstack/react-router'
 
-import { Button } from '@/components/ui'
+import { Button, Text } from '@/components/ui'
 
 export const HomePage = () => {
   return (
-    <div className='w-full flex  items-center gap-7'>
-      <div className='w-[900px]'>
-        <h1 className='text-6xl font-poppins mb-9'>Добро пожаловать!</h1>
+    <div className='w-full flex items-center justify-between gap-x-7'>
+      <div className='w-[700px] flex flex-col'>
+        <h1 className='text-6xl font-semibold font-poppins'>
+          Подбор МУН - просто!
+        </h1>
 
-        <h2 className='text-4xl font-poppins mb-9'>
-          Сервис по подбору методов повышения нефтеотдачи
-        </h2>
-
-        <p className='mb-4 text-xl font-poppins'>
-          Начните с создания проекта и выберите интерсующие вас методы
-        </p>
+        <Text className='font-poppins mb-10'>
+          Исследуйте инновационные технологии и методы для повышения
+          эффективности добычи нефти на нашем сайте
+        </Text>
 
         <Link to='/projects/new'>
           <Button size='lg' variant='secondary' className='w-full'>
@@ -22,6 +21,8 @@ export const HomePage = () => {
           </Button>
         </Link>
       </div>
+
+      <img src='/home-background.png' alt='Background' />
     </div>
   )
 }
