@@ -81,8 +81,6 @@ public sealed class CalculationService(
 
         double projectValue = (double)nullableProjectValue;
 
-        double degree;
-
 
         if (methodFirst is not null && methodSecond is not null)
         {
@@ -145,7 +143,7 @@ public sealed class CalculationService(
         {
             if (projectValue <= methodSecond.Min)
             {
-                return new Belonging(-1);
+                return new Belonging(1);
             }
 
             if (projectValue <= methodSecond.Max)
@@ -160,7 +158,7 @@ public sealed class CalculationService(
 
             if (projectValue > methodSecond.Max)
             {
-                return new Belonging(1);
+                return new Belonging(-1);
             }
         }
 
