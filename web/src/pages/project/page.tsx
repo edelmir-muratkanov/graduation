@@ -14,6 +14,7 @@ import {
 import { useProfile } from '@/lib/contexts'
 
 import { AddProjectMethods } from './components/add-methods/add-project-methods'
+import { AddProjectMembers } from './components/add-project-members/add-project-members'
 import { AddProjectParameters } from './components/add-project-parameters/add-project-parameters'
 import { DeleteProject } from './components/delete-project'
 import { ProjectCalculations } from './components/project-calculations/project-calculations'
@@ -72,7 +73,12 @@ export const ProjectPage = () => {
 
         {isOwnerOrMember && (
           <div className='flex flex-col h-full space-y-4'>
-            {isOwner && <UpdateProjectBaseInfo />}
+            {isOwner && (
+              <>
+                <UpdateProjectBaseInfo />
+                <AddProjectMembers />
+              </>
+            )}
             {isOwnerOrMember && (
               <>
                 <AddProjectParameters />
