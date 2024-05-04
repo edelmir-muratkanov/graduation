@@ -14,7 +14,7 @@ export const Footer = () => {
           </a>
           . Исходный код доступен на{' '}
           <a
-            href='https://github.com/edelmir-muratkanov/graduation-web'
+            href='https://github.com/edelmir-muratkanov/graduation'
             target='_blank'
             rel='noreferrer'
             className='font-medium underline underline-offset-4'
