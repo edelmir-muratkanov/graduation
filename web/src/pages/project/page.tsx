@@ -66,7 +66,7 @@ export const ProjectPage = () => {
             </TabsList>
           </div>
 
-          <ProjectInfo isOwnerOrMember={isOwnerOrMember} />
+          <ProjectInfo isOwnerOrMember={isOwnerOrMember} isOwner={isOwner} />
           <ProjectCalculations />
         </Tabs>
 

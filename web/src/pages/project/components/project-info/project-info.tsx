@@ -16,13 +16,16 @@ import { CollectorTypeTranslates, ProjectTypeTranslates } from '@/lib/constants'
 
 import { useProjectPage } from '../../useProjectPage'
 
+import { DeleteMemberButton } from './delete-member-button'
 import { DeleteMethodButton } from './delete-method-button'
 import { DeleteParameterButton } from './delete-parameter-button'
 
 export const ProjectInfo = ({
   isOwnerOrMember,
+  isOwner,
 }: {
   isOwnerOrMember: boolean
+  isOwner: boolean
 }) => {
   const { state } = useProjectPage()
   return (
@@ -61,6 +64,12 @@ export const ProjectInfo = ({
                   key={member.id}
                 >
                   <Text>{member.email}</Text>
+                  {isOwner && (
+                    <DeleteMemberButton
+                      projectId={state.project.id}
+                      memberId={member.id}
+                    />
+                  )}
                 </li>
               ))}
             </ul>

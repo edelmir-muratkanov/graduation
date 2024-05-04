@@ -1,4 +1,5 @@
 export * from './delete-project'
+export * from './delete-project-member'
 export * from './delete-project-method'
 export * from './delete-project-parameter'
 export * from './get-project'
