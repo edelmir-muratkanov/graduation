@@ -59,10 +59,10 @@ export const queryClient = new QueryClient({
               localStorage.removeItem(STORAGE_KEYS.AccessToken)
             })
           })
-        toast.error(response?.data.detail ?? DEFAULT_ERROR, {
-          cancel: { label: 'Закрыть' },
-        })
       }
+      toast.error(response?.data.detail ?? DEFAULT_ERROR, {
+        cancel: { label: 'Закрыть' },
+      })
     },
   }),
 })
