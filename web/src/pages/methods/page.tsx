@@ -16,7 +16,7 @@ import { MethodsTable } from './methods-table/methods-table'
 export const MethodsPage = () => {
   const { user } = useProfile()
   return (
-    <div className='w-full space-y-4'>
+    <div className='w-full space-y-6'>
       <div className='flex justify-between items-center'>
         <Breadcrumb>
           <BreadcrumbList>
