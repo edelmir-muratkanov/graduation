@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
 import { useGetPropertiesQuery } from '@/lib/api'
+import { useDebounce } from '@/lib/useDebounce'
 
 import { COLUMNS } from './columns'
 
@@ -19,13 +20,14 @@ export const usePropertiesTable = () => {
   })
 
   const [globalFilter, setGlobalFilter] = useState('')
+  const debouncedGlobalFilter = useDebounce(globalFilter, 1_000)
 
   const getPropertiesQuery = useGetPropertiesQuery({
     config: {
       params: {
         pageSize: pagination.pageSize,
         pageNumber: pagination.pageIndex + 1,
-        searchTerm: globalFilter,
+        searchTerm: debouncedGlobalFilter,
       },
     },
   })
