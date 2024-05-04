@@ -48,6 +48,26 @@ export const ProjectInfo = ({
         </CardContent>
       </Card>
 
+      {state.project.members.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Список участников</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul>
+              {state.project.members.map(member => (
+                <li
+                  className='flex items-center w-full gap-x-4'
+                  key={member.id}
+                >
+                  <Text>{member.email}</Text>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Список используемых методов</CardTitle>

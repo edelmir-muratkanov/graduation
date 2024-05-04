@@ -11,7 +11,7 @@ export type Project = {
   type: ProjectType
   ownerId: User['id']
   collectorType: CollectorType
-  members: Pick<User, 'id'>[]
+  members: Pick<User, 'id' | 'email'>[]
   methods: Pick<Method, 'id' | 'name'>[]
   parameters: ProjectParameter[]
 }
