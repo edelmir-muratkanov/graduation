@@ -56,7 +56,7 @@ export const usePropertiesTable = () => {
   }, [globalFilter, setPagination])
 
   return {
-    state: { table, globalFilter, columns },
+    state: { table, globalFilter, columns: COLUMNS },
     functions: { setGlobalFilter },
   }
 }
