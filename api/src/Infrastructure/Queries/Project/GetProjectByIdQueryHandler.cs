@@ -27,7 +27,8 @@ internal sealed class GetProjectByIdQueryHandler(ApplicationReadDbContext dbCont
                 }).ToList(),
                 Members = p.Members.Select(m => new GetProjectByIdMember
                 {
-                    Id = m.Member.Id
+                    Id = m.Member.Id,
+                    Email = m.Member.Email
                 }).ToList(),
                 Parameters = p.Parameters.Select(pp => new GetProjectByIdParameter
                 {

@@ -5,7 +5,8 @@ namespace Application.Project.GetProjectById;
 
 public record GetProjectByIdMember
 {
-    public Guid Id { get; set; }
+    public required Guid Id { get; set; }
+    public required string Email { get; set; }
 }
 
 public record GetProjectByIdMethod
