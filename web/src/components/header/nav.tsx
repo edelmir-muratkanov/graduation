@@ -41,6 +41,17 @@ export const Nav = () => {
               Методы
             </Link>
           </li>
+          <li>
+            <Link
+              to='/properties'
+              className='hover:text-foreground/80'
+              activeProps={{
+                className: 'text-foreground/90 font-semibold',
+              }}
+            >
+              Свойства
+            </Link>
+          </li>
         </ul>
       </nav>
     </div>
