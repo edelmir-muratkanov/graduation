@@ -13,7 +13,7 @@ import {
   AlertDialogTrigger,
   Button,
 } from '@/components/ui'
-import { useDeleteProjectMutation } from '@/lib/api'
+import { useDeleteMethodMutation } from '@/lib/api'
 import { cn } from '@/lib/cn'
 import { queryClient } from '@/lib/contexts'
 
@@ -24,7 +24,7 @@ interface DeleteMethodProps {
 
 export const DeleteMethod = ({ methodId, classname }: DeleteMethodProps) => {
   const navigate = useNavigate()
-  const deleteMethodMutation = useDeleteProjectMutation(methodId, {
+  const deleteMethodMutation = useDeleteMethodMutation(methodId, {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['methods'] })
