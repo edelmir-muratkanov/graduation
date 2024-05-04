@@ -28,9 +28,7 @@ export const CreateProperty = () => {
       onOpenChange={open => functions.setIsOpen(open)}
     >
       <DialogTrigger asChild>
-        <Button variant='secondary' size='lg'>
-          Создать свойство
-        </Button>
+        <Button variant='secondary'>Создать свойство</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
