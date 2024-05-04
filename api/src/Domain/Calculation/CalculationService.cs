@@ -13,6 +13,9 @@ public sealed class CalculationService(
     {
         var calculation = Calculation.Create(project.Id, method.Id);
 
+        var collectorTypeBelonging = new Belonging(method.CollectorTypes.Contains(project.CollectorType) ? 1 : -1);
+        calculation.AddItem("Тип коллектора", collectorTypeBelonging);
+
         foreach (MethodParameter methodParameter in method.Parameters)
         {
             Property property = await propertyRepository.GetByIdAsync(methodParameter.PropertyId);
@@ -42,6 +45,10 @@ public sealed class CalculationService(
         {
             return Result.Failure(CalculationErrors.NotFound);
         }
+
+        var collectorTypeBelonging = new Belonging(method.CollectorTypes.Contains(project.CollectorType) ? 1 : -1);
+
+        calculation.UpdateItem("Тип коллектора", collectorTypeBelonging);
 
         foreach (MethodParameter methodParameter in method!.Parameters)
         {
@@ -79,10 +86,18 @@ public sealed class CalculationService(
 
         if (methodFirst is not null && methodSecond is not null)
         {
+            if (projectValue <= methodFirst.Min)
+            {
+                return new Belonging(-1);
+            }
+
             if (projectValue <= methodFirst.Max)
             {
-                degree = CalculateDegreeByFormula(projectValue, methodFirst.Min, methodFirst.Avg, methodFirst.Max, 1);
-                return new Belonging(degree);
+                return new Belonging(CalculateDegreeByFormula(
+                    projectValue,
+                    methodFirst.Min,
+                    methodFirst.Avg,
+                    methodFirst.Max, 1));
             }
 
             if (projectValue < methodSecond.Min)
@@ -90,31 +105,63 @@ public sealed class CalculationService(
                 return new Belonging(1);
             }
 
-            if (projectValue > methodSecond.Max)
+            if (projectValue <= methodSecond.Max)
             {
-                return new Belonging(-1);
+                return new Belonging(CalculateDegreeByFormula(
+                    projectValue,
+                    methodSecond.Min,
+                    methodSecond.Avg,
+                    methodSecond.Max,
+                    2));
             }
 
-            degree = CalculateDegreeByFormula(projectValue, methodSecond.Min, methodSecond.Avg, methodSecond.Max, 2);
-            return new Belonging(degree);
+            return new Belonging(-1);
         }
 
         if (methodFirst is not null)
         {
-            degree = CalculateDegreeByFormula(
-                projectValue,
-                methodFirst.Min,
-                methodFirst.Avg,
-                methodFirst.Max,
-                1);
-            return new Belonging(degree);
+            if (projectValue < methodFirst.Min)
+            {
+                return new Belonging(-1);
+            }
+
+            if (projectValue <= methodFirst.Max)
+            {
+                return new Belonging(CalculateDegreeByFormula(
+                    projectValue,
+                    methodFirst.Min,
+                    methodFirst.Avg,
+                    methodFirst.Max,
+                    1));
+            }
+
+            if (projectValue > methodFirst.Max)
+            {
+                return new Belonging(1);
+            }
         }
 
         if (methodSecond is not null)
         {
-            degree = CalculateDegreeByFormula(projectValue, methodSecond.Min, methodSecond.Avg, methodSecond.Max, 2);
+            if (projectValue <= methodSecond.Min)
+            {
+                return new Belonging(-1);
+            }
 
-            return new Belonging(degree);
+            if (projectValue <= methodSecond.Max)
+            {
+                return new Belonging(CalculateDegreeByFormula(
+                    projectValue,
+                    methodSecond.Min,
+                    methodSecond.Avg,
+                    methodSecond.Max,
+                    2));
+            }
+
+            if (projectValue > methodSecond.Max)
+            {
+                return new Belonging(1);
+            }
         }
 
         throw new InvalidOperationException();
@@ -122,19 +169,10 @@ public sealed class CalculationService(
 
     private static double CalculateDegreeByFormula(double x, double min, double avg, double max, double i)
     {
-        if (x <= min)
-        {
-            return -1;
-        }
-
-        if (x > max)
-        {
-            return 1;
-        }
-
         double leftOperand = Math.Pow((max - avg) / (avg - min), 2);
         double rightOperand = Math.Pow((x - min) / (max - x), 2);
+        double temp = Math.Pow(leftOperand * rightOperand, i * -1);
 
-        return Math.Pow(1 + leftOperand * rightOperand * -1, i) * -1;
+        return Math.Pow(1 + temp, -1);
     }
 }

@@ -56,9 +56,9 @@ public class CalculationServiceTests
     [Fact]
     public void CalculateBelongingDegree_Should_ReturnProperBelonging_When_MethodParametersPresent()
     {
-        var first = new ParameterValueGroup(1.5, 5, 10);
-        var second = new ParameterValueGroup(200, 4000, 4500);
-        Belonging result = _calculationService.CalculateBelongingDegree(21.5, first, second);
-        result.Degree.Should().Be(1);
+        var first = new ParameterValueGroup(0.04, 5, 10);
+        var second = new ParameterValueGroup(286, 400, 18000);
+        Belonging result = _calculationService.CalculateBelongingDegree(2.31, first, second);
+        Math.Round(result.Degree, 4).Should().Be(0.0813);
     }
 }
