@@ -4,7 +4,7 @@ import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useGetPropertiesQuery } from '@/lib/api'
 import { useDebounce } from '@/lib/useDebounce'
 
-import { COLUMNS } from './columns'
+import { useColumns } from './columns'
 
 type PaginationState = {
   pageIndex: number
@@ -12,7 +12,8 @@ type PaginationState = {
 }
 
 export const usePropertiesTable = () => {
-  const columns = useMemo(() => COLUMNS, [])
+  const { COLUMNS } = useColumns()
+  const columns = useMemo(() => COLUMNS, [COLUMNS])
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 1,

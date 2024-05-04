@@ -18,6 +18,10 @@ import {
   FormMessage,
   Input,
   Text,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from '@/components/ui'
 
 import { useUpdateProperty } from './useUpdateProperty'
@@ -33,11 +37,18 @@ export const UpdateProperty = ({ propertyId }: UpdatePropertyProps) => {
       open={state.isOpen}
       onOpenChange={open => functions.setIsOpen(open)}
     >
-      <DialogTrigger asChild>
-        <Button variant='ghost' size='icon'>
-          <Pencil className='size-4' />
-        </Button>
-      </DialogTrigger>
+      <TooltipProvider>
+        <Tooltip>
+          <DialogTrigger asChild>
+            <TooltipTrigger asChild>
+              <Pencil className='size-4' />
+            </TooltipTrigger>
+          </DialogTrigger>
+          <TooltipContent>
+            <Text>Изменить</Text>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Обновить свойство</DialogTitle>
