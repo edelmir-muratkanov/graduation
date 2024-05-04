@@ -20,7 +20,8 @@ internal sealed class DeletePropertyCommandHandler(
 
         propertyRepository.Remove(property);
 
-        List<Calculation> calculations = await calculationRepository.Get(null, cancellationToken);
+        List<Calculation> calculations = await calculationRepository.Get(
+            calculation => calculation.Items.Any(i => i.PropertyName == property.Name), cancellationToken);
 
         foreach (Calculation calculation in calculations)
         {
