@@ -8,7 +8,7 @@ public interface ICalculationRepository
         Expression<Func<Calculation, bool>> predicate,
         CancellationToken cancellationToken = default);
 
-    Task<List<Calculation>> Get(Expression<Func<Calculation, bool>>? predicate,
+    Task<List<Calculation>> Get(Expression<Func<Calculation, bool>> predicate,
         CancellationToken cancellationToken = default);
 
     void Insert(Calculation calculation);
