@@ -5,7 +5,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
   Tabs,
   TabsList,
@@ -14,18 +13,10 @@ import {
 
 import { ProjectCalculationsLoading } from './components/project-calculations/project-calculations-loading'
 import { ProjectInfoLoading } from './components/project-info/project-info-loading'
-import { useProjectPage } from './useProjectPage'
 
 export const ProjectLoading = () => {
-  const { state, functions } = useProjectPage()
   return (
-    <Tabs
-      value={state.tab}
-      defaultValue='info'
-      onValueChange={functions.hanleTabsValueChange}
-      className='w-full'
-      orientation='vertical'
-    >
+    <Tabs defaultValue='info' className='w-full' orientation='vertical'>
       <div className='flex items-center justify-between'>
         <Breadcrumb>
           <BreadcrumbList>
@@ -39,10 +30,6 @@ export const ProjectLoading = () => {
               <BreadcrumbLink asChild>
                 <Link to='/projects'>Проекты</Link>
               </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{state.project.name}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
