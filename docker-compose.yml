@@ -3,6 +3,10 @@ version: '3.8'
 services:
   proxy:
     image: nginx:mainline
+    
+    depends_on:
+      - api
+      - web
 
   web:
     build:
@@ -23,3 +27,10 @@ services:
   database:
     image: postgres:alpine
     restart: always
+
+  database_admin:
+    image: dpage/pgadmin4
+    restart: always
+
+    depends_on:
+      - database
