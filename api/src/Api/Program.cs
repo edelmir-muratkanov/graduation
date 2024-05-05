@@ -1,5 +1,6 @@
 using System.Text;
 using Api;
+using Api.Extensions;
 using Api.Infrastructure;
 using Api.OptionsSetup;
 using Application;
@@ -89,6 +90,8 @@ builder.Services.AddAuthorizationBuilder()
 
 
 WebApplication? app = builder.Build();
+
+app.ApplyMigrations();
 
 app.UseCors();
 app.UseHttpsRedirection();

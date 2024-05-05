@@ -7,7 +7,7 @@ using Domain.Users;
 
 namespace Infrastructure.Database;
 
-internal sealed class ApplicationWriteDbContext(DbContextOptions<ApplicationWriteDbContext> options)
+public sealed class ApplicationWriteDbContext(DbContextOptions<ApplicationWriteDbContext> options)
     : DbContext(options), IUnitOfWork
 {
     public DbSet<User> Users => Set<User>();
