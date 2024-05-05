@@ -9,5 +9,5 @@ COPY . .
 
 RUN yarn build
 
-EXPOSE 8082
+EXPOSE ${VITE_PREVIEW_PORT}
 CMD [ "yarn", "preview" ]

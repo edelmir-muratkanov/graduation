@@ -1,0 +1,43 @@
+version: '3.8'
+
+volumes:
+  database:
+
+
+services:
+  proxy:
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+
+  web:
+    ports:
+      - 5001:3000
+    environment:
+      - VITE_PREVIEW_PORT=3000
+
+    depends_on:
+      - api
+
+  api:
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    ports:
+      - 5000:80
+    environment:
+      
+      - ConnectionStrings__Database=Host=database; Port=5432; Database=graduation; Username=admin; Password=123;Include Error Detail=true
+    depends_on:
+      - database
+
+  database:
+    volumes:
+      - database:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=graduation
