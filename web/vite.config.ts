@@ -15,6 +15,12 @@ export default defineConfig(({ mode }) => {
       port: APP_PORT,
       strictPort: true,
       host: true,
+      proxy: {
+        '/api': {
+          target: `http://localhost:5000/api`,
+          rewrite: path => path.replace(/^\/api/, ''),
+        },
+      },
     },
     preview: {
       port: PREVIEW_PORT,
