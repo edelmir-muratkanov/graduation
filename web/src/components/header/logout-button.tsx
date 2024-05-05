@@ -2,7 +2,7 @@ import { usePostLogoutMutation } from '@/lib/api'
 import { STORAGE_KEYS } from '@/lib/constants'
 import { useProfile } from '@/lib/contexts'
 
-import { Button } from '../ui'
+import { Button } from '../ui/button'
 
 export const LogoutButton = () => {
   const { setUser } = useProfile()

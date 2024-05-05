@@ -7,10 +7,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  Tabs,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui'
+} from '@/components/ui/breadcrumb'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useProfile } from '@/lib/contexts'
 
 import { AddProjectMethods } from './components/add-methods/add-project-methods'

@@ -1,4 +1,4 @@
-import { TabsContent } from '@/components/ui'
+import { TabsContent } from '@/components/ui/tabs'
 
 import { AcceptableParametersChart } from './components/acceptable-parameters-chart'
 import { MethodsApplecabilityChart } from './components/methods-applecability-chart'

@@ -1,6 +1,8 @@
 import { Delete, Plus } from 'lucide-react'
 
-import { Button, Heading, Skeleton } from '@/components/ui'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Heading } from '@/components/ui/typography'
 
 export const CreateProjectLoading = () => (
   <div className='mx-auto flex flex-col w-full justify-center space-y-6 sm:w-[650px]'>

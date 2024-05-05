@@ -7,8 +7,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  Skeleton,
-} from '@/components/ui'
+} from '@/components/ui/breadcrumb'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const MethodsLoading = () => {
   return (

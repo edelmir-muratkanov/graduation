@@ -1,6 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 
-import { Button, Heading, Text } from '../ui'
+import { Button } from '@/components/ui/button'
+import { Heading, Text } from '@/components/ui/typography'
 
 export const ErrorComponent = () => {
   const router = useRouter()

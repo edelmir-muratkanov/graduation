@@ -11,13 +11,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-  Text,
+} from '@/components/ui/alert-dialog'
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui'
-import { useDeletePropertyMutation } from '@/lib/api/properties/delete-property/hook'
+} from '@/components/ui/tooltip'
+import { Text } from '@/components/ui/typography'
+import { useDeletePropertyMutation } from '@/lib/api'
 import { cn } from '@/lib/cn'
 import { queryClient } from '@/lib/contexts'
 

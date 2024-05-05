@@ -7,8 +7,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Input,
-} from '@/components/ui'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 import type { AddParametersFormSchema } from './constants'
 import { useAddParameter } from './useAddParameters'

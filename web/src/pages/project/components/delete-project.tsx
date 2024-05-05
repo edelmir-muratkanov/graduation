@@ -11,8 +11,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-  Button,
-} from '@/components/ui'
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 import { useDeleteProjectMutation } from '@/lib/api'
 import { cn } from '@/lib/cn'
 import { queryClient } from '@/lib/contexts'

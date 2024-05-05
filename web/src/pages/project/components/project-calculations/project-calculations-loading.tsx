@@ -1,4 +1,5 @@
-import { Skeleton, TabsContent } from '@/components/ui'
+import { Skeleton } from '@/components/ui/skeleton'
+import { TabsContent } from '@/components/ui/tabs'
 
 export const ProjectCalculationsLoading = () => {
   return (

@@ -1,15 +1,12 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui'
+} from '@/components/ui/table'
 import type { Method } from '@/types'
 
 import { DeleteParameterButton } from './delete-parameter-button'

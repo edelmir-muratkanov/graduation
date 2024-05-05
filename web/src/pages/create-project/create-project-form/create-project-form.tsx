@@ -1,7 +1,14 @@
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@radix-ui/react-select'
 import { Delete, Plus } from 'lucide-react'
 
+import { Button } from '@/components/ui/button'
 import {
-  Button,
   Form,
   FormControl,
   FormDescription,
@@ -9,15 +16,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Heading,
-  Input,
-  MultipleSelector,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { MultipleSelector } from '@/components/ui/multiple-select'
+import { Heading } from '@/components/ui/typography'
 import { CollectorTypeTranslates, ProjectTypeTranslates } from '@/lib/constants'
 
 import { useCreateProjectForm } from './useCreateProjectForm'

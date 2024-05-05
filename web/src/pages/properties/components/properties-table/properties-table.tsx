@@ -1,21 +1,23 @@
 import { flexRender } from '@tanstack/react-table'
 import { X } from 'lucide-react'
 
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
-  Button,
-  Input,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+} from '@/components/ui/select'
+import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui'
+} from '@/components/ui/table'
 
 import { usePropertiesTable } from './usePropertiesTable'
 

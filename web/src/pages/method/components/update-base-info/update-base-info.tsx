@@ -1,5 +1,5 @@
+import { Button } from '@/components/ui/button'
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -7,6 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+} from '@/components/ui/dialog'
+import {
   Form,
   FormControl,
   FormDescription,
@@ -14,10 +16,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Input,
-  MultipleSelector,
-  Text,
-} from '@/components/ui'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { MultipleSelector } from '@/components/ui/multiple-select'
+import { Text } from '@/components/ui/typography'
 import { CollectorTypeTranslates } from '@/lib/constants'
 import { CollectorType } from '@/types'
 

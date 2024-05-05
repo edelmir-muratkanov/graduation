@@ -8,7 +8,8 @@ import {
   YAxis,
 } from 'recharts'
 
-import { Card, CardContent, CardHeader, CardTitle, Text } from '@/components/ui'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Text } from '@/components/ui/typography'
 
 import { useProjectCalculations } from '../useProjectCalculations'
 

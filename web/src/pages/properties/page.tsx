@@ -7,7 +7,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui'
+} from '@/components/ui/breadcrumb'
 
 import { CreateProperty } from './components/create-property/create-property'
 import { PropertiesTable } from './components/properties-table/properties-table'

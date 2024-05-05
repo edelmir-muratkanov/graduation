@@ -1,17 +1,15 @@
+import { Table } from 'lucide-react'
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-  TabsContent,
-  Text,
-} from '@/components/ui'
+} from '@/components/ui/table'
+import { TabsContent } from '@/components/ui/tabs'
+import { Text } from '@/components/ui/typography'
 import { CollectorTypeTranslates, ProjectTypeTranslates } from '@/lib/constants'
 
 import { useProjectPage } from '../../useProjectPage'

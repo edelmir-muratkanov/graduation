@@ -1,6 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table'
 
-import { Badge } from '@/components/ui'
+import { Badge } from '@/components/ui/badge'
 import { CollectorTypeTranslates } from '@/lib/constants'
 import type { Method } from '@/types'
 

@@ -7,9 +7,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  Button,
-  Skeleton,
-} from '@/components/ui'
+} from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const ProjectsLoading = () => {
   return (

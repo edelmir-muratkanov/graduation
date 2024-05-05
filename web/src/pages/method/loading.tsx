@@ -1,16 +1,13 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Skeleton,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui'
+} from '@/components/ui/table'
 
 export const MethodLoading = () => {
   return (

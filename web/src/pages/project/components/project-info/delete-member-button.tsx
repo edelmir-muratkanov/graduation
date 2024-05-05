@@ -2,12 +2,12 @@ import { X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import {
-  Text,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui'
+} from '@/components/ui/tooltip'
+import { Text } from '@/components/ui/typography'
 import { useDeleteProjectMemberMutation } from '@/lib/api'
 import { queryClient } from '@/lib/contexts'
 

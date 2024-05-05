@@ -6,10 +6,8 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-  Tabs,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui'
+} from '@/components/ui/breadcrumb'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { ProjectCalculationsLoading } from './components/project-calculations/project-calculations-loading'
 import { ProjectInfoLoading } from './components/project-info/project-info-loading'

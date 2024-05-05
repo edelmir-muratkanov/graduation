@@ -1,6 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 
-import { Button, Heading, Text } from '../ui'
+import { Button } from '../ui/button'
+import { Heading, Text } from '../ui/typography'
 
 export const NotFound = () => {
   const router = useRouter()

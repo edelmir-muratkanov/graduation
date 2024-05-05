@@ -6,7 +6,7 @@ import { ErrorComponent } from '@/components/error-component'
 import { Footer } from '@/components/footer'
 import { Header } from '@/components/header'
 import { NotFound } from '@/components/not-found'
-import { Toaster } from '@/components/ui'
+import { Toaster } from '@/components/ui/sonner'
 import type { User } from '@/types'
 
 const TOASTER_DURATION = 5000

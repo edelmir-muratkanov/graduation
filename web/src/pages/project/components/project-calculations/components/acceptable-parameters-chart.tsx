@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Sector } from 'recharts'
 
-import { Text } from '@/components/ui'
+import { Text } from '@/components/ui/typography'
 
 import { useProjectCalculations } from '../useProjectCalculations'
 

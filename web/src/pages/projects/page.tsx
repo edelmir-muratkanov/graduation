@@ -7,8 +7,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  Button,
-} from '@/components/ui'
+} from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
 
 import { ProjectsTable } from './components/projects-table/projects-table'
 

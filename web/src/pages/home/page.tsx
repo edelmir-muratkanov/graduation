@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 
-import { Button, Text } from '@/components/ui'
+import { Button } from '@/components/ui/button'
+import { Text } from '@/components/ui/typography'
 
 export const HomePage = () => {
   return (

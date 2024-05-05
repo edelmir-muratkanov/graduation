@@ -2,7 +2,7 @@ import { Link, useRouter } from '@tanstack/react-router'
 
 import { cn } from '@/lib/cn'
 
-import { buttonVariants } from '../ui'
+import { buttonVariants } from '../ui/button'
 
 export const LoginButton = () => {
   const { history } = useRouter()

@@ -7,8 +7,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  Button,
-} from '@/components/ui'
+} from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
 import { useProfile } from '@/lib/contexts'
 
 import { MethodsTable } from './methods-table/methods-table'

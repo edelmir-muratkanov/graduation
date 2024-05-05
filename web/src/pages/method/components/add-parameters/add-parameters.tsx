@@ -1,7 +1,7 @@
 import { X } from 'lucide-react'
 
+import { Button } from '@/components/ui/button'
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -9,6 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+} from '@/components/ui/dialog'
+import {
   Form,
   FormControl,
   FormDescription,
@@ -16,14 +18,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  ScrollArea,
+} from '@/components/ui/form'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Text,
-} from '@/components/ui'
+} from '@/components/ui/select'
+import { Text } from '@/components/ui/typography'
 
 import { ParameterField } from './parameter-field'
 import { useAddParameter } from './useAddParameters'

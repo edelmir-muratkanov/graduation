@@ -1,14 +1,14 @@
+import { Button } from '@/components/ui/button'
 import {
-  Button,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-  Input,
-  Label,
-  PasswordInput,
-} from '@/components/ui'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { PasswordInput } from '@/components/ui/password-input'
 
 import { useRegisterForm } from './useRegisterForm'
 

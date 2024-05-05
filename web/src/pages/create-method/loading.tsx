@@ -1,4 +1,5 @@
-import { Heading, Skeleton } from '@/components/ui'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Heading } from '@/components/ui/typography'
 
 export const CreateMethodLoading = () => {
   return (

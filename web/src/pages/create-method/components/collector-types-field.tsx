@@ -7,9 +7,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  MultipleSelector,
-  Text,
-} from '@/components/ui'
+} from '@/components/ui/form'
+import { MultipleSelector } from '@/components/ui/multiple-select'
+import { Text } from '@/components/ui/typography'
 import { CollectorTypeTranslates } from '@/lib/constants'
 import { CollectorType } from '@/types'
 

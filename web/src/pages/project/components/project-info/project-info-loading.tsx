@@ -1,11 +1,6 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Skeleton,
-  TabsContent,
-} from '@/components/ui'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { TabsContent } from '@/components/ui/tabs'
 
 export const ProjectInfoLoading = () => {
   return (

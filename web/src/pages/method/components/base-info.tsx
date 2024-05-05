@@ -1,11 +1,6 @@
-import {
-  Badge,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Text,
-} from '@/components/ui'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Text } from '@/components/ui/typography'
 import { CollectorTypeTranslates } from '@/lib/constants'
 import type { Method } from '@/types'
 

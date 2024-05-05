@@ -1,4 +1,4 @@
-import { Heading } from '@/components/ui'
+import { Heading } from '@/components/ui/typography'
 
 import { CreateProjectForm } from './create-project-form/create-project-form'
 

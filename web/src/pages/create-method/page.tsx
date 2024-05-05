@@ -1,6 +1,8 @@
 import { X } from 'lucide-react'
 
-import { Button, Form, FormMessage, Heading } from '@/components/ui'
+import { Button } from '@/components/ui/button'
+import { Form, FormMessage } from '@/components/ui/form'
+import { Heading } from '@/components/ui/typography'
 
 import { CollectorTypesField } from './components/collector-types-field'
 import { NameField } from './components/name-field'

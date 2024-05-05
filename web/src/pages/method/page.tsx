@@ -7,7 +7,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui'
+} from '@/components/ui/breadcrumb'
 import { cn } from '@/lib/cn'
 import { useProfile } from '@/lib/contexts'
 

@@ -1,14 +1,10 @@
 import { RoleTranslates } from '@/lib/constants'
 import { useProfile } from '@/lib/contexts'
 
-import {
-  Button,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Separator,
-  Text,
-} from '../ui'
+import { Button } from '../ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Separator } from '../ui/separator'
+import { Text } from '../ui/typography'
 
 import { LoginButton } from './login-button'
 import { LogoutButton } from './logout-button'
