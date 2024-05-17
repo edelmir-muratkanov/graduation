@@ -4,6 +4,9 @@ using Shared;
 
 namespace Application.Project.GetProjects;
 
+/// <summary>
+/// Ответ на запрос <see cref="GetProjectsQuery"/>
+/// </summary>
 public record GetProjectsResponse
 {
     public Guid Id { get; set; }
@@ -14,6 +17,9 @@ public record GetProjectsResponse
     public CollectorType CollectorType { get; set; }
 }
 
+/// <summary>
+/// Запрос на получение списка проектов.
+/// </summary>
 public record GetProjectsQuery : IQuery<PaginatedList<GetProjectsResponse>>
 {
     public string? SearchTerm { get; set; }

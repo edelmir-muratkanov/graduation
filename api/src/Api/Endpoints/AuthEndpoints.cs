@@ -12,10 +12,16 @@ using AuthContracts = Api.Contracts.Auth;
 
 namespace Api.Endpoints;
 
+/// <summary>
+/// Класс, представляющий конечные точки аутентификации и авторизации.
+/// </summary>
 public class AuthEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
+        // Определение конечных точек для различных операций аутентификации
+        // и регистрации пользователей.
+        
         RouteGroupBuilder? group = app
             .MapGroup("api/auth")
             .WithTags("auth")
@@ -60,6 +66,8 @@ public class AuthEndpoints : ICarterModule
             .WithName("Logout");
     }
 
+    // Обработчики для каждой конечной точки
+    
     private static Task<IResult> MapPostLogout(HttpContext context, CancellationToken cancellationToken)
     {
         context.Response.Cookies.Delete(AuthConstants.RefreshTokenKey);

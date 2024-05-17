@@ -1,5 +1,8 @@
 ﻿namespace Domain.Calculation;
 
+/// <summary>
+/// Представляет степень принадлежности.
+/// </summary>
 public sealed record Belonging
 {
     public const string NotApplicable = "Не пременим";
@@ -8,8 +11,16 @@ public sealed record Belonging
     public const string Applicable = "Применим";
     public const string Favorable = "Благоприятен для применения";
 
+    /// <summary>
+    /// Закрытый конструктор без параметров, предотвращающий создание экземпляров класса за его пределами.
+    /// </summary>
     private Belonging() { }
 
+    /// <summary>
+    /// Создает новый экземпляр класса <see cref="Belonging"/> на основе указанной степени принадлежности.
+    /// </summary>
+    /// <param name="degree">Степень принадлежности.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Выбрасывается когда степень в недопустимых пределах</exception>
     public Belonging(double degree)
     {
         Status = degree switch
@@ -25,7 +36,13 @@ public sealed record Belonging
         Degree = degree;
     }
 
+    /// <summary>
+    /// Числовое представление степени принадлежности
+    /// </summary>
     public double Degree { get; }
 
+    /// <summary>
+    /// Текстовое представление степени принадлежности
+    /// </summary>
     public string Status { get; }
 }

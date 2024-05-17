@@ -3,12 +3,16 @@ using Domain.Projects;
 
 namespace Infrastructure.Queries.Project;
 
+/// <summary>
+/// Обработчик запроса <see cref="GetProjectByIdQuery"/>
+/// </summary>
 internal sealed class GetProjectByIdQueryHandler(ApplicationReadDbContext dbContext)
     : IQueryHandler<GetProjectByIdQuery, GetProjectByIdResponse>
 {
     public async Task<Result<GetProjectByIdResponse>> Handle(GetProjectByIdQuery request,
         CancellationToken cancellationToken)
     {
+        // Поиск проекта в базе данных по его идентификатору
         GetProjectByIdResponse? project = await dbContext.Projects
             .Where(p => p.Id == request.Id)
             .Select(p => new GetProjectByIdResponse
@@ -40,6 +44,7 @@ internal sealed class GetProjectByIdQueryHandler(ApplicationReadDbContext dbCont
             })
             .FirstOrDefaultAsync(cancellationToken);
 
+        // Возвращаем результат операции
         return project ?? Result.Failure<GetProjectByIdResponse>(ProjectErrors.NotFound);
     }
 }

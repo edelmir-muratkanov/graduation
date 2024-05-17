@@ -1,6 +1,13 @@
 namespace Domain.Users.Events;
 
-public sealed class UserRegisteredDomainEvent(User user) : IDomainEvent
+/// <summary>
+/// Представляет событие регистрации пользователя.
+/// </summary>
+/// <param name="userId">Идентификатор зарегистрированного пользователя.</param>
+public sealed class UserRegisteredDomainEvent(Guid userId) : IDomainEvent
 {
-    public User User { get; set; } = user;
+    /// <summary>
+    /// Идентификатор пользователя.
+    /// </summary>
+    public Guid UserId { get; init; } = userId;
 }

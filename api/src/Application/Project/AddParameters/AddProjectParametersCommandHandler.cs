@@ -5,6 +5,9 @@ using Domain.Properties;
 
 namespace Application.Project.AddParameters;
 
+/// <summary>
+/// Обработчик команды <see cref="AddProjectParametersCommand"/>.
+/// </summary>
 internal class AddProjectParametersCommandHandler(
     ICurrentUserService currentUserService,
     IProjectRepository projectRepository,
@@ -14,8 +17,10 @@ internal class AddProjectParametersCommandHandler(
     IMethodRepository methodRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<AddProjectParametersCommand>
 {
+    /// <inheritdoc/>
     public async Task<Result> Handle(AddProjectParametersCommand request, CancellationToken cancellationToken)
     {
+        // Получение проекта по его идентификатору
         Domain.Projects.Project? project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
 
         if (project is null)
@@ -23,8 +28,10 @@ internal class AddProjectParametersCommandHandler(
             return Result.Failure(ProjectErrors.NotFound);
         }
 
+        // Получение идентификатора текущего пользователя
         string? userId = currentUserService.Id ?? string.Empty;
 
+        // Проверка, является ли текущий пользователь владельцем или участником проекта
         Result? isOwnerResult = project.IsOwner(userId);
         Result? isMemberResult = project.IsMember(userId);
 
@@ -33,6 +40,7 @@ internal class AddProjectParametersCommandHandler(
             return isMemberResult;
         }
 
+        // Проверка существования свойств по их идентификаторам
         foreach (AddProjectParameter? parameter in request.Parameters)
         {
             if (!await propertyRepository.Exists(parameter.PropertyId))
@@ -42,6 +50,7 @@ internal class AddProjectParametersCommandHandler(
         }
 
 
+        // Добавление параметров к проекту
         var results = request.Parameters.Select(p =>
                 project.AddParameter(p.PropertyId, p.Value))
             .ToList();
@@ -51,6 +60,7 @@ internal class AddProjectParametersCommandHandler(
             return Result.Failure(ValidationError.FromResults(results));
         }
 
+        // Обновление расчетов, связанных с проектом
         foreach (ProjectMethod projectMethod in project.Methods)
         {
             Domain.Methods.Method? method = await methodRepository
@@ -63,7 +73,10 @@ internal class AddProjectParametersCommandHandler(
             }
         }
 
+        // Вставка параметров проекта в репозиторий
         projectParameterRepository.InsertRange(results.Select(r => r.Value).ToList());
+        
+        // Сохранение изменений
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

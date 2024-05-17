@@ -1,5 +1,8 @@
 ﻿namespace Domain.Users;
 
+/// <summary>
+/// Представляет статический класс, содержащий ошибки, связанные с пользователями.
+/// </summary>
 public static class UserErrors
 {
     public static readonly Error EmailNotUnique = Error.Conflict(

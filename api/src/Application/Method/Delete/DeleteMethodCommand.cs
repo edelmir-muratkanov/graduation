@@ -1,6 +1,12 @@
 ﻿namespace Application.Method.Delete;
 
+/// <summary>
+/// Команда для удаления метода.
+/// </summary>
 public record DeleteMethodCommand : ICommand
 {
-    public Guid Id { get; set; }
+    /// <summary>
+    /// Идентификатор метода.
+    /// </summary>
+    public Guid Id { get; init; }
 }

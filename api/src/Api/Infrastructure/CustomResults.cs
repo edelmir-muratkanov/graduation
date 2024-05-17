@@ -2,8 +2,16 @@
 
 namespace Api.Infrastructure;
 
+/// <summary>
+/// Класс для создания пользовательских результатов HTTP-ответов.
+/// </summary>
 public static class CustomResults
 {
+    /// <summary>
+    /// Создает HTTP-ответ с проблемой на основе объекта Result.
+    /// </summary>
+    /// <param name="result">Объект Result, содержащий информацию об ошибке.</param>
+    /// <returns>Объект IResult, представляющий проблему.</returns>
     public static IResult Problem(Result result)
     {
         if (result.IsSuccess)
@@ -18,6 +26,7 @@ public static class CustomResults
             statusCode: GetStatusCode(result.Error.Type),
             extensions: GetErrors(result));
 
+        // Получение заголовка ошибки на основе типа ошибки.
         static string GetTitle(Error error)
         {
             return error.Type switch
@@ -31,6 +40,7 @@ public static class CustomResults
             };
         }
 
+        // Получение подробного описания ошибки.
         static string GetDetail(Error error)
         {
             return error.Type switch
@@ -44,6 +54,7 @@ public static class CustomResults
             };
         }
 
+        // Получение ссылки на описание типа ошибки.
         static string GetType(ErrorType errorType)
         {
             return errorType switch
@@ -57,6 +68,7 @@ public static class CustomResults
             };
         }
 
+        // Получение HTTP-кода состояния на основе типа ошибки.
         static int GetStatusCode(ErrorType errorType)
         {
             return errorType switch
@@ -69,6 +81,7 @@ public static class CustomResults
             };
         }
 
+        // Получение ошибок в случае ошибки валидации.
         static Dictionary<string, object?>? GetErrors(Result result)
         {
             if (result.Error is not ValidationError validationError)

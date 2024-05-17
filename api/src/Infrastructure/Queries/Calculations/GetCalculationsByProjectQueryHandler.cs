@@ -2,6 +2,9 @@
 
 namespace Infrastructure.Queries.Calculations;
 
+/// <summary>
+/// Обработчик запроса <see cref="GetCalculationsByProjectQuery"/>
+/// </summary>
 internal sealed class GetCalculationsByProjectQueryHandler(ApplicationReadDbContext dbContext)
     : IQueryHandler<GetCalculationsByProjectQuery, List<CalculationResponse>>
 {
@@ -9,6 +12,7 @@ internal sealed class GetCalculationsByProjectQueryHandler(ApplicationReadDbCont
         GetCalculationsByProjectQuery request,
         CancellationToken cancellationToken)
     {
+        // Получаем расчеты для указанного идентификатора проекта, включая связанные элементы расчета
         return await dbContext.Calculations
             .Where(c => c.ProjectId == request.ProjectId)
             .Include(c => c.Items)

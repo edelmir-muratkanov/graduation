@@ -3,6 +3,9 @@ using Domain.Projects;
 
 namespace Infrastructure.Database.Models;
 
+/// <summary>
+/// Модель проекта для операций чтения
+/// </summary>
 internal class ProjectReadModel
 {
     public Guid Id { get; set; }

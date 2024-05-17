@@ -3,6 +3,9 @@ using Domain.Methods;
 
 namespace Infrastructure.Queries.Method;
 
+/// <summary>
+/// Обработчик запроса <see cref="GetMethodByIdQuery"/>
+/// </summary>
 internal sealed class GetMethodByIdQueryHandler(ApplicationReadDbContext dbContext)
     : IQueryHandler<GetMethodByIdQuery, GetMethodByIdResponse>
 {
@@ -10,6 +13,7 @@ internal sealed class GetMethodByIdQueryHandler(ApplicationReadDbContext dbConte
         GetMethodByIdQuery request,
         CancellationToken cancellationToken)
     {
+        // Ищем метод в базе данных по указанному идентификатору
         GetMethodByIdResponse? method = await dbContext.Methods
             .Where(m => m.Id == request.Id)
             .Select(m =>
@@ -28,6 +32,7 @@ internal sealed class GetMethodByIdQueryHandler(ApplicationReadDbContext dbConte
                     }).ToList()
                 }).FirstOrDefaultAsync(cancellationToken);
 
+        // Возвращаем метод, если найден, иначе возвращаем ошибку о том, что метод не найден
         return method ?? Result.Failure<GetMethodByIdResponse>(MethodErrors.NotFound);
     }
 }

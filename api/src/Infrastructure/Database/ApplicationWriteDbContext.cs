@@ -7,6 +7,10 @@ using Domain.Users;
 
 namespace Infrastructure.Database;
 
+/// <summary>
+/// Контекст базы данных для операций записи.
+/// </summary>
+/// <param name="options">Параметры контекста базы данных.</param>
 public sealed class ApplicationWriteDbContext(DbContextOptions<ApplicationWriteDbContext> options)
     : DbContext(options), IUnitOfWork
 {
@@ -21,6 +25,10 @@ public sealed class ApplicationWriteDbContext(DbContextOptions<ApplicationWriteD
     public DbSet<Calculation> Calculations => Set<Calculation>();
     public DbSet<CalculationItem> CalculationItems => Set<CalculationItem>();
 
+    /// <summary>
+    /// Настройка отображения сущностей базы данных.
+    /// </summary>
+    /// <param name="builder">Строитель моделей сущностей.</param>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(
@@ -28,7 +36,12 @@ public sealed class ApplicationWriteDbContext(DbContextOptions<ApplicationWriteD
             WriteConfigurationsFilter);
     }
 
-    public static bool WriteConfigurationsFilter(Type type)
+    /// <summary>
+    /// Фильтр для настройки отображения сущностей записи.
+    /// </summary>
+    /// <param name="type">Тип сущности.</param>
+    /// <returns>Значение true, если тип сущности должен быть настроен для записи, иначе - false.</returns>
+    private static bool WriteConfigurationsFilter(Type type)
     {
         return type.FullName?.Contains("Configurations.Write") ?? false;
     }

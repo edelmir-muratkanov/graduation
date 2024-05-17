@@ -1,7 +1,17 @@
 ﻿namespace Application.Method.RemoveParameter;
 
+/// <summary>
+/// Команда для удаления параметра метода.
+/// </summary>
 public record RemoveMethodParameterCommand : ICommand
 {
-    public Guid MethodId { get; set; }
-    public Guid ParameterId { get; set; }
+    /// <summary>
+    /// Идентификатор метода.
+    /// </summary>
+    public Guid MethodId { get; init; }
+
+    /// <summary>
+    /// Идентификатор параметра.
+    /// </summary>
+    public Guid ParameterId { get; init; }
 }

@@ -7,10 +7,15 @@ using Shared.Results;
 
 namespace Api.Endpoints;
 
+/// <summary>
+/// Класс, представляющий конечные точки пользователей.
+/// </summary>
 public class UserEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
+        // Определение конечных точек для различных операций с пользователями.
+
         RouteGroupBuilder group = app.MapGroup("api/users").WithTags("users").WithOpenApi();
 
         group.MapGet("/", MapGetList)
@@ -18,6 +23,8 @@ public class UserEndpoints : ICarterModule
             .ProducesProblem(500)
             .WithSummary("Get users list");
     }
+
+    // Методы-обработчики для каждой конечной точки
 
     private static async Task<IResult> MapGetList(
         string? searchTerm,

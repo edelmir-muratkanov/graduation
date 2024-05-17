@@ -2,6 +2,9 @@
 
 namespace Infrastructure.Database.Models;
 
+/// <summary>
+/// Модель калькуляций для операций чтения
+/// </summary>
 internal sealed class CalculationReadModel
 {
     public Guid Id { get; set; }

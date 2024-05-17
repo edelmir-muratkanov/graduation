@@ -1,35 +1,44 @@
 namespace Application.Method.Create;
 
+/// <summary>
+/// Валидатор для команды <see cref="CreateMethodCommand"/>.
+/// </summary>
 internal sealed class CreateMethodCommandValidator : AbstractValidator<CreateMethodCommand>
 {
     public CreateMethodCommandValidator()
     {
+        // Правила валидации для названия метода
         RuleFor(c => c.Name)
-            .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingName)
-            .MaximumLength(255).WithErrorCode(MethodErrorCodes.Create.LongName);
+            .NotEmpty().WithMessage("Название метода не должно быть пустым.")
+            .MaximumLength(255).WithMessage("Название метода не должно превышать 255 символов.");
 
+        // Правила валидации для типов коллектора
         RuleFor(c => c.CollectorTypes)
-            .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingCollectorTypes)
+            .NotEmpty().WithMessage("Список типов коллектора не должен быть пустым.")
             .ForEach(ct =>
-                ct.IsInEnum().WithErrorCode(MethodErrorCodes.Create.InvalidCollectorType));
+                ct.IsInEnum().WithMessage("Недопустимый тип коллектора."));
 
+        // Правила валидации для параметров метода
         RuleFor(c => c.Parameters)
-            .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingParameters)
+            .NotEmpty().WithMessage("Список параметров метода не должен быть пустым.")
             .ForEach(mp => mp
-                .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingParameter));
+                .NotEmpty().WithMessage("Параметр метода не должен быть пустым."));
 
+        // Правила валидации для каждого параметра метода
         RuleForEach(c => c.Parameters)
             .ChildRules(mp =>
             {
                 mp.RuleFor(p => p.PropertyId)
-                    .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingProperty);
+                    .NotEmpty().WithMessage("Идентификатор свойства параметра не должен быть пустым.");
 
                 mp.RuleFor(p => p.FirstParameters)
-                    .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingFirstOrSecondParameters)
+                    .NotEmpty().WithMessage(
+                        "Значения первого параметра не должны быть пустыми при отсутствии второго параметра.")
                     .When(p => p.SecondParameters is null);
 
                 mp.RuleFor(p => p.SecondParameters)
-                    .NotEmpty().WithErrorCode(MethodErrorCodes.Create.MissingFirstOrSecondParameters)
+                    .NotEmpty().WithMessage(
+                        "Значения второго параметра не должны быть пустыми при отсутствии первого параметра.")
                     .When(p => p.FirstParameters is null);
             });
     }

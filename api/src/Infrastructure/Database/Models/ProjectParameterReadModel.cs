@@ -1,5 +1,8 @@
 ﻿namespace Infrastructure.Database.Models;
 
+/// <summary>
+/// Модель параметра проекта для операций чтения
+/// </summary>
 internal class ProjectParameterReadModel
 {
     public Guid Id { get; set; }

@@ -2,6 +2,9 @@
 
 namespace Infrastructure.Database.Models;
 
+/// <summary>
+/// Модель пользователя для операций чтения
+/// </summary>
 internal sealed class UserReadModel
 {
     public Guid Id { get; set; }

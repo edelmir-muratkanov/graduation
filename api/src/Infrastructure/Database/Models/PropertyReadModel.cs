@@ -1,5 +1,8 @@
 ﻿namespace Infrastructure.Database.Models;
 
+/// <summary>
+/// Модель свойства для операций чтения
+/// </summary>
 internal sealed class PropertyReadModel
 {
     public Guid Id { get; set; }

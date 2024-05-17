@@ -4,20 +4,26 @@ using Shared.Mappings;
 
 namespace Infrastructure.Queries.Property;
 
+/// <summary>
+/// Обработчик запроса <see cref="GetPropertiesQuery"/>
+/// </summary>
 internal sealed class GetPropertiesQueryHandler(ApplicationReadDbContext context)
     : IQueryHandler<GetPropertiesQuery, PaginatedList<GetPropertiesResponse>>
 {
     public async Task<Result<PaginatedList<GetPropertiesResponse>>> Handle(GetPropertiesQuery request,
         CancellationToken cancellationToken)
     {
+        // Запрос на получение списка свойств
         IQueryable<PropertyReadModel>? propertiesQuery = context.Properties.AsQueryable();
 
+        // Фильтрация по поисковому запросу
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
             propertiesQuery = propertiesQuery.Where(p =>
                 EF.Functions.ILike(p.Name, $"%{request.SearchTerm}%"));
         }
 
+        // Сортировка
         Expression<Func<PropertyReadModel, object>> keySelector = request.SortColumn?.ToLower() switch
         {
             "name" => property => property.Name,
@@ -29,6 +35,7 @@ internal sealed class GetPropertiesQueryHandler(ApplicationReadDbContext context
             ? propertiesQuery.OrderByDescending(keySelector)
             : propertiesQuery.OrderBy(keySelector);
 
+        // Выполнение запроса и преобразование результатов
         PaginatedList<GetPropertiesResponse> properties = await propertiesQuery
             .Select(p => new GetPropertiesResponse(
                 p.Id,

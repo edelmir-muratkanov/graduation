@@ -4,8 +4,13 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Infrastructure.Database;
 
+/// <summary>
+/// Перехватчик для отслеживания аудиторских сущностей при сохранении изменений в базе данных.
+/// </summary>
+/// <param name="currentUserService">Сервис для получения текущего пользователя.</param>
 internal sealed class TrackAuditableEntityInterceptor(ICurrentUserService currentUserService) : SaveChangesInterceptor
 {
+    /// <inheritdoc/>
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -19,6 +24,10 @@ internal sealed class TrackAuditableEntityInterceptor(ICurrentUserService curren
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
+    /// <summary>
+    /// Отслеживает изменения в аудиторских сущностях.
+    /// </summary>
+    /// <param name="context">Контекст базы данных Entity Framework.</param>
     private void TrackEntityAsync(DbContext context)
     {
         foreach (EntityEntry<AuditableEntity>? entry in context.ChangeTracker.Entries<AuditableEntity>())

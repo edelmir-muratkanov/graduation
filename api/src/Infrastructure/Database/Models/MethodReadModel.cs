@@ -2,6 +2,9 @@
 
 namespace Infrastructure.Database.Models;
 
+/// <summary>
+/// Модель метода для операций чтения
+/// </summary>
 internal sealed class MethodReadModel
 {
     public Guid Id { get; set; }

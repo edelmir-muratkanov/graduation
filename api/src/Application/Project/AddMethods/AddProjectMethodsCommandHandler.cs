@@ -4,6 +4,9 @@ using Domain.Projects;
 
 namespace Application.Project.AddMethods;
 
+/// <summary>
+/// Обработчик команды <see cref="AddProjectMethodsCommand"/>.
+/// </summary>
 internal sealed class AddProjectMethodsCommandHandler(
     ICurrentUserService currentUserService,
     IProjectRepository projectRepository,
@@ -12,14 +15,17 @@ internal sealed class AddProjectMethodsCommandHandler(
     ICalculationService calculationService,
     IUnitOfWork unitOfWork) : ICommandHandler<AddProjectMethodsCommand>
 {
+    /// <inheritdoc/>
     public async Task<Result> Handle(AddProjectMethodsCommand request, CancellationToken cancellationToken)
     {
+        // Получение проекта по его идентификатору
         Domain.Projects.Project? project = await projectRepository.GetByIdAsync(request.ProjectId, cancellationToken);
         if (project is null)
         {
             return Result.Failure(ProjectErrors.NotFound);
         }
 
+        // Проверка владения или членства пользователя в проекте
         Result? isOwnerResult = project.IsOwner(currentUserService.Id!);
         Result? isMemberResult = project.IsMember(currentUserService.Id!);
 
@@ -28,6 +34,7 @@ internal sealed class AddProjectMethodsCommandHandler(
             return isMemberResult;
         }
 
+        // Проверка существования каждого метода
         foreach (Guid methodId in request.MethodIds)
         {
             if (!await methodRepository.Exists(methodId))
@@ -36,6 +43,7 @@ internal sealed class AddProjectMethodsCommandHandler(
             }
         }
 
+        // Добавление методов в проект
         var results = request.MethodIds.Select(methodId => project.AddMethod(methodId)).ToList();
 
         if (results.Any(r => r.IsFailure))
@@ -43,6 +51,7 @@ internal sealed class AddProjectMethodsCommandHandler(
             return Result.Failure(ValidationError.FromResults(results));
         }
 
+        // Создание расчетов для каждого добавленного метода
         foreach (Guid methodId in request.MethodIds)
         {
             Domain.Methods.Method method = await methodRepository.GetByIdAsync(methodId, cancellationToken);
@@ -53,6 +62,7 @@ internal sealed class AddProjectMethodsCommandHandler(
             }
         }
 
+        // Вставка связей между проектом и методами в репозиторий и сохранение изменений
         projectMethodRepository.InsertRange(results.Select(r => r.Value).ToList());
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

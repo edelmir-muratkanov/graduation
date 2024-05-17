@@ -1,5 +1,4 @@
 using System.Text;
-using Api;
 using Api.Extensions;
 using Api.Infrastructure;
 using Api.OptionsSetup;
@@ -13,13 +12,18 @@ using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
+// Настройка приложения и регистрация сервисов
+
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
+// добавляет поддержку Endpoint Routing и интеграцию с API Explorer.
 builder.Services.AddEndpointsApiExplorer();
 
+// регистрируют сервисы из инфраструктуры и слоя приложения соответственно.
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
+// настраивает CORS (Cross-Origin Resource Sharing) для разрешения запросов с определенных источников.
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -31,6 +35,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+//  добавляет поддержку Swagger для документации API.
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -59,17 +64,23 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// добавляют обработку исключений и детализацию проблем для API.
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+// регистрирует Mapster для маппинга объектов.
 builder.Services.AddMapster();
 
+// добавляет Carter для создания маршрутов API.
 builder.Services.AddCarter();
 
+// добавляет доступ к контексту HTTP.
 builder.Services.AddHttpContextAccessor();
 
+//  настраивает параметры JWT токена.
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 
+//  добавляют аутентификацию с использованием JWT токенов.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     JwtBearerDefaults.AuthenticationScheme,
     options =>
@@ -91,11 +102,16 @@ builder.Services.AddAuthorizationBuilder()
 
 WebApplication? app = builder.Build();
 
+//  применяет все ожидающие миграции базы данных.
 app.ApplyMigrations();
 
+// добавляет CORS middleware.
 app.UseCors();
+
+// перенаправляет HTTP запросы на HTTPS.
 app.UseHttpsRedirection();
 
+//  добавляет политику cookie, определяющую правила использования файлов cookie.
 app.UseCookiePolicy(new CookiePolicyOptions
 {
     MinimumSameSitePolicy = SameSiteMode.Strict,
@@ -104,8 +120,10 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 if (app.Environment.IsDevelopment())
 {
+    // включают Swagger и его пользовательский интерфейс для документации API в режиме разработки.
     app.UseSwagger();
     app.UseSwaggerUI();
+    // использует middleware для обработки исключений и перенаправления на страницу ошибки в режиме разработки.
     app.UseExceptionHandler("/error-dev");
 }
 else
@@ -113,10 +131,16 @@ else
     app.UseExceptionHandler("/error");
 }
 
+// добавляют middleware для аутентификации и авторизации.
 app.UseAuthentication();
 app.UseAuthorization();
+
+// добавляет Carter middleware для обработки маршрутов API.
 app.MapCarter();
+
+// добавляет middleware для обработки ошибок.
 app.UseExceptionHandler();
+
 app.Run();
 
 namespace Api

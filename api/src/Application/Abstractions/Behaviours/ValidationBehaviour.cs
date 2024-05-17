@@ -3,10 +3,23 @@ using FluentValidation.Results;
 
 namespace Application.Abstractions.Behaviours;
 
+/// <summary>
+/// Поведение для валидации запросов.
+/// </summary>
+/// <typeparam name="TRequest">Тип запроса.</typeparam>
+/// <typeparam name="TResponse">Тип ответа.</typeparam>
+/// <param name="validators">Список валидаторов.</param>
 public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+    /// <summary>
+    /// Обрабатывает запрос и выполняет его валидацию.
+    /// </summary>
+    /// <param name="request">Запрос.</param>
+    /// <param name="next">Делегат для вызова следующего обработчика в цепочке.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <returns>Результат обработки запроса.</returns>
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
@@ -42,6 +55,11 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
         throw new ValidationException(validationFailures);
     }
 
+    /// <summary>
+    /// Выполняет валидацию запроса.
+    /// </summary>
+    /// <param name="request">Запрос.</param>
+    /// <returns>Массив ошибок валидации.</returns>
     private async Task<ValidationFailure[]> ValidateAsync(TRequest request)
     {
         if (!validators.Any())
@@ -62,6 +80,11 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
         return validationFailures;
     }
 
+    /// <summary>
+    /// Создает объект ValidationError на основе списка ошибок валидации.
+    /// </summary>
+    /// <param name="validationFailures">Список ошибок валидации.</param>
+    /// <returns>Объект <see cref="ValidationError"/>.</returns>
     private static ValidationError CreateValidationError(IEnumerable<ValidationFailure> validationFailures)
     {
         return new ValidationError(validationFailures.Select(f => Error.Problem(f.ErrorCode, f.ErrorMessage))

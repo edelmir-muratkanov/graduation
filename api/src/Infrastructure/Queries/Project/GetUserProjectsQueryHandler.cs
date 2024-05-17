@@ -3,6 +3,9 @@ using Application.Project.GetUserProjects;
 
 namespace Infrastructure.Queries.Project;
 
+/// <summary>
+/// Обработчик запроса <see cref="GetUserProjectsQuery"/>
+/// </summary>
 internal sealed class GetUserProjectsQueryHandler(
     ApplicationReadDbContext dbContext,
     ICurrentUserService currentUserService)
@@ -11,6 +14,7 @@ internal sealed class GetUserProjectsQueryHandler(
     public async Task<Result<List<ProjectResponse>>> Handle(GetUserProjectsQuery request,
         CancellationToken cancellationToken)
     {
+        // Запрос проектов, созданных или в которых состоит текущий пользователь
         List<ProjectResponse> projects = await dbContext.Projects
             .Where(p =>
                 p.CreatedBy == currentUserService.Id ||

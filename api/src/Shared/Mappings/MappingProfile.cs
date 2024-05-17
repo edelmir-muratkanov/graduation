@@ -3,8 +3,15 @@ using AutoMapper;
 
 namespace Shared.Mappings;
 
+/// <summary>
+/// Профиль маппинга для AutoMapper, позволяющий автоматически применять маппинги из определенной сборки.
+/// </summary>
 public class MappingProfile : Profile
 {
+    /// <summary>
+    /// Применяет маппинги из всех типов, реализующих интерфейс <see cref="IMapFrom{T}"/> из указанной сборки.
+    /// </summary>
+    /// <param name="assembly">Сборка, из которой необходимо загрузить типы для маппинга.</param>
     private void ApplyMappingsFromAssembly(Assembly assembly)
     {
         var types = assembly.GetExportedTypes()

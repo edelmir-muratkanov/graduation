@@ -17,10 +17,15 @@ using Shared.Results;
 
 namespace Api.Endpoints;
 
+/// <summary>
+/// Класс, представляющий конечные точки методов.
+/// </summary>
 public class MethodEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
+        // Определение конечных точек для различных операций с методами.
+
         RouteGroupBuilder group = app
             .MapGroup("api/methods")
             .WithTags("methods")
@@ -94,6 +99,8 @@ public class MethodEndpoints : ICarterModule
             .WithSummary("Remove method parameter")
             .WithName("Remove method parameter");
     }
+
+    // Методы-обработчики для каждой конечной точки
 
     private static async Task<IResult> MapDeleteMethodParameter(
         Guid methodId,

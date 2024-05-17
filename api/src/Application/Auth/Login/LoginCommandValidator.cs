@@ -1,15 +1,21 @@
 namespace Application.Auth.Login;
 
+/// <summary>
+/// Валидатор команды входа в систему.
+/// </summary>
 internal sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
     public LoginCommandValidator()
     {
+        // Правила валидации для адреса электронной почты.
         RuleFor(c => c.Email)
-            .NotEmpty().WithErrorCode(AuthErrorCodes.Login.MissingEmail)
-            .EmailAddress().WithErrorCode(AuthErrorCodes.Login.InvalidEmail);
+            .NotEmpty().WithMessage("Адрес электронной почты обязателен для заполнения")
+            .EmailAddress().WithMessage("Недопустимый формат адреса электронной почты");
 
+
+        // Правила валидации для пароля.
         RuleFor(c => c.Password)
-            .NotEmpty().WithErrorCode(AuthErrorCodes.Login.MissingPassword)
-            .MinimumLength(6).WithErrorCode(AuthErrorCodes.Login.ShortPassword);
+            .NotEmpty().WithMessage("Пароль обязателен для заполнения")
+            .MinimumLength(6).WithMessage("Пароль должен содержать не менее 6 символов");
     }
 }

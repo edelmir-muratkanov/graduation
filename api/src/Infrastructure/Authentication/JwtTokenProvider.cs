@@ -10,10 +10,15 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace Infrastructure.Authentication;
 
+/// <summary>
+/// Сервис для работы с JWT-токенами
+/// </summary>
+/// <param name="options">Настройки JWT-токенов.</param>
 internal sealed class JwtTokenProvider(IOptions<JwtOptions> options) : IJwtTokenProvider
 {
     private readonly JwtOptions _jwtOptions = options.Value;
 
+    /// <inheritdoc/>
     public string Generate(User user)
     {
         var claims = new Claim[]
@@ -39,6 +44,7 @@ internal sealed class JwtTokenProvider(IOptions<JwtOptions> options) : IJwtToken
         return tokenValue;
     }
 
+    /// <inheritdoc/>
     public string GenerateRefreshToken()
     {
         byte[]? randomNumber = new byte[32];
@@ -49,6 +55,7 @@ internal sealed class JwtTokenProvider(IOptions<JwtOptions> options) : IJwtToken
         return Convert.ToBase64String(randomNumber);
     }
 
+    /// <inheritdoc/>
     public async Task<string?> GetUserFromToken(string token)
     {
         var tokenValidationParameter = new TokenValidationParameters

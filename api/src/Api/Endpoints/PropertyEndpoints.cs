@@ -17,10 +17,15 @@ using GetPropertyByIdResponse = Api.Contracts.Property.GetPropertyByIdResponse;
 
 namespace Api.Endpoints;
 
+/// <summary>
+/// Класс, представляющий конечные точки свойств.
+/// </summary>
 public class PropertyEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
+        // Определение конечных точек для различных операций с объектами свойств.
+
         RouteGroupBuilder? group = app
             .MapGroup("api/properties")
             .WithTags("properties")
@@ -66,6 +71,8 @@ public class PropertyEndpoints : ICarterModule
             .WithSummary("Update property")
             .WithName("Update property");
     }
+
+    // Методы-обработчики для каждой конечной точки
 
     private static async Task<IResult> MapUpdateProperty(
         Guid id,

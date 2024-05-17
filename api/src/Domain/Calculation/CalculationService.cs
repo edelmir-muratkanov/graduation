@@ -4,11 +4,22 @@ using Domain.Properties;
 
 namespace Domain.Calculation;
 
+/// <summary>
+/// Сервис для создания и обновления расчетов.
+/// </summary>
+/// <param name="propertyRepository">Репозиторий свойств.</param>
+/// <param name="calculationRepository">Репозиторий расчетов.</param>
 public sealed class CalculationService(
     IPropertyRepository propertyRepository,
     ICalculationRepository calculationRepository)
     : ICalculationService
 {
+    /// <summary>
+    /// Создает новый расчет для указанного проекта и метода.
+    /// </summary>
+    /// <param name="project">Проект, для которого выполняется расчет.</param>
+    /// <param name="method">Метод расчета.</param>
+    /// <returns>Результат операции.</returns>
     public async Task<Result> Create(Project project, Method method)
     {
         var calculation = Calculation.Create(project.Id, method.Id);
@@ -35,6 +46,12 @@ public sealed class CalculationService(
         return Result.Success();
     }
 
+    /// <summary>
+    /// Обновляет существующий расчет для указанного проекта и метода.
+    /// </summary>
+    /// <param name="project">Проект, для которого выполняется обновление расчета.</param>
+    /// <param name="method">Метод расчета.</param>
+    /// <returns>Результат операции.</returns>
     public async Task<Result> Update(Project project, Method method)
     {
         Calculation? calculation = await calculationRepository.GetOne(calculation =>
@@ -69,6 +86,13 @@ public sealed class CalculationService(
         return Result.Success();
     }
 
+    /// <summary>
+    /// Вычисляет степень принадлежности для указанного значения проектного параметра и параметров метода.
+    /// </summary>
+    /// <param name="nullableProjectValue">Значение проектного параметра.</param>
+    /// <param name="methodFirst">Первая группа параметров метода.</param>
+    /// <param name="methodSecond">Вторая группа параметров метода.</param>
+    /// <returns>Степень принадлежности.</returns>
     public Belonging CalculateBelongingDegree(
         double? nullableProjectValue,
         ParameterValueGroup? methodFirst,
@@ -165,6 +189,15 @@ public sealed class CalculationService(
         throw new InvalidOperationException();
     }
 
+    /// <summary>
+    /// Вычисляет степень принадлежности по формуле для заданных параметров.
+    /// </summary>
+    /// <param name="x">Значение геолого-физического параметра проекта.</param>
+    /// <param name="min">Минимальное значение геолого-физического параметра метода.</param>
+    /// <param name="avg">Среднее значение геолого-физического параметра метода.</param>
+    /// <param name="max">Максимальное значение геолого-физического параметра метода.</param>
+    /// <param name="i">Коэффициент, представляющее ветвь функции принадлежности</param>
+    /// <returns>Степень принадлежности.</returns>
     private static double CalculateDegreeByFormula(double x, double min, double avg, double max, double i)
     {
         double leftOperand = Math.Pow((max - avg) / (avg - min), 2);

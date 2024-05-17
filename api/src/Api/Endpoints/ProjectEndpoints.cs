@@ -23,10 +23,15 @@ using GetProjectsResponse = Application.Project.GetProjects.GetProjectsResponse;
 
 namespace Api.Endpoints;
 
+/// <summary>
+/// Класс, представляющий конечные точки проектов.
+/// </summary>
 public class ProjectEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
+        // Определение конечных точек для различных операций с проектами.
+
         RouteGroupBuilder group = app
             .MapGroup("api/projects")
             .RequireAuthorization()
@@ -150,6 +155,8 @@ public class ProjectEndpoints : ICarterModule
             .WithSummary("Remove project member")
             .WithName("Remove project member");
     }
+
+    // Методы-обработчики для каждой конечной точки
 
     private static async Task<IResult> MapUpdateProject(
         Guid id,
