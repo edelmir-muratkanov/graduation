@@ -1,4 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, notFound } from '@tanstack/react-router'
+import { isAxiosError } from 'axios'
 import { z } from 'zod'
 
 import {
@@ -15,12 +16,19 @@ const projectSearchSchema = z.object({
 })
 
 export const Route = createFileRoute('/projects/$projectId/')({
-  loader: ({ context: { queryClient }, params }) => {
-    queryClient.ensureQueryData(getProjectQueryOptions(params.projectId))
-    queryClient.ensureQueryData(
-      getProjectCalculationsQueryOptions(params.projectId),
-    )
-  },
+  loader: ({ context: { queryClient }, params }) =>
+    Promise.all([
+      queryClient.ensureQueryData(getProjectQueryOptions(params.projectId)),
+      queryClient.ensureQueryData(
+        getProjectCalculationsQueryOptions(params.projectId),
+      ),
+    ]).catch(err => {
+      if (isAxiosError(err) && err.response?.status === 404) {
+        throw notFound()
+      }
+
+      throw err
+    }),
   validateSearch: projectSearchSchema,
   pendingComponent: ProjectLoading,
 })
