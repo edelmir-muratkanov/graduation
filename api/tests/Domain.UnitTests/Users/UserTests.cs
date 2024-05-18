@@ -13,16 +13,19 @@ public class UserTests
     [Fact]
     public void Create_Should_ReturnSuccessResult()
     {
-        Result<Domain.Users.User> result = Domain.Users.User.Create(Email, Password);
+        Result<User> result = User.Create(Email, Password);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Id.Should().NotBeEmpty();
+        result.Value.Email.Should().NotBeEmpty();
+        result.Value.Password.Should().NotBeEmpty();
+        result.Value.Role.Should().Be(Role.User);
     }
 
     [Fact]
     public void Create_Should_RaiseDomainEvent()
     {
-        Result<Domain.Users.User> result = Domain.Users.User.Create(Email, Password);
+        Result<User> result = User.Create(Email, Password);
 
         result.Value.DomainEvents[0].Should().BeOfType<UserRegisteredDomainEvent>();
     }
@@ -32,7 +35,7 @@ public class UserTests
     [InlineData(Role.Admin)]
     public void Create_Should_ReturnUserWithSpecifiedRole(Role role)
     {
-        Result<Domain.Users.User> result = Domain.Users.User.Create(Email, Password, role);
+        Result<User> result = User.Create(Email, Password, role);
 
         result.Value.Role.Should().Be(role);
     }
@@ -40,7 +43,7 @@ public class UserTests
     [Fact]
     public void UpdateToken_Should_ReturnSuccess()
     {
-        Result<Domain.Users.User> result = Domain.Users.User.Create(Email, Password);
+        Result<User> result = User.Create(Email, Password);
         result.Value.Token.Should().BeNullOrWhiteSpace();
 
         const string token = "token";
