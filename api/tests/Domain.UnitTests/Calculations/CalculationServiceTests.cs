@@ -1,23 +1,23 @@
 ﻿using Domain.Calculation;
 using Domain.Methods;
+using Domain.Projects;
 using Domain.Properties;
 using FluentAssertions;
 using NSubstitute;
+using Shared.Results;
 
 namespace Domain.UnitTests.Calculations;
 
 public class CalculationServiceTests
 {
-    private readonly ICalculationRepository _calculationRepositoryMock;
-    private readonly IPropertyRepository _propertyRepositoryMock;
     private readonly CalculationService _calculationService;
 
 
     public CalculationServiceTests()
     {
-        _calculationRepositoryMock = Substitute.For<ICalculationRepository>();
-        _propertyRepositoryMock = Substitute.For<IPropertyRepository>();
-        _calculationService = new CalculationService(_propertyRepositoryMock, _calculationRepositoryMock);
+        ICalculationRepository calculationRepositoryMock = Substitute.For<ICalculationRepository>();
+        IPropertyRepository propertyRepositoryMock = Substitute.For<IPropertyRepository>();
+        _calculationService = new CalculationService(propertyRepositoryMock, calculationRepositoryMock);
     }
 
 
@@ -42,6 +42,7 @@ public class CalculationServiceTests
     [InlineData(2.31, 0.3, 0.5, 1, -1)]
     [InlineData(2.31, 0.2, 0.6, 1, -1)]
     [InlineData(783, 834, 840, 850, 1)]
+    [InlineData(25, 10, 20, 30, 0.9878)]
     public void CalculateBelongingDegree_Should_ReturnProperBelonging_When_MethodFirstParameterAbsent(
         double x,
         double min,
@@ -75,6 +76,8 @@ public class CalculationServiceTests
     [InlineData(1861, 457, 800, 1000, 3800, 4000, 4075, 1)]
     [InlineData(783, 801, 810, 820, 900, 910, 922, -1)]
     [InlineData(2.31, 0.04, 5, 10, 286, 400, 18000, 0.0813)]
+    [InlineData(25, 1, 2, 3, 10, 20, 30, 0.9878)]
+    [InlineData(70, 1, 2, 3, 10, 20, 30, -1)]
     public void CalculateBelongingDegree_Should_ReturnProperBelonging_When_MethodParametersPresent(
         double x,
         double min1,
